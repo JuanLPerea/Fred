@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         var cX = 0
         var cY = 0
         var pasoX = -128
-        var pasoY = -240
+        var pasoY = -160
 
         // Variables para la posición
         cY = 32
@@ -56,29 +56,52 @@ class MainActivity : AppCompatActivity() {
             Log.d("MyApp", "Coordenadas: " + cX + " " + cY)
         }
 
+        botonDerecha.setOnClickListener {
+            if (miLaberinto.map[cX+3][cY+2] == 0) {
+                if (cX < 32) {
+                    pasoX -= 32
+                    crearFondo(cX - 1, cY - 1, pasoX, pasoY, miLaberinto)
+                    if (pasoX <= -128){
+                        cX++
+                        pasoX = 0
+                    }
+                }
+            }
+            Log.d("MyApp", "Coordenadas: " + cX + " " + cY)
+        }
+
         botonArriba.setOnClickListener {
             if (miLaberinto.map[cX+2][cY+1] == 0 || miLaberinto.map[cX+2][cY+1] == 3) {
-                if (cY > 1) cY--
-                crearFondo(cX, cY, pasoX, pasoY, miLaberinto)
+                if (cY > 1){
+                    pasoY += 32
+                    crearFondo(cX - 1, cY - 1, pasoX, pasoY, miLaberinto)
+                    if (pasoY >= 0) {
+                        cY--
+                        pasoY = -160
+                    }
+                }
+
             }
             Log.d("MyApp", "Coordenadas: " + cX + " " + cY)
         }
 
         botonAbajo.setOnClickListener {
             if (miLaberinto.map[cX+2][cY+3] == 0) {
-                if (cY < 32) cY++
-                crearFondo(cX, cY, pasoX, pasoY, miLaberinto)
+                if (cY < 32) {
+                    pasoY -= 32
+                    crearFondo(cX - 1, cY - 1, pasoX, pasoY, miLaberinto)
+                    if (pasoY <= -160) {
+                        cY++
+                        pasoY = 0
+                    }
+
+                }
+
             }
             Log.d("MyApp", "Coordenadas: " + cX + " " + cY)
         }
 
-        botonDerecha.setOnClickListener {
-            if (miLaberinto.map[cX+3][cY+2] == 0) {
-                if (cX < 32) cX++
-                crearFondo(cX, cY, pasoX, pasoY, miLaberinto)
-            }
-            Log.d("MyApp", "Coordenadas: " + cX + " " + cY)
-        }
+
 
     }
 
@@ -86,7 +109,7 @@ class MainActivity : AppCompatActivity() {
     fun crearFondo(posX: Int, posY: Int, offsetInicialX: Int, offsetInicialY : Int, miLaberinto: Laberinto) {
 
         var offsetx = offsetInicialX
-        var offsety = offsetInicialY
+        var offsety = offsetInicialY - 80
 
         val fondo = findViewById(R.id.imagen_fondo) as ImageView
         val roca1 = BitmapFactory.decodeResource(resources, R.drawable.roca1)
