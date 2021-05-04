@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".MainActivity">
+
+
+    <FrameLayout
+        android:id="@+id/frame_fondo"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:background="@drawable/fondo">
+
+
+        <ImageView
+            android:id="@+id/imagen_fondo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@drawable/fred"
+            android:visibility="invisible" />
+
+    </FrameLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/relative_botones"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/flecha_abajo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:rotation="270"
+            android:src="?attr/homeAsUpIndicator"
+            android:layout_marginBottom="10dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/flecha_arriba"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/flecha_derecha"
+            android:layout_centerHorizontal="true"
+            android:rotation="90"
+            android:src="?attr/homeAsUpIndicator" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/flecha_izquierda"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/flecha_abajo"
+            android:layout_toLeftOf="@id/flecha_abajo"
+            android:src="?attr/homeAsUpIndicator"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/flecha_derecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/flecha_arriba"
+            android:layout_above="@id/flecha_abajo"
+            android:src="?attr/homeAsUpIndicator"
+            android:rotation="180"/>
+
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>
