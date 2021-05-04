@@ -104,10 +104,10 @@ class Laberinto {
                     posicionY = bifurcaciones[indice_bifurcaciones][1]
                 }
             }
-            Log.d("MyApp", "Bifurcaciones " + indice_bifurcaciones)
+      //      Log.d("MyApp", "Bifurcaciones " + indice_bifurcaciones)
         } while (indice_bifurcaciones != 0)
 
-        Log.d("MyApp", "Maximo del buffer: " + maxBuffer)
+     //   Log.d("MyApp", "Maximo del buffer: " + maxBuffer)
 
         // Situar salida
         do {
@@ -122,7 +122,7 @@ class Laberinto {
         } while (salida == 0)
 
 
-        Log.d("MyApp", "Fin blucle")
+  //      Log.d("MyApp", "Fin blucle")
 
     }
 

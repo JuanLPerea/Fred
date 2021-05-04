@@ -35,7 +35,8 @@ class MainActivity : AppCompatActivity() {
         // Variables para la posición
         cY = 34
         cX = 4
-        crearFondo(cX-3, cY-3, pasoX, pasoY, miLaberinto)
+        crearFondo(cX-4, cY-3, pasoX, pasoY, miLaberinto)
+        Log.d("MyApp", "Pasox: " + pasoX + " PasoY: " + pasoY + "  cX: " + cX + "  cY:" + cY)
 
         dibujarLaberintoTexto(miLaberinto)
         /*
@@ -54,7 +55,7 @@ class MainActivity : AppCompatActivity() {
                         cX--
                         pasoX = 0
                     }
-                    crearFondo(cX-3, cY-3, pasoX, pasoY, miLaberinto)
+                    crearFondo(cX-4, cY-3, pasoX, pasoY, miLaberinto)
                 }
 
             }
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                         cX++
                         pasoX = 0
                     }
-                    crearFondo(cX-3, cY-3, pasoX, pasoY, miLaberinto)
+                    crearFondo(cX-4, cY-3, pasoX, pasoY, miLaberinto)
                 }
             }
             Log.d("MyApp", "Pasox: " + pasoX + " PasoY: " + pasoY + "  cX: " + cX + "  cY:" + cY)
@@ -84,7 +85,7 @@ class MainActivity : AppCompatActivity() {
                         cY--
                         pasoY = -160
                     }
-                    crearFondo(cX-3, cY-3, pasoX, pasoY, miLaberinto)
+                    crearFondo(cX-4, cY-3, pasoX, pasoY, miLaberinto)
                 }
 
             }
@@ -99,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                         cY++
                         pasoY = -160
                     }
-                    crearFondo(cX-3, cY-3, pasoX, pasoY, miLaberinto)
+                    crearFondo(cX-4, cY-3, pasoX, pasoY, miLaberinto)
                 }
 
             }
@@ -192,7 +193,7 @@ class MainActivity : AppCompatActivity() {
         val fred_quieto = BitmapFactory.decodeResource(resources, R.drawable.fred)
 
 
-        rectDestino.offsetTo(256, 240)
+        rectDestino.offsetTo(384, 240)
         lienzo.drawBitmap(fred_quieto, null, rectDestino, null)
 
         fondo.setImageBitmap(bitmapFondo)
