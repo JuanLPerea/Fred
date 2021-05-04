@@ -6,11 +6,6 @@ import kotlin.random.Random as Random
 
 class Laberinto {
 
-    // 1 -> Zona exterior del laberinto
-    // 2 -> Muro
-    // 0 -> Camino
-    // 3 -> Trampilla Salida
-
     var map = arrayOf(
             arrayOf(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2),
             arrayOf(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2),
@@ -50,6 +45,11 @@ class Laberinto {
             arrayOf(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2),
             arrayOf(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
     )
+
+    // 1 -> Zona exterior del laberinto
+    // 2 -> Muro
+    // 0 -> Camino
+    // 3 -> Trampilla Salida
 
 
     fun generarLaberinto() {

@@ -29,76 +29,81 @@ class MainActivity : AppCompatActivity() {
 
         var cX = 0
         var cY = 0
-        var pasoX = -128
+        var pasoX = 0
         var pasoY = -160
 
         // Variables para la posición
-        cY = 32
+        cY = 34
+        cX = 4
+        crearFondo(cX-3, cY-3, pasoX, pasoY, miLaberinto)
+
+        dibujarLaberintoTexto(miLaberinto)
+        /*
         do {
             cX = (3..29).shuffled().last()
         } while (miLaberinto.map[cX][cY] != 0)
         crearFondo(cX-1, cY-1, pasoX, pasoY, miLaberinto)
 
+         */
         botonIzquierda.setOnClickListener {
 
-            if (miLaberinto.map[cX+1][cY+2] == 0) {
+            if ((miLaberinto.map[cX-1][cY] == 0 && pasoY == -160) || pasoX != 0) {
                 if (cX > 2) {
                     pasoX += 32
-                    crearFondo(cX - 1, cY - 1, pasoX, pasoY, miLaberinto)
-                    if (pasoX >= 0) {
+                    if (pasoX == 128) {
                         cX--
-                        pasoX = -128
+                        pasoX = 0
                     }
+                    crearFondo(cX-3, cY-3, pasoX, pasoY, miLaberinto)
                 }
 
             }
 
-            Log.d("MyApp", "Coordenadas: " + cX + " " + cY)
+            Log.d("MyApp", "Pasox: " + pasoX + " PasoY: " + pasoY + "  cX: " + cX + "  cY:" + cY)
         }
 
         botonDerecha.setOnClickListener {
-            if (miLaberinto.map[cX+3][cY+2] == 0) {
+            if ((miLaberinto.map[cX + 1][cY] == 0 && pasoY == -160) || pasoX != 0) {
                 if (cX < 32) {
                     pasoX -= 32
-                    crearFondo(cX - 1, cY - 1, pasoX, pasoY, miLaberinto)
-                    if (pasoX <= -128){
+                    if (pasoX == -128){
                         cX++
                         pasoX = 0
                     }
+                    crearFondo(cX-3, cY-3, pasoX, pasoY, miLaberinto)
                 }
             }
-            Log.d("MyApp", "Coordenadas: " + cX + " " + cY)
+            Log.d("MyApp", "Pasox: " + pasoX + " PasoY: " + pasoY + "  cX: " + cX + "  cY:" + cY)
         }
 
         botonArriba.setOnClickListener {
-            if (miLaberinto.map[cX+2][cY+1] == 0 || miLaberinto.map[cX+2][cY+1] == 3) {
-                if (cY > 1){
+            if (((miLaberinto.map[cX][cY-1] == 0 || miLaberinto.map[cX][cY-1] == 3) && pasoX == 0) || pasoY != -160) {
+                if (cY > 2){
                     pasoY += 32
-                    crearFondo(cX - 1, cY - 1, pasoX, pasoY, miLaberinto)
-                    if (pasoY >= 0) {
+                    if (pasoY == 0) {
                         cY--
                         pasoY = -160
                     }
+                    crearFondo(cX-3, cY-3, pasoX, pasoY, miLaberinto)
                 }
 
             }
-            Log.d("MyApp", "Coordenadas: " + cX + " " + cY)
+            Log.d("MyApp", "Pasox: " + pasoX + " PasoY: " + pasoY + "  cX: " + cX + "  cY:" + cY)
         }
 
         botonAbajo.setOnClickListener {
-            if (miLaberinto.map[cX+2][cY+3] == 0) {
-                if (cY < 32) {
+            if ((miLaberinto.map[cX][cY+1] == 0  && pasoX == 0) || pasoY != -160) {
+                if (cY < 35) {
                     pasoY -= 32
-                    crearFondo(cX - 1, cY - 1, pasoX, pasoY, miLaberinto)
-                    if (pasoY <= -160) {
+                    if (pasoY == -320) {
                         cY++
-                        pasoY = 0
+                        pasoY = -160
                     }
-
+                    crearFondo(cX-3, cY-3, pasoX, pasoY, miLaberinto)
                 }
 
             }
-            Log.d("MyApp", "Coordenadas: " + cX + " " + cY)
+            Log.d("MyApp", "Pasox: " + pasoX + " PasoY: " + pasoY + "  cX: " + cX + "  cY:" + cY)
         }
 
 
@@ -108,7 +113,7 @@ class MainActivity : AppCompatActivity() {
 
     fun crearFondo(posX: Int, posY: Int, offsetInicialX: Int, offsetInicialY : Int, miLaberinto: Laberinto) {
 
-        var offsetx = offsetInicialX
+        var offsetx = offsetInicialX - 128
         var offsety = offsetInicialY - 80
 
         val fondo = findViewById(R.id.imagen_fondo) as ImageView
@@ -123,15 +128,15 @@ class MainActivity : AppCompatActivity() {
         val cielo = BitmapFactory.decodeResource(resources, R.drawable.cielo)
         val pasillo = BitmapFactory.decodeResource(resources, R.drawable.pasillo_negro)
 
-        var bitmapFondo = Bitmap.createBitmap(768, 800, Bitmap.Config.ARGB_8888)
+        var bitmapFondo = Bitmap.createBitmap(896, 800, Bitmap.Config.ARGB_8888)
         var lienzo = Canvas(bitmapFondo)
         val rectDestino = Rect()
         rectDestino.set(0,0,128,160)
 
         // La pantalla en horizontal está dividida en 6 espacios completos y está centrado de forma que se ven 1/2 por cada lado. En horizontal hace scroll en 4 pasos cada uno
         // en vertical son 4 completos y se ve 2 pasos del siguiente. Hace scroll con 5 pasos en vertical
-        for (y in 0..6) {
-            for (x in 0..7) {
+        for (y in 0..7) {
+            for (x in 0..8) {
                 rectDestino.offsetTo(offsetx, offsety)
                 // en los bordes dibujar la tierra o el cielo
                 if (posY == 2 && y < 1) {
@@ -179,7 +184,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 offsetx += 128
             }
-            offsetx = offsetInicialX
+            offsetx = offsetInicialX - 128
             offsety += 160
         }
 
@@ -191,5 +196,20 @@ class MainActivity : AppCompatActivity() {
         lienzo.drawBitmap(fred_quieto, null, rectDestino, null)
 
         fondo.setImageBitmap(bitmapFondo)
+    }
+
+    fun dibujarLaberintoTexto (miLaberinto: Laberinto) {
+        var fila = ""
+        for (y in 0..35) {
+            for (x in 0..36) {
+                when (miLaberinto.map[x][y]) {
+                    0 -> fila += " "
+                    2 -> fila += "X"
+                }
+
+            }
+            fila += "\n"
+            Log.d("Miapp", fila)
+        }
     }
 }
