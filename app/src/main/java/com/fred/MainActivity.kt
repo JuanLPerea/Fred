@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var botonAbajo: FloatingActionButton
     lateinit var botonDerecha: FloatingActionButton
     lateinit var miLaberinto: Laberinto
+    lateinit var alturaTV : TextView
     var cX = 0
     var cY = 0
     var pasoX = 0
@@ -38,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         botonIzquierda = findViewById(com.fred.R.id.flecha_izquierda)
         botonAbajo = findViewById(R.id.flecha_abajo)
         botonDerecha = findViewById(com.fred.R.id.flecha_derecha)
+        alturaTV = findViewById(R.id.alturaTV)
 
         miLaberinto = Laberinto()
         miLaberinto.generarLaberinto()
@@ -64,12 +67,13 @@ class MainActivity : AppCompatActivity() {
         val timer = Timer()
         val ticks = object : TimerTask() {
             override fun run() {
+                if (pulsado_izquierda) moverFondo(Direcciones.IZQUIERDA)
+                if (pulsado_derecha) moverFondo(Direcciones.DERECHA)
+                if (pulsado_arriba) moverFondo(Direcciones.ARRIBA)
+                if (pulsado_abajo) moverFondo(Direcciones.ABAJO)
                 runOnUiThread {
-                    if (pulsado_izquierda) moverFondo(Direcciones.IZQUIERDA)
-                    if (pulsado_derecha) moverFondo(Direcciones.DERECHA)
-                    if (pulsado_arriba) moverFondo(Direcciones.ARRIBA)
-                    if (pulsado_abajo) moverFondo(Direcciones.ABAJO)
                     crearFondo(cX - 4, cY - 3, pasoX, pasoY, miLaberinto)
+                    alturaTV.text = "Altura: $cY + Posicion X : $cX"
                 }
 
             }
@@ -257,7 +261,6 @@ class MainActivity : AppCompatActivity() {
                             cY--
                             pasoY = -160
                         }
-                        crearFondo(cX - 4, cY - 3, pasoX, pasoY, miLaberinto)
                     }
                 }
             }
@@ -271,7 +274,6 @@ class MainActivity : AppCompatActivity() {
                             cY++
                             pasoY = -160
                         }
-                        crearFondo(cX - 4, cY - 3, pasoX, pasoY, miLaberinto)
                     }
 
                 }
@@ -280,13 +282,12 @@ class MainActivity : AppCompatActivity() {
             Direcciones.DERECHA -> {
                 // Derecha
                 if ((miLaberinto.map[cX + 1][cY] == 0 && pasoY == -160) || pasoX != 0) {
-                    if (cX < 32) {
+                    if (cX < 34) {
                         pasoX -= 32
                         if (pasoX == -128) {
                             cX++
                             pasoX = 0
                         }
-                        crearFondo(cX - 4, cY - 3, pasoX, pasoY, miLaberinto)
                     }
                 }
 
@@ -301,7 +302,6 @@ class MainActivity : AppCompatActivity() {
                             cX--
                             pasoX = 0
                         }
-                        crearFondo(cX - 4, cY - 3, pasoX, pasoY, miLaberinto)
                     }
 
                 }
@@ -313,60 +313,3 @@ class MainActivity : AppCompatActivity() {
 enum class Direcciones {
     ARRIBA, ABAJO, IZQUIERDA, DERECHA
 }
-
-/*
-
-  // Mover fondo hacia arriba
-                    if (((miLaberinto.map[cX][cY-1] == 0 || miLaberinto.map[cX][cY-1] == 3) && pasoX == 0) || pasoY != -160) {
-                        if (cY > 2){
-                            pasoY += 32
-                            if (pasoY == 0) {
-                                cY--
-                                pasoY = -160
-                            }
-                            crearFondo(cX-4, cY-3, pasoX, pasoY, miLaberinto)
-                        }
-
-
-                    // Mover fondo hacia abajo
-                    if ((miLaberinto.map[cX][cY + 1] == 0 && pasoX == 0) || pasoY != -160) {
-                        if (cY < 35) {
-                            pasoY -= 32
-                            if (pasoY == -320) {
-                                cY++
-                                pasoY = -160
-                            }
-                            crearFondo(cX - 4, cY - 3, pasoX, pasoY, miLaberinto)
-                        }
-
-                    }
-
-                    // Izquierda
-
-                                     if ((miLaberinto.map[cX - 1][cY] == 0 && pasoY == -160) || pasoX != 0) {
-                        if (cX > 2) {
-                            pasoX += 32
-                            if (pasoX == 128) {
-                                cX--
-                                pasoX = 0
-                            }
-                            crearFondo(cX - 4, cY - 3, pasoX, pasoY, miLaberinto)
-                        }
-
-                    }
-
-
-                    // Derecha
-
-                                    if ((miLaberinto.map[cX + 1][cY] == 0 && pasoY == -160) || pasoX != 0) {
-                        if (cX < 32) {
-                            pasoX -= 32
-                            if (pasoX == -128) {
-                                cX++
-                                pasoX = 0
-                            }
-                            crearFondo(cX - 4, cY - 3, pasoX, pasoY, miLaberinto)
-                        }
-                    }
-
- */
