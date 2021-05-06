@@ -39,9 +39,9 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         botonArriba = findViewById(R.id.flecha_arriba)
-        botonIzquierda = findViewById(com.fred.R.id.flecha_izquierda)
+        botonIzquierda = findViewById(R.id.flecha_izquierda)
         botonAbajo = findViewById(R.id.flecha_abajo)
-        botonDerecha = findViewById(com.fred.R.id.flecha_derecha)
+        botonDerecha = findViewById(R.id.flecha_derecha)
         alturaTV = findViewById(R.id.alturaTV)
 
         // Creamos a nuestro protagonista
@@ -73,8 +73,12 @@ class MainActivity : AppCompatActivity() {
         val timer = Timer()
         val ticks = object : TimerTask() {
             override fun run() {
-                if (pulsado_izquierda) moverFondo(Direcciones.IZQUIERDA)
-                if (pulsado_derecha) moverFondo(Direcciones.DERECHA)
+                if (pulsado_izquierda) {
+                    if (fred.lado == 1) moverFondo(Direcciones.IZQUIERDA) else fred.lado = 1
+                }
+                if (pulsado_derecha)  {
+                    if (fred.lado == 0) moverFondo(Direcciones.DERECHA) else fred.lado = 0
+                }
                 if (pulsado_arriba) moverFondo(Direcciones.ARRIBA)
                 if (pulsado_abajo) moverFondo(Direcciones.ABAJO)
                 runOnUiThread {
@@ -234,6 +238,8 @@ class MainActivity : AppCompatActivity() {
             offsety += 160
         }
 
+
+        // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         // Pintar a Fred
         val fredd = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar)
         val fredd1 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar2)
@@ -241,7 +247,12 @@ class MainActivity : AppCompatActivity() {
         val fredi = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar6)
         val fredi1 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar5)
         val fredi2 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar4)
-
+        val fredSaltandoI = BitmapFactory.decodeResource(resources, R.drawable.fred_saltar_1)
+        val fredSaltandoD = BitmapFactory.decodeResource(resources, R.drawable.fred_saltar_2)
+        val fredCuerda1D = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda1)
+        val fredCuerda2D = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda2)
+        val fredCuerda1I = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda3)
+        val fredCuerda2I = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda4)
 
 
         rectDestino.offsetTo(384, 240)
@@ -250,11 +261,40 @@ class MainActivity : AppCompatActivity() {
         if (fred.lado == 0) {
             // Fred mira a la derecha
             // comprobar si está saltando
-            if (fred.saltando) {
+            if (fred.saltando && fred.animacionSalto <= 4) {
+                fred.saltar()
+                lienzo.drawBitmap(fredSaltandoI, null, rectDestino, null)
+
+                if (fred.animacionSalto == 4) {
+                    // Comprobar si hay cuerda y agarrarse si la hay
+                    if (miLaberinto.map[cX][cY-1] == 0 && pasoX == 0) {
+                        fred.cuerda = true
+                        fred.animacionSalto = 0
+                        fred.saltando = false
+                    }
+                }
 
             } else {
+                if (fred.animacionSalto != 0) fred.animacionSalto++
+                if (fred.animacionSalto == 6) {
+                    fred.animacionSalto = 0
+                    fred.saltando = false
+                }
+
+
                 // comprobamos si está en una cuerda
                 if (fred.cuerda) {
+                    if ((pulsado_arriba || pulsado_abajo) ) {
+                        when (fred.animacionCuerda) {
+                            0-> lienzo.drawBitmap(fredCuerda1D, null, rectDestino, null)
+                            1-> lienzo.drawBitmap(fredCuerda2D, null, rectDestino, null)
+                        }
+                        fred.animarCuerda()
+                    } else {
+                        lienzo.drawBitmap(fredCuerda1D, null, rectDestino, null)
+                    }
+
+
 
                 } else {
                     // fred por tanto está de pie
@@ -264,17 +304,43 @@ class MainActivity : AppCompatActivity() {
                         2 -> lienzo.drawBitmap(fredd2, null, rectDestino, null)
                         3 -> lienzo.drawBitmap(fredd1, null, rectDestino, null)
                     }
-
                 }
             }
 
         } else {
             // Fred mira a la izquierda
-            if (fred.saltando) {
+            if (fred.saltando && fred.animacionSalto <= 4) {
+                fred.saltar()
+                lienzo.drawBitmap(fredSaltandoD, null, rectDestino, null)
+
+                if (fred.animacionSalto == 4) {
+                    // Comprobar si hay cuerda y agarrarse si la hay
+                    if (miLaberinto.map[cX][cY-1] == 0 && pasoX == 0) {
+                        fred.cuerda = true
+                        fred.animacionSalto = 0
+                        fred.saltando = false
+                    }
+                }
 
             }else {
+                if (fred.animacionSalto != 0) fred.animacionSalto++
+                if (fred.animacionSalto == 6) {
+                    fred.animacionSalto = 0
+                    fred.saltando = false
+                }
+
                 // comprobamos si está en una cuerda
                 if (fred.cuerda) {
+                    if ((pulsado_arriba || pulsado_abajo) ) {
+                        when (fred.animacionCuerda) {
+                            0 -> lienzo.drawBitmap(fredCuerda1I, null, rectDestino, null)
+                            1 -> lienzo.drawBitmap(fredCuerda2I, null, rectDestino, null)
+                        }
+                        fred.animarCuerda()
+                    }else {
+                        lienzo.drawBitmap(fredCuerda1I, null, rectDestino, null)
+                    }
+
 
                 } else {
                     // fred por tanto está de pie
@@ -304,7 +370,6 @@ class MainActivity : AppCompatActivity() {
                     0 -> fila += " "
                     2 -> fila += "X"
                 }
-
             }
             fila += "\n"
             Log.d("Miapp", fila)
@@ -314,16 +379,26 @@ class MainActivity : AppCompatActivity() {
     private fun moverFondo(direccion: Direcciones) {
         when (direccion) {
             Direcciones.ARRIBA -> {
-                // Mover fondo hacia arriba
-                if (((miLaberinto.map[cX][cY - 1] == 0 || miLaberinto.map[cX][cY - 1] == 3) && pasoX == 0) || pasoY != -160) {
-                    if (cY > 2) {
-                        pasoY += 32
-                        if (pasoY == 0) {
-                            cY--
-                            pasoY = -160
+                // Comprobar si estamos en una cuerda o no
+                if (fred.cuerda) {
+                    // Estamos en una cuerda, por lo tanto movemos a Fred arriba si se puede
+                    // Mover fondo hacia arriba
+                    if (((miLaberinto.map[cX][cY - 1] == 0 || miLaberinto.map[cX][cY - 1] == 3) && pasoX == 0) || pasoY != -160) {
+                        if (cY > 2) {
+                            pasoY += 32
+                            if (pasoY == 0) {
+                                cY--
+                                pasoY = -160
+                            }
                         }
                     }
+
+                } else {
+                    // saltar
+                        if (fred.animacionSalto == 0) fred.saltando = true
+
                 }
+
             }
 
             Direcciones.ABAJO -> {
@@ -363,7 +438,6 @@ class MainActivity : AppCompatActivity() {
                     fred.animacion = 0
                 }
 
-                Log.d("Miapp" , "Animacion: " + fred.animacion)
             }
 
             Direcciones.IZQUIERDA -> {
