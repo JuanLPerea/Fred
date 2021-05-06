@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.fred.entidades.Fred
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var botonDerecha: FloatingActionButton
     lateinit var miLaberinto: Laberinto
     lateinit var alturaTV : TextView
+    lateinit var fred : Fred
     var cX = 0
     var cY = 0
     var pasoX = 0
@@ -42,6 +44,10 @@ class MainActivity : AppCompatActivity() {
         botonDerecha = findViewById(com.fred.R.id.flecha_derecha)
         alturaTV = findViewById(R.id.alturaTV)
 
+        // Creamos a nuestro protagonista
+        fred = Fred()
+
+        // Necesitamos un laberinto para jugar
         miLaberinto = Laberinto()
         miLaberinto.generarLaberinto()
 
@@ -56,13 +62,13 @@ class MainActivity : AppCompatActivity() {
         do {
             cX = (3..29).shuffled().last()
         } while (miLaberinto.map[cX][cY] != 0)
-        crearFondo(cX - 4, cY - 3, pasoX, pasoY, miLaberinto)
+        crearFondo(cX - 4, cY - 3, pasoX, pasoY)
 
         establecerListeners()
 
-        // Con este Timer se actualiza la pantalla cada 1/4 de segundo osea 4 fps!!
+        // Con este Timer se actualiza la pantalla cada 200ms osea 5 fps!!
         // lo que le da ese toque tan rítmico que enganchaba en los 80's tic-tac-tic-tac-tic-tac
-        // ¿fundiré el procesador del siglo 21??? sometiéndole a este terrible trabajo :D ???
+        // ¿fundiré un procesador del siglo 21??? sometiéndole a este terrible trabajo :D ???
 
         val timer = Timer()
         val ticks = object : TimerTask() {
@@ -72,14 +78,14 @@ class MainActivity : AppCompatActivity() {
                 if (pulsado_arriba) moverFondo(Direcciones.ARRIBA)
                 if (pulsado_abajo) moverFondo(Direcciones.ABAJO)
                 runOnUiThread {
-                    crearFondo(cX - 4, cY - 3, pasoX, pasoY, miLaberinto)
+                    crearFondo(cX - 4, cY - 3, pasoX, pasoY)
                     alturaTV.text = "Altura: $cY + Posicion X : $cX"
                 }
 
             }
         }
 
-        timer.schedule(ticks, 250, 250)
+        timer.schedule(ticks, 200, 200)
     }
 
 
@@ -121,6 +127,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 MotionEvent.ACTION_UP -> {
                     pulsado_derecha = false
+                    fred.animacion = 0
                 }
             }
             true
@@ -134,8 +141,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 MotionEvent.ACTION_UP -> {
                     pulsado_izquierda = false
+                    fred.animacion = 0
                 }
             }
+
+
+
             true
         }
     }
@@ -145,8 +156,7 @@ class MainActivity : AppCompatActivity() {
         posX: Int,
         posY: Int,
         offsetInicialX: Int,
-        offsetInicialY: Int,
-        miLaberinto: Laberinto
+        offsetInicialY: Int
     ) {
 
         var offsetx = offsetInicialX - 128
@@ -225,12 +235,63 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Pintar a Fred
-        val fred_quieto = BitmapFactory.decodeResource(resources, R.drawable.fred)
+        val fredd = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar)
+        val fredd1 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar2)
+        val fredd2 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar3)
+        val fredi = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar6)
+        val fredi1 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar5)
+        val fredi2 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar4)
+
 
 
         rectDestino.offsetTo(384, 240)
-        lienzo.drawBitmap(fred_quieto, null, rectDestino, null)
 
+        // comprobamos si fred mira a la derecha o la izquierda
+        if (fred.lado == 0) {
+            // Fred mira a la derecha
+            // comprobar si está saltando
+            if (fred.saltando) {
+
+            } else {
+                // comprobamos si está en una cuerda
+                if (fred.cuerda) {
+
+                } else {
+                    // fred por tanto está de pie
+                    when (fred.animacion) {
+                        0 -> lienzo.drawBitmap(fredd, null, rectDestino, null)
+                        1 -> lienzo.drawBitmap(fredd1, null, rectDestino, null)
+                        2 -> lienzo.drawBitmap(fredd2, null, rectDestino, null)
+                        3 -> lienzo.drawBitmap(fredd1, null, rectDestino, null)
+                    }
+
+                }
+            }
+
+        } else {
+            // Fred mira a la izquierda
+            if (fred.saltando) {
+
+            }else {
+                // comprobamos si está en una cuerda
+                if (fred.cuerda) {
+
+                } else {
+                    // fred por tanto está de pie
+                    when (fred.animacion) {
+                        0 -> lienzo.drawBitmap(fredi, null, rectDestino, null)
+                        1 -> lienzo.drawBitmap(fredi1, null, rectDestino, null)
+                        2 -> lienzo.drawBitmap(fredi2, null, rectDestino, null)
+                        3 -> lienzo.drawBitmap(fredi1, null, rectDestino, null)
+                    }
+
+                }
+            }
+        }
+
+
+
+        //pintamos finalmente el fondo compuesto con todos los bitmaps
         fondo.setImageBitmap(bitmapFondo)
     }
 
@@ -281,6 +342,8 @@ class MainActivity : AppCompatActivity() {
 
             Direcciones.DERECHA -> {
                 // Derecha
+                if (fred.lado == 1) fred.cambiarLado()
+
                 if ((miLaberinto.map[cX + 1][cY] == 0 && pasoY == -160) || pasoX != 0) {
                     if (cX < 34) {
                         pasoX -= 32
@@ -288,13 +351,25 @@ class MainActivity : AppCompatActivity() {
                             cX++
                             pasoX = 0
                         }
+
+                        // Animación del personaje
+                        if (pulsado_derecha) {
+                            fred.animar()
+                        } else {
+                            fred.animacion = 0
+                        }
                     }
+                } else {
+                    fred.animacion = 0
                 }
 
+                Log.d("Miapp" , "Animacion: " + fred.animacion)
             }
 
             Direcciones.IZQUIERDA -> {
                 // Izquierda
+                if (fred.lado == 0) fred.cambiarLado()
+
                 if ((miLaberinto.map[cX - 1][cY] == 0 && pasoY == -160) || pasoX != 0) {
                     if (cX > 2) {
                         pasoX += 32
@@ -302,8 +377,17 @@ class MainActivity : AppCompatActivity() {
                             cX--
                             pasoX = 0
                         }
+
+                        // Animación del personaje
+                        if (pulsado_izquierda) {
+                            fred.animar()
+                        } else {
+                            fred.animacion = 0
+                        }
                     }
 
+                } else {
+                    fred.animacion = 0
                 }
             }
         }
