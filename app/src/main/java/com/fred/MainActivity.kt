@@ -28,10 +28,10 @@ class MainActivity : AppCompatActivity() {
     var cY = 0
     var pasoX = 0
     var pasoY = 0
-    var pulsado_abajo = false
-    var pulsado_arriba = false
-    var pulsado_izquierda = false
-    var pulsado_derecha = false
+    var pulsadoAbajo = false
+    var pulsadoArriba = false
+    var pulsadoIzquierda = false
+    var pulsadoDerecha = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,22 +75,104 @@ class MainActivity : AppCompatActivity() {
             override fun run() {
 
                 // Cada tick se comprueban los botones y se muestra la pantalla actualizada
-                if (pulsado_izquierda && !fred.saltandoDeCuerda && !fred.saltando) {
-                    if (fred.lado == 1) moverFondo(Direcciones.IZQUIERDA) else fred.lado = 1
+                // aquí gestionamos el estado de Fred para mostrar la animación que corresponda
+
+                Log.d("Miapp" , "Estado: " + fred.estadoFred)
+
+                when {
+
+                    // si ha acabado de saltar dedicamos un tick a mirar si nos agarramos a una cuerda o seguimos de pie
+                    fred.estadoFred == EstadosFred.DECISIONSALTO -> {
+                        if (esPosibleMoverArriba()) fred.cuerda = true
+                        fred.estadoFred = EstadosFred.QUIETO
+                    }
+
+                    // Si no hay ningun botón pulsado, y Fred está caminando o moviéndose por una cuerda, hacemos que se quede quieto
+                    !pulsadoDerecha && !pulsadoIzquierda && !pulsadoAbajo && !pulsadoArriba && (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.MOVIENDOCUERDA) -> fred.estadoFred = EstadosFred.QUIETO
+
+
+                    // Si pulsamos el botón derecho ...
+                    pulsadoDerecha -> {
+                        // Lo primero mirar que no estemos saltando y si estamos saltando, no hacemos nada, dejamos que la vida fluya
+                        if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.QUIETO) {
+                            // Si está mirando a la izquierda cambiar el lado a la derecha
+                            if (fred.lado == Lado.IZQUIERDA) {
+                                if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.QUIETO) fred.lado = Lado.DERECHA
+                            } else {
+                                // si está mirando a la derecha y ...
+                                if (fred.cuerda) {
+                                    // Si está en una cuerda saltar al pasillo si es posible, si no dejar el personaje quieto
+                                    if (esPosibleMoverDerecha()) fred.estadoFred = EstadosFred.SALTANDOCUERDA else fred.estadoFred = EstadosFred.QUIETO
+                                } else {
+                                    // Si está en un pasillo caminar a la derecha, y no está saltando, caminar ... si no dejar el personaje quieto
+                                    if (esPosibleMoverDerecha()) {
+                                        fred.estadoFred = EstadosFred.CAMINANDO
+                                        moverDerecha()
+                                    } else fred.estadoFred = EstadosFred.QUIETO
+                                    // Si hay una cuerda delante, saltar para agarrarnos
+                                    if (!esPosibleMoverDerecha() && esPosibleMoverAbajo()) fred.estadoFred = EstadosFred.SALTANDOCUERDA
+                                }
+                            }
+                        }
+
+
+                    }
+
+                    pulsadoIzquierda -> {
+                        // Lo primero mirar que no estemos saltando y si estamos saltando, no hacemos nada, dejamos que la vida fluya
+                        if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.QUIETO) {
+                            // Si está mirando a la derecha cambiar el lado a la izquierda
+                            if (fred.lado == Lado.DERECHA) {
+                                fred.lado = Lado.IZQUIERDA
+                            } else {
+                                // si está mirando a la derecha y ...
+                                if (fred.cuerda) {
+                                    // Si está en una cuerda saltar al pasillo si es posible, si no dejar el personaje quieto
+                                    if (esPosibleMoverIzquierda()) fred.estadoFred = EstadosFred.SALTANDOCUERDA else fred.estadoFred = EstadosFred.QUIETO
+                                } else {
+                                    // Si está en un pasillo caminar a la derecha, si no dejar el personaje quieto
+                                    if (esPosibleMoverIzquierda()) {
+                                        fred.estadoFred = EstadosFred.CAMINANDO
+                                        moverIzquierda()
+                                    } else fred.estadoFred = EstadosFred.QUIETO
+                                    // Si hay una cuerda delante, saltar para agarrarnos
+                                    if (!esPosibleMoverIzquierda() && esPosibleMoverAbajo()) fred.estadoFred = EstadosFred.SALTANDOCUERDA
+                                }
+                            }
+                        }
+
+                    }
+
+                    pulsadoArriba -> {
+                        if (fred.cuerda) {
+                            // si está en una cuerda ...
+                            // si se puede subir ... si no, quieto
+                            if (esPosibleMoverArriba()) {
+                                fred.estadoFred = EstadosFred.MOVIENDOCUERDA
+                                moverArriba()
+                            } else fred.estadoFred = EstadosFred.QUIETO
+                        } else {
+                            // si está en un pasillo ... saltar
+                            fred.estadoFred = EstadosFred.SALTANDO
+                        }
+                    }
+
+                    pulsadoAbajo -> {
+                        if (fred.cuerda) {
+                            if (esPosibleMoverAbajo()) {
+                                fred.estadoFred = EstadosFred.MOVIENDOCUERDA
+                                moverAbajo()
+                            } else fred.estadoFred = EstadosFred.QUIETO
+                        }
+                    }
+
                 }
-                if (pulsado_derecha && !fred.saltandoDeCuerda && !fred.saltando) {
-                    if (fred.lado == 0) moverFondo(Direcciones.DERECHA) else fred.lado = 0
-                }
-                if (pulsado_arriba) moverFondo(Direcciones.ARRIBA)
-                if (pulsado_abajo) moverFondo(Direcciones.ABAJO)
-                if (fred.saltandoDeCuerda && fred.lado == 0) moverFondo((Direcciones.DERECHA))
-                if (fred.saltandoDeCuerda && fred.lado == 1) moverFondo((Direcciones.IZQUIERDA))
 
                 runOnUiThread {
                     crearFondo(cX - 4, cY - 3, pasoX, pasoY)
                     alturaTV.text = "Altura: $cY + Posicion X : $cX"
                 }
-              //    Log.d("Miapp" , "pasoX: " + pasoX + " PasoY: " + pasoY)
+                //    Log.d("Miapp" , "pasoX: " + pasoX + " PasoY: " + pasoY)
             }
         }
 
@@ -103,10 +185,10 @@ class MainActivity : AppCompatActivity() {
             val action = event.action
             when (action) {
                 MotionEvent.ACTION_DOWN -> {
-                    pulsado_arriba = true
+                    pulsadoArriba = true
                 }
                 MotionEvent.ACTION_UP -> {
-                    pulsado_arriba = false
+                    pulsadoArriba = false
                 }
 
             }
@@ -118,10 +200,10 @@ class MainActivity : AppCompatActivity() {
             val action = event.action
             when (action) {
                 MotionEvent.ACTION_DOWN -> {
-                    pulsado_abajo = true
+                    pulsadoAbajo = true
                 }
                 MotionEvent.ACTION_UP -> {
-                    pulsado_abajo = false
+                    pulsadoAbajo = false
                 }
             }
 
@@ -133,11 +215,10 @@ class MainActivity : AppCompatActivity() {
             val action = event.action
             when (action) {
                 MotionEvent.ACTION_DOWN -> {
-                    if (fred.lado == 1 && fred.scrollTick == 0) fred.lado = 0
-                    pulsado_derecha = true
+                    pulsadoDerecha = true
                 }
                 MotionEvent.ACTION_UP -> {
-                    pulsado_derecha = false
+                    pulsadoDerecha = false
                 }
             }
             true
@@ -147,11 +228,10 @@ class MainActivity : AppCompatActivity() {
             val action = event.action
             when (action) {
                 MotionEvent.ACTION_DOWN -> {
-                    if (fred.lado == 0 && fred.scrollTick == 0) fred.lado = 1
-                    pulsado_izquierda = true
+                    pulsadoIzquierda = true
                 }
                 MotionEvent.ACTION_UP -> {
-                    pulsado_izquierda = false
+                    pulsadoIzquierda = false
                 }
             }
 
@@ -255,36 +335,34 @@ class MainActivity : AppCompatActivity() {
         val fredi2 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar4)              // 5
         val fredSaltandoI = BitmapFactory.decodeResource(resources, R.drawable.fred_saltar_1)       // 6
         val fredSaltandoD = BitmapFactory.decodeResource(resources, R.drawable.fred_saltar_2)       // 7
-        val fredCuerda1D = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda1)         // 8
-        val fredCuerda2D = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda2)         // 9
-        val fredCuerda1I = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda3)         // 10
-        val fredCuerda2I = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda4)         // 11
+        val fredCuerda1I = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda1)         // 8
+        val fredCuerda2I = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda2)         // 9
+        val fredCuerda1D = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda3)         // 10
+        val fredCuerda2D = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda4)         // 11
+        val fredDisparoPieI = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_pie_izquierda)                 // 12
+        val fredDisparoPieD = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_pie_derecha)                  // 13
+        val fredDisparoSaltoI = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_salto_izquierda)            // 14
+        val fredDisparoSaltoD = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_salto_derecha)              // 15
 
 
         rectDestino.offsetTo(384, 240)
-
-        // comprobar si hay que agarrarse a una cuerda
-        if (fred.saltando && fred.scrollTickSalto == 4 && miLaberinto.map[cX][cY-1] == 0 && pasoX == 0) fred.cuerda = true
-        // comprobar si estamos en una cuerda y salta hacia el suelo
-        if (fred.cuerda && pulsado_derecha && miLaberinto.map[cX+1][cY] == 0 && pasoY == -160 && fred.lado == 0) fred.saltandoDeCuerda = true
-        if (fred.cuerda && pulsado_izquierda && miLaberinto.map[cX-1][cY] == 0 && pasoY == -160 && fred.lado == 1) fred.saltandoDeCuerda = true
-        Log.d("Miapp" , "Saltando de cuerda: " + fred.saltandoDeCuerda)
-        // Comprobar si vamos por un pasillo y salta hacia una cuerda
-      //  if (!fred.saltandoDeCuerda && !fred.cuerda && (miLaberinto.map[cX+1][cY+1] == 0 ||  miLaberinto.map[cX-1][cY+1] == 0)) fred.saltandoDeCuerda = true
-
-        when (fred.animacionFred(pulsado_derecha, pulsado_izquierda, pulsado_arriba, pulsado_abajo)) {
-            0 -> lienzo.drawBitmap(fredd, null, rectDestino, null)
-            1 -> lienzo.drawBitmap(fredd1, null, rectDestino, null)
-            2 -> lienzo.drawBitmap(fredd2, null, rectDestino, null)
-            3 -> lienzo.drawBitmap(fredi, null, rectDestino, null)
-            4 -> lienzo.drawBitmap(fredi1, null, rectDestino, null)
-            5 -> lienzo.drawBitmap(fredi2, null, rectDestino, null)
-            6 -> lienzo.drawBitmap(fredSaltandoI, null, rectDestino, null)
-            7 -> lienzo.drawBitmap(fredSaltandoD, null, rectDestino, null)
-            8 -> lienzo.drawBitmap(fredCuerda1D, null, rectDestino, null)
-            9 -> lienzo.drawBitmap(fredCuerda2D, null, rectDestino, null)
-            10 -> lienzo.drawBitmap(fredCuerda1I, null, rectDestino, null)
-            11 -> lienzo.drawBitmap(fredCuerda2I, null, rectDestino, null)
+        when (fred.animacionFred()) {
+            0 -> lienzo.drawBitmap(fredd, null, rectDestino, null)              // Quieto a la derecha
+            1 -> lienzo.drawBitmap(fredd1, null, rectDestino, null)             // Caminando 1 derecha
+            2 -> lienzo.drawBitmap(fredd2, null, rectDestino, null)             // Caminando 2 derecha
+            3 -> lienzo.drawBitmap(fredi, null, rectDestino, null)              // Quieto izquierda
+            4 -> lienzo.drawBitmap(fredi1, null, rectDestino, null)             // Caminando 1 izquierda
+            5 -> lienzo.drawBitmap(fredi2, null, rectDestino, null)             // Caminando 2 izquierda
+            6 -> lienzo.drawBitmap(fredSaltandoI, null, rectDestino, null)      // Saltando derecha
+            7 -> lienzo.drawBitmap(fredSaltandoD, null, rectDestino, null)      // Saltando izquierda
+            8 -> lienzo.drawBitmap(fredCuerda1D, null, rectDestino, null)       // En cuerda 1 izquierda
+            9 -> lienzo.drawBitmap(fredCuerda2D, null, rectDestino, null)       // En cuerda 2 izquierda
+            10 -> lienzo.drawBitmap(fredCuerda1I, null, rectDestino, null)      // En cuerda 1 derecha
+            11 -> lienzo.drawBitmap(fredCuerda2I, null, rectDestino, null)      // En cuerda 2 derecha
+            12 -> lienzo.drawBitmap(fredDisparoPieI, null, rectDestino, null)      // Disparo pie izquierda
+            13 -> lienzo.drawBitmap(fredDisparoPieD, null, rectDestino, null)      // Disparo pie derecha
+            14 -> lienzo.drawBitmap(fredDisparoSaltoI, null, rectDestino, null)      // Disparo salto izquierda
+            15 -> lienzo.drawBitmap(fredDisparoSaltoD, null, rectDestino, null)      // Disparo salto derecha
         }
 
         //pintamos finalmente el fondo compuesto con todos los bitmaps
@@ -307,86 +385,83 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun moverFondo(direccion: Direcciones) {
-        if (fred.scroll) {
-            when (direccion) {
-                Direcciones.ARRIBA -> {
-                    // Mover fondo hacia arriba
-                    if (((miLaberinto.map[cX][cY - 1] == 0 || miLaberinto.map[cX][cY - 1] == 3) && pasoX == 0) || pasoY != -160) {
-                        fred.animacion = true
-                        if (cY > 2) {
-                            pasoY += 32
-                            if (pasoY == 0) {
-                                cY--
-                                pasoY = -160
-                            }
-                        }
-                    } else {
-                        fred.animacion = false
-                    }
-                }
 
-                Direcciones.ABAJO -> {
-                    // Mover fondo hacia abajo
-                    if ((miLaberinto.map[cX][cY + 1] == 0 && pasoX == 0) || pasoY != -160) {
-                        fred.animacion = true
-                        if (cY < 35) {
-                            pasoY -= 32
-                            if (pasoY == -320) {
-                                cY++
-                                pasoY = -160
-                            }
-                        }
-                    } else {
-                        fred.animacion = false
-                    }
-                }
-
-                Direcciones.DERECHA -> {
-                    // Derecha
-
-                    if ((miLaberinto.map[cX + 1][cY] == 0 && pasoY == -160) || pasoX != 0) {
-                        fred.animacion = true
-                        if (cX < 34) {
-                            pasoX -= 32
-                            if (pasoX == -128) {
-                                cX++
-                                pasoX = 0
-                            }
-                        }
-                    } else {
-                        fred.animacion = false
-                    }
-
-                }
-
-                Direcciones.IZQUIERDA -> {
-                    // Izquierda
-                    if ((miLaberinto.map[cX - 1][cY] == 0 && pasoY == -160) || pasoX != 0) {
-                        fred.animacion = true
-                        if (cX > 2) {
-                            pasoX += 32
-                            if (pasoX == 128) {
-                                cX--
-                                pasoX = 0
-                            }
-                        }
-                    } else {
-                        fred.animacion = false
-                    }
-                }
+    private fun esPosibleMoverArriba(): Boolean {
+        if (((miLaberinto.map[cX][cY - 1] == 0 || miLaberinto.map[cX][cY - 1] == 3) && pasoX == 0) || pasoY != -160) {
+            if (cY > 2) {
+                return true
             }
         }
-
+        return false
     }
 
+    private fun moverArriba () {
+        pasoY += 32
+        if (pasoY == 0) {
+            cY--
+            pasoY = -160
+        }
+    }
+
+    private fun esPosibleMoverAbajo(): Boolean {
+        if ((miLaberinto.map[cX][cY + 1] == 0 && pasoX == 0) || pasoY != -160) {
+            if (cY < 35) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun moverAbajo () {
+        pasoY -= 32
+        if (pasoY == -320) {
+            cY++
+            pasoY = -160
+        }
+    }
+
+    private fun esPosibleMoverIzquierda(): Boolean {
+        // Izquierda
+        if ((miLaberinto.map[cX - 1][cY] == 0 && pasoY == -160) || pasoX != 0) {
+            if (cX > 2) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun moverIzquierda () {
+        pasoX += 32
+        if (pasoX == 128) {
+            cX--
+            pasoX = 0
+        }
+    }
+
+    private fun esPosibleMoverDerecha(): Boolean {
+        if ((miLaberinto.map[cX + 1][cY] == 0 && pasoY == -160) || pasoX != 0) {
+            if (cX < 34) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun moverDerecha() {
+        pasoX -= 32
+        if (pasoX == -128) {
+            cX++
+            pasoX = 0
+        }
+    }
 
 }
 
-enum class Direcciones {
-    ARRIBA, ABAJO, IZQUIERDA, DERECHA
+
+enum class Lado {
+    DERECHA, IZQUIERDA
 }
 
 enum class EstadosFred {
-    QUIETO, CAMINANDO, CUERDA, SALTANDO, SALTANDOCUERDA, DISPARANDO, DISPARANDOSALTO, DISPARANDOSALTOCUERDA
+    QUIETO, CAMINANDO, MOVIENDOCUERDA, SALTANDO, SALTANDOCUERDA, DISPARANDO, DISPARANDOSALTO, DISPARANDOSALTOCUERDA, DECISIONSALTO
 }
