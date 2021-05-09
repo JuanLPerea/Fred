@@ -11,76 +11,89 @@
 
     <FrameLayout
         android:id="@+id/frame_fondo"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="right|center_vertical"
+        android:layout_gravity="center|center_vertical"
         android:layout_weight="2">
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
+            android:id="@+id/boton_disparo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|left"
-            android:layout_marginStart="50dp"
+            android:layout_gravity="bottom"
             android:layout_marginLeft="50dp"
             android:layout_marginBottom="50dp"
-            android:clickable="true"
-            app:srcCompat="@android:drawable/ic_menu_compass" />
+            app:srcCompat="@android:drawable/btn_star_big_on" />
 
         <ImageView
-            android:id="@+id/imagen_fondo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:id="@+id/image_view_juego"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:cropToPadding="true"
+            android:padding="10dp" />
 
     </FrameLayout>
 
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
             android:layout_weight="1"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/balasTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@color/white"
-                android:text="Balas: 6 " />
+                android:fontFamily="monospace"
+                android:text="Balas: 6 "
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/alturaTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@color/white"
-                android:text="Altura: " />
+                android:fontFamily="monospace"
+                android:text="Altura: "
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/nivelTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@color/white"
-                android:text="Nivel: 1" />
+                android:fontFamily="monospace"
+                android:text="Nivel: 1"
+                android:textSize="16sp" />
+
         </LinearLayout>
 
         <RelativeLayout

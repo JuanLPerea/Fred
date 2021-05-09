@@ -1,14 +1,12 @@
 package com.fred
 
-import android.app.Activity
 import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
-import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
 import com.fred.entidades.Fred
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -21,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var botonIzquierda: FloatingActionButton
     lateinit var botonAbajo: FloatingActionButton
     lateinit var botonDerecha: FloatingActionButton
+    lateinit var botonDisparo : ImageButton
     lateinit var miLaberinto: Laberinto
     lateinit var alturaTV: TextView
     lateinit var fred: Fred
@@ -32,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     var pulsadoArriba = false
     var pulsadoIzquierda = false
     var pulsadoDerecha = false
+    var pulsadoDisparo = false
+    var velocidadJuego = 150L
 
     lateinit var fredd : Bitmap              // 0
     lateinit var  fredd1 : Bitmap               // 1
@@ -73,6 +74,7 @@ class MainActivity : AppCompatActivity() {
         botonIzquierda = findViewById(R.id.flecha_izquierda)
         botonAbajo = findViewById(R.id.flecha_abajo)
         botonDerecha = findViewById(R.id.flecha_derecha)
+        botonDisparo = findViewById(R.id.boton_disparo)
         alturaTV = findViewById(R.id.alturaTV)
 
         // Creamos a nuestro protagonista
@@ -104,12 +106,8 @@ class MainActivity : AppCompatActivity() {
         val timer = Timer()
         val ticks = object : TimerTask() {
             override fun run() {
-
                 // Cada tick se comprueban los botones y se muestra la pantalla actualizada
                 // aquí gestionamos el estado de Fred para mostrar la animación que corresponda
-
-                Log.d("Miapp" , "CX: " + cX + " CY: " + cY + " PasoX: " + pasoX)
-
                 when {
                     // si Fred está saltando de una cuerda no hacer caso de los botones que pulsa el usuario
                     fred.estadoFred == EstadosFred.SALTANDOCUERDA -> {
@@ -200,7 +198,6 @@ class MainActivity : AppCompatActivity() {
                                         } else {
                                             fred.estadoFred = EstadosFred.CAMINANDO
                                         }
-
                                     } else {
                                         fred.estadoFred = EstadosFred.QUIETO
                                     }
@@ -236,6 +233,16 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
+                    pulsadoDisparo -> {
+                        if (fred.estadoFred == EstadosFred.CAMINANDO) {
+                            if (fred.lado == 0) {
+
+                            }
+                            fred.estadoFred = EstadosFred.DISPARANDO
+                        }
+
+                    }
+
                 }
 
                 runOnUiThread {
@@ -246,13 +253,31 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        timer.schedule(ticks, 200, 200)
+        timer.schedule(ticks, velocidadJuego, velocidadJuego)
     }
 
 
 
 
     private fun establecerListeners() {
+
+        botonDisparo.setOnTouchListener { v , event ->
+
+                when (event?.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        pulsadoDisparo = true
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        pulsadoDisparo = false
+                    }
+                }
+
+
+            true
+            }
+
+
+
         botonArriba.setOnTouchListener { v, event ->
             val action = event.action
             when (action) {
@@ -516,7 +541,7 @@ class MainActivity : AppCompatActivity() {
         fredDisparoSaltoI = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_salto_izquierda)            // 14
         fredDisparoSaltoD = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_salto_derecha)              // 15
 
-        fondo = findViewById(R.id.imagen_fondo)
+        fondo = findViewById(R.id.image_view_juego)
         roca1 = BitmapFactory.decodeResource(resources, R.drawable.roca1)
         roca2 = BitmapFactory.decodeResource(resources, R.drawable.roca2)
         roca3 = BitmapFactory.decodeResource(resources, R.drawable.roca3)
@@ -529,6 +554,8 @@ class MainActivity : AppCompatActivity() {
         pasillo = BitmapFactory.decodeResource(resources, R.drawable.pasillo_negro)
 
     }
+
+
 }
 
 
