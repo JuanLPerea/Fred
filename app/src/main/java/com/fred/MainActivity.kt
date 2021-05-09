@@ -75,14 +75,16 @@ class MainActivity : AppCompatActivity() {
             override fun run() {
 
                 // Cada tick se comprueban los botones y se muestra la pantalla actualizada
-                if (pulsado_izquierda) {
+                if (pulsado_izquierda && !fred.saltandoDeCuerda && !fred.saltando) {
                     if (fred.lado == 1) moverFondo(Direcciones.IZQUIERDA) else fred.lado = 1
                 }
-                if (pulsado_derecha) {
+                if (pulsado_derecha && !fred.saltandoDeCuerda && !fred.saltando) {
                     if (fred.lado == 0) moverFondo(Direcciones.DERECHA) else fred.lado = 0
                 }
                 if (pulsado_arriba) moverFondo(Direcciones.ARRIBA)
                 if (pulsado_abajo) moverFondo(Direcciones.ABAJO)
+                if (fred.saltandoDeCuerda && fred.lado == 0) moverFondo((Direcciones.DERECHA))
+                if (fred.saltandoDeCuerda && fred.lado == 1) moverFondo((Direcciones.IZQUIERDA))
 
                 runOnUiThread {
                     crearFondo(cX - 4, cY - 3, pasoX, pasoY)
@@ -131,7 +133,7 @@ class MainActivity : AppCompatActivity() {
             val action = event.action
             when (action) {
                 MotionEvent.ACTION_DOWN -> {
-                    if (fred.lado == 1) fred.lado = 0
+                    if (fred.lado == 1 && fred.scrollTick == 0) fred.lado = 0
                     pulsado_derecha = true
                 }
                 MotionEvent.ACTION_UP -> {
@@ -145,7 +147,7 @@ class MainActivity : AppCompatActivity() {
             val action = event.action
             when (action) {
                 MotionEvent.ACTION_DOWN -> {
-                    if (fred.lado == 0) fred.lado = 1
+                    if (fred.lado == 0 && fred.scrollTick == 0) fred.lado = 1
                     pulsado_izquierda = true
                 }
                 MotionEvent.ACTION_UP -> {
@@ -262,9 +264,13 @@ class MainActivity : AppCompatActivity() {
         rectDestino.offsetTo(384, 240)
 
         // comprobar si hay que agarrarse a una cuerda
-        Log.d("Miapp" , "saltando: " + fred.saltando + " scrollTick: " + fred.scrollTick )
-        if (fred.saltando && fred.scrollTick == 4 && miLaberinto.map[cX][cY-1] == 0) fred.cuerda = true
-
+        if (fred.saltando && fred.scrollTickSalto == 4 && miLaberinto.map[cX][cY-1] == 0 && pasoX == 0) fred.cuerda = true
+        // comprobar si estamos en una cuerda y salta hacia el suelo
+        if (fred.cuerda && pulsado_derecha && miLaberinto.map[cX+1][cY] == 0 && pasoY == -160 && fred.lado == 0) fred.saltandoDeCuerda = true
+        if (fred.cuerda && pulsado_izquierda && miLaberinto.map[cX-1][cY] == 0 && pasoY == -160 && fred.lado == 1) fred.saltandoDeCuerda = true
+        Log.d("Miapp" , "Saltando de cuerda: " + fred.saltandoDeCuerda)
+        // Comprobar si vamos por un pasillo y salta hacia una cuerda
+      //  if (!fred.saltandoDeCuerda && !fred.cuerda && (miLaberinto.map[cX+1][cY+1] == 0 ||  miLaberinto.map[cX-1][cY+1] == 0)) fred.saltandoDeCuerda = true
 
         when (fred.animacionFred(pulsado_derecha, pulsado_izquierda, pulsado_arriba, pulsado_abajo)) {
             0 -> lienzo.drawBitmap(fredd, null, rectDestino, null)
@@ -307,6 +313,7 @@ class MainActivity : AppCompatActivity() {
                 Direcciones.ARRIBA -> {
                     // Mover fondo hacia arriba
                     if (((miLaberinto.map[cX][cY - 1] == 0 || miLaberinto.map[cX][cY - 1] == 3) && pasoX == 0) || pasoY != -160) {
+                        fred.animacion = true
                         if (cY > 2) {
                             pasoY += 32
                             if (pasoY == 0) {
@@ -314,12 +321,15 @@ class MainActivity : AppCompatActivity() {
                                 pasoY = -160
                             }
                         }
+                    } else {
+                        fred.animacion = false
                     }
                 }
 
                 Direcciones.ABAJO -> {
                     // Mover fondo hacia abajo
                     if ((miLaberinto.map[cX][cY + 1] == 0 && pasoX == 0) || pasoY != -160) {
+                        fred.animacion = true
                         if (cY < 35) {
                             pasoY -= 32
                             if (pasoY == -320) {
@@ -327,6 +337,8 @@ class MainActivity : AppCompatActivity() {
                                 pasoY = -160
                             }
                         }
+                    } else {
+                        fred.animacion = false
                     }
                 }
 
@@ -334,6 +346,7 @@ class MainActivity : AppCompatActivity() {
                     // Derecha
 
                     if ((miLaberinto.map[cX + 1][cY] == 0 && pasoY == -160) || pasoX != 0) {
+                        fred.animacion = true
                         if (cX < 34) {
                             pasoX -= 32
                             if (pasoX == -128) {
@@ -341,6 +354,8 @@ class MainActivity : AppCompatActivity() {
                                 pasoX = 0
                             }
                         }
+                    } else {
+                        fred.animacion = false
                     }
 
                 }
@@ -348,6 +363,7 @@ class MainActivity : AppCompatActivity() {
                 Direcciones.IZQUIERDA -> {
                     // Izquierda
                     if ((miLaberinto.map[cX - 1][cY] == 0 && pasoY == -160) || pasoX != 0) {
+                        fred.animacion = true
                         if (cX > 2) {
                             pasoX += 32
                             if (pasoX == 128) {
@@ -355,6 +371,8 @@ class MainActivity : AppCompatActivity() {
                                 pasoX = 0
                             }
                         }
+                    } else {
+                        fred.animacion = false
                     }
                 }
             }
@@ -367,4 +385,8 @@ class MainActivity : AppCompatActivity() {
 
 enum class Direcciones {
     ARRIBA, ABAJO, IZQUIERDA, DERECHA
+}
+
+enum class EstadosFred {
+    QUIETO, CAMINANDO, CUERDA, SALTANDO, SALTANDOCUERDA, DISPARANDO, DISPARANDOSALTO, DISPARANDOSALTOCUERDA
 }
