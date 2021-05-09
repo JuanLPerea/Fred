@@ -18,6 +18,7 @@ class Fred() {
     var scrollTick = 0
     var scrollTickSalto = 0
     var scrollTickCuerda = 0
+    var scrollTickSaltoCuerda = 0
     var lado = Lado.DERECHA
 
     fun animacionFred(): Int {
@@ -37,9 +38,9 @@ class Fred() {
         when (estadoFred) {
             EstadosFred.QUIETO -> {
                 if (lado == Lado.DERECHA) {
-                    if (cuerda) return 8 else return 0
+                    if (cuerda) return 10 else return 0
                 } else {
-                    if (cuerda) return 10 else return 3
+                    if (cuerda) return 8 else return 3
                 }
 
                 scrollTick = 0
@@ -76,12 +77,61 @@ class Fred() {
             EstadosFred.SALTANDO -> {
                 // Fred está saltando
                 scrollTickSalto++
-                Log.d("Miapp" , "Tick Salto: " + scrollTickSalto)
+             //   Log.d("Miapp" , "Tick Salto: " + scrollTickSalto)
                 if (scrollTickSalto == 4) {
                     scrollTickSalto = 0
                     estadoFred = EstadosFred.DECISIONSALTO
                 }
                     if (lado == Lado.DERECHA) return  6 else  return 7
+
+            }
+
+
+            EstadosFred.MOVIENDOCUERDA -> {
+                if (scrollTickCuerda == 0) scrollTickCuerda = 1 else scrollTickCuerda = 0
+                if (lado == Lado.DERECHA) {
+                    when (scrollTickCuerda) {
+                        0 -> return 10
+                        1 -> return 11
+                    }
+                } else {
+                    when (scrollTickCuerda) {
+                        0 -> return 8
+                        1 -> return 9
+                    }
+                }
+            }
+
+            EstadosFred.SALTANDOCUERDA -> {
+                // Fred está saltando desde una cuerda hacia un pasillo
+                scrollTickSaltoCuerda++
+                if (scrollTickSaltoCuerda == 4) {
+                    scrollTickSaltoCuerda = 0
+
+                    if (cuerda) {
+                        estadoFred = EstadosFred.CAMINANDO
+                        cuerda = false
+                    } else {
+                        cuerda = true
+                      //  if (lado == Lado.DERECHA) lado = Lado.IZQUIERDA else lado = Lado.DERECHA
+                        estadoFred = EstadosFred.QUIETO
+                    }
+
+                }
+                if (lado == Lado.DERECHA) {
+                    if (scrollTickSaltoCuerda != 0 ) {
+                        return 6
+                    } else {
+                        if (cuerda) return 10 else return 0
+                    }
+                } else {
+                    if (scrollTickSaltoCuerda != 0 ) {
+                        return 7
+                    } else {
+                        if (cuerda) return 8 else return 3
+                    }
+                }
+
 
             }
 

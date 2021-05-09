@@ -33,10 +33,41 @@ class MainActivity : AppCompatActivity() {
     var pulsadoIzquierda = false
     var pulsadoDerecha = false
 
+    lateinit var fredd : Bitmap              // 0
+    lateinit var  fredd1 : Bitmap               // 1
+    lateinit var  fredd2  : Bitmap              // 2
+    lateinit var  fredi  : Bitmap                // 3
+    lateinit var  fredi1 : Bitmap              // 4
+    lateinit var  fredi2  : Bitmap             // 5
+    lateinit var  fredSaltandoI : Bitmap         // 6
+    lateinit var  fredSaltandoD  : Bitmap       // 7
+    lateinit var  fredCuerda1I  : Bitmap          // 8
+    lateinit var  fredCuerda2I  : Bitmap          // 9
+    lateinit var  fredCuerda1D  : Bitmap        // 10
+    lateinit var  fredCuerda2D  : Bitmap          // 11
+    lateinit var  fredDisparoPieI  : Bitmap                  // 12
+    lateinit var  fredDisparoPieD  : Bitmap                  // 13
+    lateinit var  fredDisparoSaltoI  : Bitmap              // 14
+    lateinit var  fredDisparoSaltoD  : Bitmap                // 15
+
+    lateinit var fondo : ImageView
+    lateinit var roca1 : Bitmap
+    lateinit var roca2 : Bitmap
+    lateinit var roca3 : Bitmap
+    lateinit var fin_cuerda : Bitmap
+    lateinit var cuerda : Bitmap
+    lateinit var inicio_cuerda : Bitmap
+    lateinit var tierra : Bitmap
+    lateinit var trampilla : Bitmap
+    lateinit var cielo : Bitmap
+    lateinit var pasillo : Bitmap
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
+
+        cargarSprites()
 
         botonArriba = findViewById(R.id.flecha_arriba)
         botonIzquierda = findViewById(R.id.flecha_izquierda)
@@ -57,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         pasoX = 0
         pasoY = -160
 
-        // Situar al personaje en un punto aleatorio en la fila de mas abajo
+        // Situar al personaje en un punto aleatorio en la fila de mas abajo del laberinto
         cY = 34
         do {
             cX = (3..29).shuffled().last()
@@ -77,13 +108,24 @@ class MainActivity : AppCompatActivity() {
                 // Cada tick se comprueban los botones y se muestra la pantalla actualizada
                 // aquí gestionamos el estado de Fred para mostrar la animación que corresponda
 
-                Log.d("Miapp" , "Estado: " + fred.estadoFred)
+                Log.d("Miapp" , "CX: " + cX + " CY: " + cY + " PasoX: " + pasoX)
 
                 when {
+                    // si Fred está saltando de una cuerda no hacer caso de los botones que pulsa el usuario
+                    fred.estadoFred == EstadosFred.SALTANDOCUERDA -> {
+                        if (fred.lado == Lado.DERECHA) {
+                            moverDerecha()
+                        } else {
+                            moverIzquierda()
+                        }
+                    }
 
                     // si ha acabado de saltar dedicamos un tick a mirar si nos agarramos a una cuerda o seguimos de pie
                     fred.estadoFred == EstadosFred.DECISIONSALTO -> {
-                        if (esPosibleMoverArriba()) fred.cuerda = true
+                        if (miLaberinto.map[cX][cY-1] == 0 || miLaberinto.map[cX][cY+1] == 0) {
+                            fred.cuerda = true
+                         //   if (fred.lado == Lado.DERECHA) fred.lado = Lado.IZQUIERDA else fred.lado = Lado.DERECHA
+                        }
                         fred.estadoFred = EstadosFred.QUIETO
                     }
 
@@ -95,48 +137,76 @@ class MainActivity : AppCompatActivity() {
                     pulsadoDerecha -> {
                         // Lo primero mirar que no estemos saltando y si estamos saltando, no hacemos nada, dejamos que la vida fluya
                         if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.QUIETO) {
-                            // Si está mirando a la izquierda cambiar el lado a la derecha
-                            if (fred.lado == Lado.IZQUIERDA) {
-                                if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.QUIETO) fred.lado = Lado.DERECHA
-                            } else {
-                                // si está mirando a la derecha y ...
-                                if (fred.cuerda) {
-                                    // Si está en una cuerda saltar al pasillo si es posible, si no dejar el personaje quieto
-                                    if (esPosibleMoverDerecha()) fred.estadoFred = EstadosFred.SALTANDOCUERDA else fred.estadoFred = EstadosFred.QUIETO
-                                } else {
-                                    // Si está en un pasillo caminar a la derecha, y no está saltando, caminar ... si no dejar el personaje quieto
+                            // Miramos si está en una cuerda
+                            if (fred.cuerda) {
+                                // Si Fred está en una cuerda y mira a la izquierda y puede saltar a la derecha, salta
+                                if (fred.lado == Lado.IZQUIERDA) {
                                     if (esPosibleMoverDerecha()) {
-                                        fred.estadoFred = EstadosFred.CAMINANDO
                                         moverDerecha()
-                                    } else fred.estadoFred = EstadosFred.QUIETO
-                                    // Si hay una cuerda delante, saltar para agarrarnos
-                                    if (!esPosibleMoverDerecha() && esPosibleMoverAbajo()) fred.estadoFred = EstadosFred.SALTANDOCUERDA
+                                        fred.lado = Lado.DERECHA
+                                        fred.estadoFred = EstadosFred.SALTANDOCUERDA
+                                    }
+                                } else {
+                                    // Si está mirando a la derecha, le damos la vuelta
+                                    fred.lado = Lado.IZQUIERDA
+                                }
+                            } else {
+                                // Si estamos en un pasillo y puede moverse a la derecha, y mira a la derecha, lo movemos
+                                if (fred.lado == Lado.DERECHA) {
+                                    if (esPosibleMoverDerecha()) {
+                                        // Detectar si hay una cuerda y saltar si la hay
+                                        moverDerecha()
+                                        if (miLaberinto.map[cX + 1][cY + 1] == 0 && pasoX == -32) {
+                                            fred.estadoFred = EstadosFred.SALTANDOCUERDA
+                                        } else {
+                                        // Si no hay cuerda, seguimos caminando
+                                            fred.estadoFred = EstadosFred.CAMINANDO
+                                        }
+
+                                    } else {
+                                        fred.estadoFred = EstadosFred.QUIETO
+                                    }
+                                } else {
+                                    // si estamos en un pasillo y mira para el otro lado, le damos la vuelta
+                                    fred.lado = Lado.DERECHA
                                 }
                             }
                         }
-
-
                     }
 
                     pulsadoIzquierda -> {
                         // Lo primero mirar que no estemos saltando y si estamos saltando, no hacemos nada, dejamos que la vida fluya
                         if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.QUIETO) {
-                            // Si está mirando a la derecha cambiar el lado a la izquierda
-                            if (fred.lado == Lado.DERECHA) {
-                                fred.lado = Lado.IZQUIERDA
-                            } else {
-                                // si está mirando a la derecha y ...
-                                if (fred.cuerda) {
-                                    // Si está en una cuerda saltar al pasillo si es posible, si no dejar el personaje quieto
-                                    if (esPosibleMoverIzquierda()) fred.estadoFred = EstadosFred.SALTANDOCUERDA else fred.estadoFred = EstadosFred.QUIETO
-                                } else {
-                                    // Si está en un pasillo caminar a la derecha, si no dejar el personaje quieto
+                            // Miramos si está en una cuerda
+                            if (fred.cuerda) {
+                                // Si Fred está en una cuerda y mira a la izquierda y puede saltar a la derecha, salta
+                                if (fred.lado == Lado.DERECHA) {
                                     if (esPosibleMoverIzquierda()) {
-                                        fred.estadoFred = EstadosFred.CAMINANDO
                                         moverIzquierda()
-                                    } else fred.estadoFred = EstadosFred.QUIETO
-                                    // Si hay una cuerda delante, saltar para agarrarnos
-                                    if (!esPosibleMoverIzquierda() && esPosibleMoverAbajo()) fred.estadoFred = EstadosFred.SALTANDOCUERDA
+                                        fred.lado = Lado.IZQUIERDA
+                                        fred.estadoFred = EstadosFred.SALTANDOCUERDA
+                                    }
+                                } else {
+                                    // Si está mirando a la derecha, le damos la vuelta
+                                    fred.lado = Lado.DERECHA
+                                }
+                            } else {
+                                // Si estamos en un pasillo y puede moverse a la derecha, y mira a la derecha, lo movemos
+                                if (fred.lado == Lado.IZQUIERDA) {
+                                    if (esPosibleMoverIzquierda()) {
+                                        moverIzquierda()
+                                        if (miLaberinto.map[cX - 1][cY + 1] == 0 && pasoX == 32) {
+                                            fred.estadoFred = EstadosFred.SALTANDOCUERDA
+                                        } else {
+                                            fred.estadoFred = EstadosFred.CAMINANDO
+                                        }
+
+                                    } else {
+                                        fred.estadoFred = EstadosFred.QUIETO
+                                    }
+                                } else {
+                                    // si estamos en un pasillo y mira para el otro lado, le damos la vuelta
+                                    fred.lado = Lado.IZQUIERDA
                                 }
                             }
                         }
@@ -147,7 +217,7 @@ class MainActivity : AppCompatActivity() {
                         if (fred.cuerda) {
                             // si está en una cuerda ...
                             // si se puede subir ... si no, quieto
-                            if (esPosibleMoverArriba()) {
+                            if (esPosibleMoverArriba() && pasoX == 0) {
                                 fred.estadoFred = EstadosFred.MOVIENDOCUERDA
                                 moverArriba()
                             } else fred.estadoFred = EstadosFred.QUIETO
@@ -178,6 +248,8 @@ class MainActivity : AppCompatActivity() {
 
         timer.schedule(ticks, 200, 200)
     }
+
+
 
 
     private fun establecerListeners() {
@@ -252,18 +324,6 @@ class MainActivity : AppCompatActivity() {
         var offsetx = offsetInicialX - 128
         var offsety = offsetInicialY - 80
 
-        val fondo = findViewById(R.id.imagen_fondo) as ImageView
-        val roca1 = BitmapFactory.decodeResource(resources, R.drawable.roca1)
-        val roca2 = BitmapFactory.decodeResource(resources, R.drawable.roca2)
-        val roca3 = BitmapFactory.decodeResource(resources, R.drawable.roca3)
-        val fin_cuerda = BitmapFactory.decodeResource(resources, R.drawable.finalcuerda)
-        val cuerda = BitmapFactory.decodeResource(resources, R.drawable.mediocuerda)
-        val inicio_cuerda = BitmapFactory.decodeResource(resources, R.drawable.arribacuerda)
-        val tierra = BitmapFactory.decodeResource(resources, R.drawable.tierra)
-        val trampilla = BitmapFactory.decodeResource(resources, R.drawable.trampilla)
-        val cielo = BitmapFactory.decodeResource(resources, R.drawable.cielo)
-        val pasillo = BitmapFactory.decodeResource(resources, R.drawable.pasillo_negro)
-
         var bitmapFondo = Bitmap.createBitmap(896, 800, Bitmap.Config.ARGB_8888)
         var lienzo = Canvas(bitmapFondo)
         val rectDestino = Rect()
@@ -327,24 +387,6 @@ class MainActivity : AppCompatActivity() {
 
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         // Pintar a Fred
-        val fredd = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar)                // 0
-        val fredd1 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar2)              // 1
-        val fredd2 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar3)              // 2
-        val fredi = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar6)               // 3
-        val fredi1 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar5)              // 4
-        val fredi2 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar4)              // 5
-        val fredSaltandoI = BitmapFactory.decodeResource(resources, R.drawable.fred_saltar_1)       // 6
-        val fredSaltandoD = BitmapFactory.decodeResource(resources, R.drawable.fred_saltar_2)       // 7
-        val fredCuerda1I = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda1)         // 8
-        val fredCuerda2I = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda2)         // 9
-        val fredCuerda1D = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda3)         // 10
-        val fredCuerda2D = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda4)         // 11
-        val fredDisparoPieI = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_pie_izquierda)                 // 12
-        val fredDisparoPieD = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_pie_derecha)                  // 13
-        val fredDisparoSaltoI = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_salto_izquierda)            // 14
-        val fredDisparoSaltoD = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_salto_derecha)              // 15
-
-
         rectDestino.offsetTo(384, 240)
         when (fred.animacionFred()) {
             0 -> lienzo.drawBitmap(fredd, null, rectDestino, null)              // Quieto a la derecha
@@ -455,6 +497,38 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    private fun cargarSprites() {
+        fredd = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar)                // 0
+        fredd1 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar2)              // 1
+        fredd2 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar3)              // 2
+        fredi = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar6)               // 3
+        fredi1 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar5)              // 4
+        fredi2 = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar4)              // 5
+        fredSaltandoI = BitmapFactory.decodeResource(resources, R.drawable.fred_saltar_1)       // 6
+        fredSaltandoD = BitmapFactory.decodeResource(resources, R.drawable.fred_saltar_2)       // 7
+        fredCuerda1I = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda1)         // 8
+        fredCuerda2I = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda2)         // 9
+        fredCuerda1D = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda3)         // 10
+        fredCuerda2D = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda4)         // 11
+        fredDisparoPieI = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_pie_izquierda)                 // 12
+        fredDisparoPieD = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_pie_derecha)                  // 13
+        fredDisparoSaltoI = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_salto_izquierda)            // 14
+        fredDisparoSaltoD = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_salto_derecha)              // 15
+
+        fondo = findViewById(R.id.imagen_fondo)
+        roca1 = BitmapFactory.decodeResource(resources, R.drawable.roca1)
+        roca2 = BitmapFactory.decodeResource(resources, R.drawable.roca2)
+        roca3 = BitmapFactory.decodeResource(resources, R.drawable.roca3)
+        fin_cuerda = BitmapFactory.decodeResource(resources, R.drawable.finalcuerda)
+        cuerda = BitmapFactory.decodeResource(resources, R.drawable.mediocuerda)
+        inicio_cuerda = BitmapFactory.decodeResource(resources, R.drawable.arribacuerda)
+        tierra = BitmapFactory.decodeResource(resources, R.drawable.tierra)
+        trampilla = BitmapFactory.decodeResource(resources, R.drawable.trampilla)
+        cielo = BitmapFactory.decodeResource(resources, R.drawable.cielo)
+        pasillo = BitmapFactory.decodeResource(resources, R.drawable.pasillo_negro)
+
+    }
 }
 
 
