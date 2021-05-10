@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var botonDisparo : ImageButton
     lateinit var miLaberinto: Laberinto
     lateinit var alturaTV: TextView
+    lateinit var balasTV : TextView
     lateinit var fred: Fred
     var cX = 0
     var cY = 0
@@ -76,6 +77,7 @@ class MainActivity : AppCompatActivity() {
         botonDerecha = findViewById(R.id.flecha_derecha)
         botonDisparo = findViewById(R.id.boton_disparo)
         alturaTV = findViewById(R.id.alturaTV)
+        balasTV = findViewById(R.id.balasTV)
 
         // Creamos a nuestro protagonista
         fred = Fred()
@@ -83,6 +85,8 @@ class MainActivity : AppCompatActivity() {
         // Necesitamos un laberinto para jugar
         miLaberinto = Laberinto()
         miLaberinto.generarLaberinto()
+
+        dibujarLaberintoTexto(miLaberinto)
 
         // Variables para la posición
         cX = 0
@@ -96,6 +100,10 @@ class MainActivity : AppCompatActivity() {
             cX = (3..29).shuffled().last()
         } while (miLaberinto.map[cX][cY] != 0)
         crearFondo(cX - 4, cY - 3, pasoX, pasoY)
+
+        // TODO crear enemigos
+
+        // TODO crear objetos
 
         establecerListeners()
 
@@ -121,7 +129,7 @@ class MainActivity : AppCompatActivity() {
                     // si ha acabado de saltar dedicamos un tick a mirar si nos agarramos a una cuerda o seguimos de pie
                     fred.estadoFred == EstadosFred.DECISIONSALTO -> {
                         if (miLaberinto.map[cX][cY-1] == 0 || miLaberinto.map[cX][cY+1] == 0) {
-                            fred.cuerda = true
+                            if (pasoX == 0) fred.cuerda = true
                          //   if (fred.lado == Lado.DERECHA) fred.lado = Lado.IZQUIERDA else fred.lado = Lado.DERECHA
                         }
                         fred.estadoFred = EstadosFred.QUIETO
@@ -234,22 +242,29 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     pulsadoDisparo -> {
-
-                        // TODO animación de disparo
-                        if (fred.estadoFred == EstadosFred.CAMINANDO) {
-                            if (fred.lado == Lado.DERECHA) {
-
+                        if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.SALTANDO || fred.estadoFred == EstadosFred.SALTANDOCUERDA || fred.estadoFred == EstadosFred.QUIETO) {
+                            if (fred.balas > 0) {
+                                fred.disparando = true
                             }
-                            fred.estadoFred = EstadosFred.DISPARANDO
                         }
-
+                        pulsadoDisparo = false
                     }
 
                 }
 
+                // TODO actualizar enemigos
+
+                // TODO detectar daño a Fred
+
+                // TODO detectar objetos
+
+                // TODO actualizar disparo y detectar enemigos en la trayectoria
+
+
                 runOnUiThread {
                     crearFondo(cX - 4, cY - 3, pasoX, pasoY)
                     alturaTV.text = "Altura: $cY + Posicion X : $cX"
+                    balasTV.text = "Balas ${fred.balas}"
                 }
                 //    Log.d("Miapp" , "pasoX: " + pasoX + " PasoY: " + pasoY)
             }
@@ -264,17 +279,16 @@ class MainActivity : AppCompatActivity() {
     private fun establecerListeners() {
 
         botonDisparo.setOnTouchListener { v , event ->
-
-                when (event?.action) {
+                val action = event.action
+                when (action) {
                     MotionEvent.ACTION_DOWN -> {
                         pulsadoDisparo = true
+                        // TODO crear bala
                     }
                     MotionEvent.ACTION_UP -> {
-                        pulsadoDisparo = false
+                       // pulsadoDisparo = false
                     }
                 }
-
-
             true
             }
 
@@ -375,8 +389,8 @@ class MainActivity : AppCompatActivity() {
                         } else {
                             if (miLaberinto.map[posX + x][posY + y] == 2) {
                                 var muro_azar = 0
-                                if (x % 3 == 0) muro_azar = 1
-                                if (y % 3 == 0) muro_azar = 2
+                                if ((posX + x) % 2 == 0) muro_azar = 1
+                                if ((posX + x) % 3 == 0) muro_azar = 2
                                 when (muro_azar) {
                                     0 -> lienzo.drawBitmap(roca1, null, rectDestino, null)
                                     1 -> lienzo.drawBitmap(roca2, null, rectDestino, null)
@@ -433,6 +447,16 @@ class MainActivity : AppCompatActivity() {
             14 -> lienzo.drawBitmap(fredDisparoSaltoI, null, rectDestino, null)      // Disparo salto izquierda
             15 -> lienzo.drawBitmap(fredDisparoSaltoD, null, rectDestino, null)      // Disparo salto derecha
         }
+
+        // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        // TODO Pintar los enemigos
+
+
+        // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        // TODO Pintar los objetos
+
+
+
 
         //pintamos finalmente el fondo compuesto con todos los bitmaps
         fondo.setImageBitmap(bitmapFondo)
@@ -566,5 +590,5 @@ enum class Lado {
 }
 
 enum class EstadosFred {
-    QUIETO, CAMINANDO, MOVIENDOCUERDA, SALTANDO, SALTANDOCUERDA, DISPARANDO, DISPARANDOSALTO, DISPARANDOSALTOCUERDA, DECISIONSALTO
+    QUIETO, CAMINANDO, MOVIENDOCUERDA, SALTANDO, SALTANDOCUERDA, DECISIONSALTO
 }
