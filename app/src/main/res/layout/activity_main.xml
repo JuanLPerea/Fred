@@ -108,18 +108,14 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="10dp"
-                android:rotation="270"
-                android:src="?attr/homeAsUpIndicator" />
+                android:layout_marginBottom="10dp"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/flecha_arriba"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/flecha_derecha"
-                android:layout_centerHorizontal="true"
-                android:rotation="90"
-                android:src="?attr/homeAsUpIndicator" />
+                android:layout_centerHorizontal="true" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/flecha_izquierda"
@@ -127,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/flecha_abajo"
                 android:layout_toLeftOf="@id/flecha_abajo"
-                android:src="?attr/homeAsUpIndicator" />
+                />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/flecha_derecha"
@@ -135,8 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/flecha_abajo"
                 android:layout_toRightOf="@id/flecha_arriba"
-                android:rotation="180"
-                android:src="?attr/homeAsUpIndicator" />
+              />
 
         </RelativeLayout>
     </LinearLayout>

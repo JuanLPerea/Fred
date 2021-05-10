@@ -234,8 +234,10 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     pulsadoDisparo -> {
+
+                        // TODO animación de disparo
                         if (fred.estadoFred == EstadosFred.CAMINANDO) {
-                            if (fred.lado == 0) {
+                            if (fred.lado == Lado.DERECHA) {
 
                             }
                             fred.estadoFred = EstadosFred.DISPARANDO
