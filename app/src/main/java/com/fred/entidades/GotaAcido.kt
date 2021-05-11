@@ -53,7 +53,7 @@ class GotaAcido() : Enemigo () {
 
         } while (super.pX == 0 && super.pY == 0)
 
-        animacionTick = (0..11).shuffled().last()
+        animacionTick = (0..10).shuffled().last()
         super.offsetX = 384
         super.offsetY = 400
 
@@ -81,5 +81,18 @@ class GotaAcido() : Enemigo () {
             10-> return gota11
         }
         return gota11
+    }
+
+    override fun detectarColision(fX : Int , fY : Int, pasoX : Int, pasoY : Int): Boolean {
+        if (animacionTick > 5) {
+            if ((fX == pX && fY == pY && pasoX < 64 && pasoX > -64  ) ||
+                (fX + 1 == pX  && fY == pY && pasoX < -64) ||
+                (fX - 1 == pX  && fY == pY && pasoX > 64))  {
+                Log.d("Miapp" , "Colisión!!!")
+                return true
+            }
+        }
+
+        return false
     }
 }

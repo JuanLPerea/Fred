@@ -11,5 +11,6 @@ abstract class Enemigo {
     var offsetY = 0
     abstract fun actualizarEntidad (miLaberinto: Laberinto, cX : Int, cY : Int)
     abstract fun devolverBitmap () : Bitmap
+    abstract fun detectarColision (fX : Int, fY : Int, pasoX : Int, pasoY : Int) : Boolean
 
 }

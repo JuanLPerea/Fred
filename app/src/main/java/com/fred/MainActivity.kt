@@ -121,7 +121,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
         // TODO crear objetos
 
         establecerListeners()
@@ -133,6 +132,8 @@ class MainActivity : AppCompatActivity() {
         val timer = Timer()
         val ticks = object : TimerTask() {
             override fun run() {
+
+                Log.d("Miapp" , "cX: $cX cY: $cY pasoX: $pasoX pasoY: $pasoY")
                 // Cada tick se comprueban los botones y se muestra la pantalla actualizada
                 // aquí gestionamos el estado de Fred para mostrar la animación que corresponda
                 when {
@@ -156,7 +157,6 @@ class MainActivity : AppCompatActivity() {
 
                     // Si no hay ningun botón pulsado, y Fred está caminando o moviéndose por una cuerda, hacemos que se quede quieto
                     !pulsadoDerecha && !pulsadoIzquierda && !pulsadoAbajo && !pulsadoArriba && (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.MOVIENDOCUERDA) -> fred.estadoFred = EstadosFred.QUIETO
-
 
                     // Si pulsamos el botón derecho ...
                     pulsadoDerecha -> {
@@ -271,12 +271,14 @@ class MainActivity : AppCompatActivity() {
 
                 }
 
-                // TODO actualizar enemigos
+
                 listaEnemigos.forEach { enemigo ->
+                    // actualizar enemigos
                     enemigo.actualizarEntidad(miLaberinto, cX, cY)
+                    // TODO detectar daño a Fred
+                    enemigo.detectarColision(cX, cY, pasoX, pasoY)
                 }
 
-                // TODO detectar daño a Fred
 
                 // TODO detectar objetos
 
