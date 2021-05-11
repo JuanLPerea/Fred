@@ -8,7 +8,9 @@ import android.view.MotionEvent
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import com.fred.entidades.Enemigo
 import com.fred.entidades.Fred
+import com.fred.entidades.GotaAcido
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
@@ -35,22 +37,22 @@ class MainActivity : AppCompatActivity() {
     var pulsadoDisparo = false
     var velocidadJuego = 150L
 
-    lateinit var fredd : Bitmap              // 0
-    lateinit var  fredd1 : Bitmap               // 1
-    lateinit var  fredd2  : Bitmap              // 2
-    lateinit var  fredi  : Bitmap                // 3
-    lateinit var  fredi1 : Bitmap              // 4
-    lateinit var  fredi2  : Bitmap             // 5
-    lateinit var  fredSaltandoI : Bitmap         // 6
-    lateinit var  fredSaltandoD  : Bitmap       // 7
-    lateinit var  fredCuerda1I  : Bitmap          // 8
-    lateinit var  fredCuerda2I  : Bitmap          // 9
-    lateinit var  fredCuerda1D  : Bitmap        // 10
-    lateinit var  fredCuerda2D  : Bitmap          // 11
-    lateinit var  fredDisparoPieI  : Bitmap                  // 12
-    lateinit var  fredDisparoPieD  : Bitmap                  // 13
-    lateinit var  fredDisparoSaltoI  : Bitmap              // 14
-    lateinit var  fredDisparoSaltoD  : Bitmap                // 15
+    lateinit var fredd : Bitmap                                     // 0
+    lateinit var  fredd1 : Bitmap                                   // 1
+    lateinit var  fredd2  : Bitmap                                  // 2
+    lateinit var  fredi  : Bitmap                                   // 3
+    lateinit var  fredi1 : Bitmap                                   // 4
+    lateinit var  fredi2  : Bitmap                                  // 5
+    lateinit var  fredSaltandoI : Bitmap                            // 6
+    lateinit var  fredSaltandoD  : Bitmap                           // 7
+    lateinit var  fredCuerda1I  : Bitmap                            // 8
+    lateinit var  fredCuerda2I  : Bitmap                            // 9
+    lateinit var  fredCuerda1D  : Bitmap                            // 10
+    lateinit var  fredCuerda2D  : Bitmap                            // 11
+    lateinit var  fredDisparoPieI  : Bitmap                         // 12
+    lateinit var  fredDisparoPieD  : Bitmap                         // 13
+    lateinit var  fredDisparoSaltoI  : Bitmap                       // 14
+    lateinit var  fredDisparoSaltoD  : Bitmap                       // 15
 
     lateinit var fondo : ImageView
     lateinit var roca1 : Bitmap
@@ -63,6 +65,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var trampilla : Bitmap
     lateinit var cielo : Bitmap
     lateinit var pasillo : Bitmap
+
+    var listaEnemigos : MutableList<Enemigo> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,6 +106,21 @@ class MainActivity : AppCompatActivity() {
         crearFondo(cX - 4, cY - 3, pasoX, pasoY)
 
         // TODO crear enemigos
+        var enemigoTMP : GotaAcido
+        for (n in (0..10)) {
+            do {
+                enemigoTMP = GotaAcido()
+                enemigoTMP.newGotaAcido(this, miLaberinto)
+                var yaexiste = false
+                listaEnemigos.forEach { enemigo ->
+                    if (enemigo.pX == enemigoTMP.pX && enemigo.pY == enemigoTMP.pY) yaexiste = true
+                }
+            } while (yaexiste)
+            listaEnemigos.add(enemigoTMP)
+
+        }
+
+
 
         // TODO crear objetos
 
@@ -253,6 +272,9 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 // TODO actualizar enemigos
+                listaEnemigos.forEach { enemigo ->
+                    enemigo.actualizarEntidad(miLaberinto, cX, cY)
+                }
 
                 // TODO detectar daño a Fred
 
@@ -426,6 +448,23 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        // TODO Pintar los enemigos
+        listaEnemigos.forEach { enemigo ->
+            // si las coordenadas de la entidad enemiga están dentro de la zona visible....
+            if (enemigo.pX > (cX-5) && enemigo.pX < (cX + 5) && enemigo.pY > (cY-4) && enemigo.pY < (cY + 4)) {
+
+                val diferenciaX = enemigo.pX - cX
+                val diferenciaY = enemigo.pY - cY
+
+                val enemigoBitmap = enemigo.devolverBitmap()
+                rectDestino.offsetTo((diferenciaX * 128) + pasoX + enemigo.offsetX, (diferenciaY * 160) + pasoY + enemigo.offsetY)
+                lienzo.drawBitmap(enemigoBitmap, null, rectDestino, null)
+            }
+
+
+        }
+
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         // Pintar a Fred
         rectDestino.offsetTo(384, 240)
@@ -448,8 +487,7 @@ class MainActivity : AppCompatActivity() {
             15 -> lienzo.drawBitmap(fredDisparoSaltoD, null, rectDestino, null)      // Disparo salto derecha
         }
 
-        // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        // TODO Pintar los enemigos
+
 
 
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
