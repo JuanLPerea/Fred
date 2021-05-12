@@ -28,10 +28,10 @@
 
         <ImageView
             android:id="@+id/image_view_juego"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:cropToPadding="true"
-            android:padding="10dp" />
+            android:padding="5dp" />
 
     </FrameLayout>
 

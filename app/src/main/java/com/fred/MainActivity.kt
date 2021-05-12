@@ -6,11 +6,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
+import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import com.fred.entidades.Enemigo
+import com.fred.entidades.Espinete
 import com.fred.entidades.Fred
 import com.fred.entidades.GotaAcido
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -90,15 +92,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main)
-        supportActionBar?.hide()
-        if (Build.VERSION.SDK_INT < 16) {
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        } else {
-            actionBar?.hide()
-        }
-
 
         cargarSprites()
 
@@ -145,7 +141,19 @@ class MainActivity : AppCompatActivity() {
                 }
             } while (yaexiste)
             listaEnemigos.add(enemigoTMP)
-
+        }
+        // Crear espinetes
+        var espineteTMP : Espinete
+        for (n in (0..10)) {
+            do {
+                espineteTMP = Espinete()
+                espineteTMP.newEspinete(this, miLaberinto)
+                var yaexiste = false
+                listaEnemigos.forEach { enemigo ->
+                    if (enemigo.pX == espineteTMP.pX && enemigo.pY == espineteTMP.pY) yaexiste = true
+                }
+            } while (yaexiste)
+            listaEnemigos.add(espineteTMP)
         }
 
 
@@ -161,12 +169,21 @@ class MainActivity : AppCompatActivity() {
         val ticks = object : TimerTask() {
             override fun run() {
 
-                Log.d("Miapp" , "cX: $cX cY: $cY pasoX: $pasoX pasoY: $pasoY")
+         //       Log.d("Miapp" , "cX: $cX cY: $cY pasoX: $pasoX pasoY: $pasoY")
                 // Cada tick se comprueban los botones y se muestra la pantalla actualizada
                 // aquí gestionamos el estado de Fred para mostrar la animación que corresponda
                 if (fred.tocado > 0) {
                     fred.tocado++
                     if (fred.tocado == 8) fred.tocado = 0
+                }
+
+                if (pulsadoDisparo ) {
+                    if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.SALTANDO || fred.estadoFred == EstadosFred.SALTANDOCUERDA || fred.estadoFred == EstadosFred.QUIETO) {
+                        if (fred.balas > 0) {
+                            fred.disparando = true
+                        }
+                    }
+                    pulsadoDisparo = false
                 }
 
                 when {
@@ -293,14 +310,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                    pulsadoDisparo -> {
-                        if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.SALTANDO || fred.estadoFred == EstadosFred.SALTANDOCUERDA || fred.estadoFred == EstadosFred.QUIETO) {
-                            if (fred.balas > 0) {
-                                fred.disparando = true
-                            }
-                        }
-                        pulsadoDisparo = false
-                    }
+
 
                 }
 
@@ -497,10 +507,8 @@ class MainActivity : AppCompatActivity() {
         listaEnemigos.forEach { enemigo ->
             // si las coordenadas de la entidad enemiga están dentro de la zona visible....
             if (enemigo.pX > (cX-5) && enemigo.pX < (cX + 5) && enemigo.pY > (cY-4) && enemigo.pY < (cY + 4)) {
-
                 val diferenciaX = enemigo.pX - cX
                 val diferenciaY = enemigo.pY - cY
-
                 val enemigoBitmap = enemigo.devolverBitmap()
                 rectDestino.offsetTo((diferenciaX * 128) + pasoX + enemigo.offsetX, (diferenciaY * 160) + pasoY + enemigo.offsetY)
                 lienzo.drawBitmap(enemigoBitmap, null, rectDestino, null)

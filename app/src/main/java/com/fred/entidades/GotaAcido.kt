@@ -47,17 +47,17 @@ class GotaAcido() : Enemigo () {
                 miLaberinto.map[xAleat-1][yAleat+1] == 2 &&
                 miLaberinto.map[xAleat+1][yAleat - 1] == 2 &&
                 miLaberinto.map[xAleat+1][yAleat+1] == 2) {
-                super.pX = xAleat
-                super.pY = yAleat
+                pX = xAleat
+                pY = yAleat
             }
 
-        } while (super.pX == 0 && super.pY == 0)
+        } while (pX == 0 && pY == 0)
 
         animacionTick = (0..10).shuffled().last()
-        super.offsetX = 384
-        super.offsetY = 400
+        offsetX = 384
+        offsetY = 400
 
-        Log.d("Miapp" , "GotaX: " + super.pX + " GotaY: " + super.pY)
+     //   Log.d("Miapp" , "GotaX: " + pX + " GotaY: " + pY)
 
     }
 
@@ -88,7 +88,7 @@ class GotaAcido() : Enemigo () {
             if ((fX == pX && fY == pY && pasoX < 64 && pasoX > -64  ) ||
                 (fX + 1 == pX  && fY == pY && pasoX < -64) ||
                 (fX - 1 == pX  && fY == pY && pasoX > 64))  {
-                Log.d("Miapp" , "Colisión!!!")
+             //   Log.d("Miapp" , "Colisión!!!")
                 return true
             }
         }
