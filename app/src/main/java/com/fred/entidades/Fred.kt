@@ -12,6 +12,7 @@ class Fred() {
     var estadoFred = EstadosFred.QUIETO
     var cuerda = false
     var disparando = false
+    var tocado = 0
     var scrollTick = 0
     var scrollTickSalto = 0
     var scrollTickCuerda = 0

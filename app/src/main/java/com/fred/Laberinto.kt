@@ -115,7 +115,7 @@ class Laberinto {
             var salida = 0
 
             val aleat = (4..34).shuffled().last()
-            if (map[aleat][5] == 2) {
+            if (map[aleat][5] == 2 && map[aleat][4] == 0) {
                 salida = aleat
                 map[aleat][3] = 3
             }

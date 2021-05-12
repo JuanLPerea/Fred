@@ -1,10 +1,12 @@
 package com.fred
 
 import android.graphics.*
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
+import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -25,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var miLaberinto: Laberinto
     lateinit var alturaTV: TextView
     lateinit var balasTV : TextView
+    lateinit var vidaTV : TextView
     lateinit var fred: Fred
     var cX = 0
     var cY = 0
@@ -54,6 +57,23 @@ class MainActivity : AppCompatActivity() {
     lateinit var  fredDisparoSaltoI  : Bitmap                       // 14
     lateinit var  fredDisparoSaltoD  : Bitmap                       // 15
 
+    lateinit var freddrojo : Bitmap                                     // 0
+    lateinit var  fredd1rojo : Bitmap                                   // 1
+    lateinit var  fredd2rojo  : Bitmap                                  // 2
+    lateinit var  fredirojo  : Bitmap                                   // 3
+    lateinit var  fredi1rojo : Bitmap                                   // 4
+    lateinit var  fredi2rojo  : Bitmap                                  // 5
+    lateinit var  fredSaltandoIrojo : Bitmap                            // 6
+    lateinit var  fredSaltandoDrojo  : Bitmap                           // 7
+    lateinit var  fredCuerda1Irojo  : Bitmap                            // 8
+    lateinit var  fredCuerda2Irojo  : Bitmap                            // 9
+    lateinit var  fredCuerda1Drojo  : Bitmap                            // 10
+    lateinit var  fredCuerda2Drojo  : Bitmap                            // 11
+    lateinit var  fredDisparoPieIrojo  : Bitmap                         // 12
+    lateinit var  fredDisparoPieDrojo  : Bitmap                         // 13
+    lateinit var  fredDisparoSaltoIrojo  : Bitmap                       // 14
+    lateinit var  fredDisparoSaltoDrojo  : Bitmap                       // 15
+
     lateinit var fondo : ImageView
     lateinit var roca1 : Bitmap
     lateinit var roca2 : Bitmap
@@ -72,6 +92,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
+        if (Build.VERSION.SDK_INT < 16) {
+            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        } else {
+            actionBar?.hide()
+        }
+
 
         cargarSprites()
 
@@ -82,6 +109,7 @@ class MainActivity : AppCompatActivity() {
         botonDisparo = findViewById(R.id.boton_disparo)
         alturaTV = findViewById(R.id.alturaTV)
         balasTV = findViewById(R.id.balasTV)
+        vidaTV = findViewById(R.id.vidaTV)
 
         // Creamos a nuestro protagonista
         fred = Fred()
@@ -136,6 +164,11 @@ class MainActivity : AppCompatActivity() {
                 Log.d("Miapp" , "cX: $cX cY: $cY pasoX: $pasoX pasoY: $pasoY")
                 // Cada tick se comprueban los botones y se muestra la pantalla actualizada
                 // aquí gestionamos el estado de Fred para mostrar la animación que corresponda
+                if (fred.tocado > 0) {
+                    fred.tocado++
+                    if (fred.tocado == 8) fred.tocado = 0
+                }
+
                 when {
                     // si Fred está saltando de una cuerda no hacer caso de los botones que pulsa el usuario
                     fred.estadoFred == EstadosFred.SALTANDOCUERDA -> {
@@ -276,7 +309,11 @@ class MainActivity : AppCompatActivity() {
                     // actualizar enemigos
                     enemigo.actualizarEntidad(miLaberinto, cX, cY)
                     // TODO detectar daño a Fred
-                    enemigo.detectarColision(cX, cY, pasoX, pasoY)
+                    if (enemigo.detectarColision(cX, cY, pasoX, pasoY) && fred.tocado == 0) {
+                        fred.vida--
+                        fred.tocado = 1
+                        if (fred.vida == 0) finish()
+                    }
                 }
 
 
@@ -289,6 +326,11 @@ class MainActivity : AppCompatActivity() {
                     crearFondo(cX - 4, cY - 3, pasoX, pasoY)
                     alturaTV.text = "Altura: $cY + Posicion X : $cX"
                     balasTV.text = "Balas ${fred.balas}"
+                    var charvida = ""
+                    for (n in 0..fred.vida) {
+                        charvida += "▓"
+                    }
+                    vidaTV.text = "Vida: " + charvida
                 }
                 //    Log.d("Miapp" , "pasoX: " + pasoX + " PasoY: " + pasoY)
             }
@@ -470,23 +512,44 @@ class MainActivity : AppCompatActivity() {
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         // Pintar a Fred
         rectDestino.offsetTo(384, 240)
-        when (fred.animacionFred()) {
-            0 -> lienzo.drawBitmap(fredd, null, rectDestino, null)              // Quieto a la derecha
-            1 -> lienzo.drawBitmap(fredd1, null, rectDestino, null)             // Caminando 1 derecha
-            2 -> lienzo.drawBitmap(fredd2, null, rectDestino, null)             // Caminando 2 derecha
-            3 -> lienzo.drawBitmap(fredi, null, rectDestino, null)              // Quieto izquierda
-            4 -> lienzo.drawBitmap(fredi1, null, rectDestino, null)             // Caminando 1 izquierda
-            5 -> lienzo.drawBitmap(fredi2, null, rectDestino, null)             // Caminando 2 izquierda
-            6 -> lienzo.drawBitmap(fredSaltandoI, null, rectDestino, null)      // Saltando derecha
-            7 -> lienzo.drawBitmap(fredSaltandoD, null, rectDestino, null)      // Saltando izquierda
-            8 -> lienzo.drawBitmap(fredCuerda1D, null, rectDestino, null)       // En cuerda 1 izquierda
-            9 -> lienzo.drawBitmap(fredCuerda2D, null, rectDestino, null)       // En cuerda 2 izquierda
-            10 -> lienzo.drawBitmap(fredCuerda1I, null, rectDestino, null)      // En cuerda 1 derecha
-            11 -> lienzo.drawBitmap(fredCuerda2I, null, rectDestino, null)      // En cuerda 2 derecha
-            12 -> lienzo.drawBitmap(fredDisparoPieI, null, rectDestino, null)      // Disparo pie izquierda
-            13 -> lienzo.drawBitmap(fredDisparoPieD, null, rectDestino, null)      // Disparo pie derecha
-            14 -> lienzo.drawBitmap(fredDisparoSaltoI, null, rectDestino, null)      // Disparo salto izquierda
-            15 -> lienzo.drawBitmap(fredDisparoSaltoD, null, rectDestino, null)      // Disparo salto derecha
+        if (fred.tocado == 0) {
+            when (fred.animacionFred()) {
+                0 -> lienzo.drawBitmap(fredd, null, rectDestino, null)              // Quieto a la derecha
+                1 -> lienzo.drawBitmap(fredd1, null, rectDestino, null)             // Caminando 1 derecha
+                2 -> lienzo.drawBitmap(fredd2, null, rectDestino, null)             // Caminando 2 derecha
+                3 -> lienzo.drawBitmap(fredi, null, rectDestino, null)              // Quieto izquierda
+                4 -> lienzo.drawBitmap(fredi1, null, rectDestino, null)             // Caminando 1 izquierda
+                5 -> lienzo.drawBitmap(fredi2, null, rectDestino, null)             // Caminando 2 izquierda
+                6 -> lienzo.drawBitmap(fredSaltandoI, null, rectDestino, null)      // Saltando derecha
+                7 -> lienzo.drawBitmap(fredSaltandoD, null, rectDestino, null)      // Saltando izquierda
+                8 -> lienzo.drawBitmap(fredCuerda1D, null, rectDestino, null)       // En cuerda 1 izquierda
+                9 -> lienzo.drawBitmap(fredCuerda2D, null, rectDestino, null)       // En cuerda 2 izquierda
+                10 -> lienzo.drawBitmap(fredCuerda1I, null, rectDestino, null)      // En cuerda 1 derecha
+                11 -> lienzo.drawBitmap(fredCuerda2I, null, rectDestino, null)      // En cuerda 2 derecha
+                12 -> lienzo.drawBitmap(fredDisparoPieI, null, rectDestino, null)      // Disparo pie izquierda
+                13 -> lienzo.drawBitmap(fredDisparoPieD, null, rectDestino, null)      // Disparo pie derecha
+                14 -> lienzo.drawBitmap(fredDisparoSaltoI, null, rectDestino, null)      // Disparo salto izquierda
+                15 -> lienzo.drawBitmap(fredDisparoSaltoD, null, rectDestino, null)      // Disparo salto derecha
+            }
+        } else {
+            when (fred.animacionFred()) {
+                0 -> lienzo.drawBitmap(freddrojo, null, rectDestino, null)              // Quieto a la derecha
+                1 -> lienzo.drawBitmap(fredd1rojo, null, rectDestino, null)             // Caminando 1 derecha
+                2 -> lienzo.drawBitmap(fredd2rojo, null, rectDestino, null)             // Caminando 2 derecha
+                3 -> lienzo.drawBitmap(fredirojo, null, rectDestino, null)              // Quieto izquierda
+                4 -> lienzo.drawBitmap(fredi1rojo, null, rectDestino, null)             // Caminando 1 izquierda
+                5 -> lienzo.drawBitmap(fredi2rojo, null, rectDestino, null)             // Caminando 2 izquierda
+                6 -> lienzo.drawBitmap(fredSaltandoIrojo, null, rectDestino, null)      // Saltando derecha
+                7 -> lienzo.drawBitmap(fredSaltandoDrojo, null, rectDestino, null)      // Saltando izquierda
+                8 -> lienzo.drawBitmap(fredCuerda1Drojo, null, rectDestino, null)       // En cuerda 1 izquierda
+                9 -> lienzo.drawBitmap(fredCuerda2Drojo, null, rectDestino, null)       // En cuerda 2 izquierda
+                10 -> lienzo.drawBitmap(fredCuerda1Irojo, null, rectDestino, null)      // En cuerda 1 derecha
+                11 -> lienzo.drawBitmap(fredCuerda2Irojo, null, rectDestino, null)      // En cuerda 2 derecha
+                12 -> lienzo.drawBitmap(fredDisparoPieIrojo, null, rectDestino, null)      // Disparo pie izquierda
+                13 -> lienzo.drawBitmap(fredDisparoPieDrojo, null, rectDestino, null)      // Disparo pie derecha
+                14 -> lienzo.drawBitmap(fredDisparoSaltoIrojo, null, rectDestino, null)      // Disparo salto izquierda
+                15 -> lienzo.drawBitmap(fredDisparoSaltoDrojo, null, rectDestino, null)      // Disparo salto derecha
+            }
         }
 
 
@@ -606,6 +669,23 @@ class MainActivity : AppCompatActivity() {
         fredDisparoPieD = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_pie_derecha)                  // 13
         fredDisparoSaltoI = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_salto_izquierda)            // 14
         fredDisparoSaltoD = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_salto_derecha)              // 15
+
+        freddrojo = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar_rojo)                // 0
+        fredd1rojo = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar2_rojo)              // 1
+        fredd2rojo = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar3_rojo)              // 2
+        fredirojo = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar6_rojo)               // 3
+        fredi1rojo = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar5_rojo)              // 4
+        fredi2rojo = BitmapFactory.decodeResource(resources, R.drawable.fred_caminar4_rojo)              // 5
+        fredSaltandoIrojo = BitmapFactory.decodeResource(resources, R.drawable.fred_saltar_1_rojo)       // 6
+        fredSaltandoDrojo = BitmapFactory.decodeResource(resources, R.drawable.fred_saltar_2_rojo)       // 7
+        fredCuerda1Irojo = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda1_rojo)         // 8
+        fredCuerda2Irojo = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda2_rojo)         // 9
+        fredCuerda1Drojo = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda3_rojo)         // 10
+        fredCuerda2Drojo = BitmapFactory.decodeResource(resources, R.drawable.fred_cuerda4_rojo)         // 11
+        fredDisparoPieIrojo = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_pie_izquierda_rojo)                 // 12
+        fredDisparoPieDrojo = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_pie_derecha_rojo)                  // 13
+        fredDisparoSaltoIrojo = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_salto_izquierda_rojo)            // 14
+        fredDisparoSaltoDrojo = BitmapFactory.decodeResource(resources, R.drawable.fred_disparo_salto_derecha_rojo)              // 15
 
         fondo = findViewById(R.id.image_view_juego)
         roca1 = BitmapFactory.decodeResource(resources, R.drawable.roca1)
