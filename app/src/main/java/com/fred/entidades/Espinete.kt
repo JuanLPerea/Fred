@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
+import com.fred.EstadosFred
 import com.fred.Laberinto
 import com.fred.R
 
@@ -24,7 +25,7 @@ class Espinete : Enemigo () {
         espinete2I = BitmapFactory.decodeResource(context.resources , R.drawable.espinete2i)
 
         do {
-            val xAleat = (2..34).shuffled().last()          // La gota puede estar en cualquier posición horizontal siempre que se cumpla la condición mas abajo
+            val xAleat = (2..34).shuffled().last()          // El espinete puede estar en cualquier posición horizontal siempre que se cumpla la condición mas abajo
             val yAleat = ((2..15).shuffled().last()) * 2    // En vertical puede estar de la fila 4 a la 30 (pares)
             // tiene que haber 3 bloques solidos debajo como mínimo
             if (miLaberinto.map[xAleat][yAleat] == 0 &&
@@ -51,7 +52,7 @@ class Espinete : Enemigo () {
         if (animacionTick == 0) animacionTick = 1 else animacionTick = 0
         // avanzan 32 pixels cada tick osea 4 pasos por tile
         // en las esquinas dan la vuelta y solo hacen 3 pasos
-        Log.d("Miapp" , "OffsetX: " + offsetX )
+      //  Log.d("Miapp" , "OffsetX: " + offsetX )
 
         if (direccion == 0) {
             offsetX += 32
@@ -82,9 +83,6 @@ class Espinete : Enemigo () {
                 offsetX = 384
             }
         }
-
-
-
     }
 
     override fun devolverBitmap(): Bitmap {
@@ -95,8 +93,45 @@ class Espinete : Enemigo () {
         }
     }
 
-    override fun detectarColision(fX: Int, fY: Int, pasoX: Int, pasoY: Int): Boolean {
-        // TODO calcular cuando hay contacto basándose en la posición X
+    override fun detectarColision(fX: Int, fY: Int, pasoX: Int, pasoY: Int, fred: Fred): Boolean {
+        // Los espinetes hacen daño cuando Fred está en el suelo y no está saltando
+        if (((fred.estadoFred == EstadosFred.QUIETO || fred.estadoFred == EstadosFred.CAMINANDO) && !fred.cuerda )) {
+            val diferenciaX = offsetX - pasoX
+            // Si el espinete y Fred están en el mismo tile...
+            if (fX == pX && fY == pY )  {
+                Log.d("Miapp", "FredX: $fX EspineteX: ${pX} PasoX: $pasoX OffsetX ${offsetX} DiferenciaX: $diferenciaX Dirección: ${direccion}")
+                if (direccion == 0) {
+                    when (pasoX) {
+                        0 -> if (offsetX == 384 || offsetX == 416 || offsetX == 448 ) return true
+                        -32 -> if (offsetX == 416 || offsetX == 448 || offsetX == 480 ) return true
+                        -64 -> if (offsetX == 448 || offsetX == 480) return true
+                    }
+                } else {
+                    when (pasoX) {
+                        0 -> if (offsetX == 384 || offsetX == 352 || offsetX == 320 ) return true
+                        32 -> if (offsetX == 352 || offsetX == 320 || offsetX == 288 ) return true
+                        64 -> if (offsetX == 320 || offsetX == 288) return true
+                    }
+                }
+            } else if (pX == fX -1 && pY == fY) {
+                // si el espinete está en el tile de la derecha de Fred
+                when (pasoX) {
+                    32 -> if (offsetX == 480) return true
+                    64 -> if (offsetX == 480 || offsetX == 448) return true
+                    96 -> if (offsetX == 480 || offsetX == 448 || offsetX == 416) return true
+                }
+
+            } else if (pX == fX +1 && pY == fY) {
+                when (pasoX) {
+                    -32 -> if (offsetX == 288) return true
+                    -64 -> if (offsetX == 288 || offsetX == 320) return true
+                    -96 -> if (offsetX == 288 || offsetX == 320 || offsetX == 352) return true
+                }
+            }
+
+
+        }
+
         return false
     }
 

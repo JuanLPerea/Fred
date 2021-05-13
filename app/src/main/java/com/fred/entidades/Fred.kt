@@ -87,7 +87,7 @@ class Fred() {
             EstadosFred.SALTANDO -> {
                 // Fred está saltando
                 scrollTickSalto++
-                if (scrollTickSalto == 4) {
+                if (scrollTickSalto == 3) {
                     scrollTickSalto = 0
                     estadoFred = EstadosFred.DECISIONSALTO
                 }

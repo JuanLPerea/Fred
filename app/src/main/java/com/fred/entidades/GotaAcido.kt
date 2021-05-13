@@ -83,7 +83,7 @@ class GotaAcido() : Enemigo () {
         return gota11
     }
 
-    override fun detectarColision(fX : Int , fY : Int, pasoX : Int, pasoY : Int): Boolean {
+    override fun detectarColision(fX : Int , fY : Int, pasoX : Int, pasoY : Int, fred: Fred): Boolean {
         if (animacionTick > 5) {
             if ((fX == pX && fY == pY && pasoX < 64 && pasoX > -64  ) ||
                 (fX + 1 == pX  && fY == pY && pasoX < -64) ||

@@ -144,7 +144,7 @@ class MainActivity : AppCompatActivity() {
         }
         // Crear espinetes
         var espineteTMP : Espinete
-        for (n in (0..10)) {
+        for (n in (0..30)) {
             do {
                 espineteTMP = Espinete()
                 espineteTMP.newEspinete(this, miLaberinto)
@@ -206,7 +206,10 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     // Si no hay ningun botón pulsado, y Fred está caminando o moviéndose por una cuerda, hacemos que se quede quieto
-                    !pulsadoDerecha && !pulsadoIzquierda && !pulsadoAbajo && !pulsadoArriba && (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.MOVIENDOCUERDA) -> fred.estadoFred = EstadosFred.QUIETO
+                    !pulsadoDerecha && !pulsadoIzquierda && !pulsadoAbajo && !pulsadoArriba && (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.MOVIENDOCUERDA) -> {
+                        fred.estadoFred = EstadosFred.QUIETO
+                        fred.scrollTick = 0
+                    }
 
                     // Si pulsamos el botón derecho ...
                     pulsadoDerecha -> {
@@ -319,7 +322,7 @@ class MainActivity : AppCompatActivity() {
                     // actualizar enemigos
                     enemigo.actualizarEntidad(miLaberinto, cX, cY)
                     // TODO detectar daño a Fred
-                    if (enemigo.detectarColision(cX, cY, pasoX, pasoY) && fred.tocado == 0) {
+                    if (enemigo.detectarColision(cX, cY, pasoX, pasoY, fred) && fred.tocado == 0) {
                         fred.vida--
                         fred.tocado = 1
                         if (fred.vida == 0) finish()
