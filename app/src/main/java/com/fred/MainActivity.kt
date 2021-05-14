@@ -129,30 +129,25 @@ class MainActivity : AppCompatActivity() {
         } while (miLaberinto.map[cX][cY] != 0)
         crearFondo(cX - 4, cY - 3, pasoX, pasoY)
 
-        // TODO crear enemigos
-        var enemigoTMP : GotaAcido
-        for (n in (0..10)) {
-            do {
-                enemigoTMP = GotaAcido()
-                enemigoTMP.newGotaAcido(this, miLaberinto)
-                var yaexiste = false
-                listaEnemigos.forEach { enemigo ->
-                    if (enemigo.pX == enemigoTMP.pX && enemigo.pY == enemigoTMP.pY) yaexiste = true
-                }
-            } while (yaexiste)
-            listaEnemigos.add(enemigoTMP)
+
+        // crear enemigos optimizar para que no caiga en bucle infinito
+        // Crear Gotas de ácido
+        var listaUbicacionesGotasAcido = miLaberinto.posiblesUbicacionesGota(miLaberinto)
+        var numeroGotasAcidoEnLaberinto = 100
+        if (numeroGotasAcidoEnLaberinto > listaUbicacionesGotasAcido.size) numeroGotasAcidoEnLaberinto = listaUbicacionesGotasAcido.size - 1
+        for (n in 1..numeroGotasAcidoEnLaberinto) {
+            val gotaAcidoTMP = GotaAcido()
+            gotaAcidoTMP.newGotaAcido(this, miLaberinto, listaUbicacionesGotasAcido.get(n))
+            listaEnemigos.add(gotaAcidoTMP)
         }
+
         // Crear espinetes
-        var espineteTMP : Espinete
-        for (n in (0..30)) {
-            do {
-                espineteTMP = Espinete()
-                espineteTMP.newEspinete(this, miLaberinto)
-                var yaexiste = false
-                listaEnemigos.forEach { enemigo ->
-                    if (enemigo.pX == espineteTMP.pX && enemigo.pY == espineteTMP.pY) yaexiste = true
-                }
-            } while (yaexiste)
+        var listaUbicacionesEspinete = miLaberinto.posiblesUbicacionesEspinete(miLaberinto)
+        var numeroEspinetesEnLaberinto = 1
+        if (numeroEspinetesEnLaberinto > listaUbicacionesEspinete.size) numeroEspinetesEnLaberinto = listaUbicacionesEspinete.size - 1
+        for (n in (1..numeroEspinetesEnLaberinto)) {
+            val espineteTMP = Espinete()
+            espineteTMP.newEspinete(this , miLaberinto, listaUbicacionesEspinete.get(n))
             listaEnemigos.add(espineteTMP)
         }
 
@@ -321,11 +316,11 @@ class MainActivity : AppCompatActivity() {
                 listaEnemigos.forEach { enemigo ->
                     // actualizar enemigos
                     enemigo.actualizarEntidad(miLaberinto, cX, cY)
-                    // TODO detectar daño a Fred
-                    if (enemigo.detectarColision(cX, cY, pasoX, pasoY, fred) && fred.tocado == 0) {
-                        fred.vida--
-                        fred.tocado = 1
-                        if (fred.vida == 0) finish()
+                    if (enemigo is GotaAcido) {
+                        if (enemigo.detectarColision(cX,cY, pasoX,pasoY,fred) && fred.tocado == 0) {
+                            fred.vida--
+                            fred.tocado = 1
+                        }
                     }
                 }
 
@@ -352,7 +347,48 @@ class MainActivity : AppCompatActivity() {
         timer.schedule(ticks, velocidadJuego, velocidadJuego)
     }
 
+    private fun detectarColision(bitmapFred: Bitmap) {
+     // crear un bitmap con un recorte centrado en Fred
+     // chequear algunos pixeles en la imágen y si no son amarillos
+     // decidir si hay daño o es un objeto ...
 
+        // Si Fred no está tocado
+        if (fred.tocado == 0) {
+            val pixel1 = bitmapFred.getPixel(30, 144)
+            val pixel2 = bitmapFred.getPixel(90, 144)
+            val pixel3 = bitmapFred.getPixel(64, 144)
+
+        //    Log.d("Miapp" , "Color del pixel: ${pixel} ${pixelgota1} ${pixelgota2} ${pixelgota3}  ${pixelgota31} ${pixelgota4}  ${pixelgota41}  ${pixelgota42} ${pixelgota5} ${pixelgota6} ${pixelgota7} ${pixelgota8} ${pixelgota9} ${pixelgota61} ")
+/*
+
+            // Detectar Gotas de Ácido
+            if (fred.lado == Lado.DERECHA) {
+                if (pixelgota7 == -14293723 ||pixelgota41 == -16711936 || pixelgota2 == -16711936 || pixelgota6 == -16711936 || pixelgota1 == -16711936 || pixelgota9 == -16711936 || pixelgota61 == -16711936) {
+                    fred.vida--
+                    fred.tocado = 1
+                }
+            } else {
+                if (pixel == -16711936 || pixelgota6 == -11809974 || pixelgota1 == -16711936 || pixelgota41 == -16711936 || pixelgota9 == -16711936 || pixelgota61 == -16711936) {
+                    fred.vida--
+                    fred.tocado = 1
+                }
+
+            }
+*/
+            // Detectar Espinetes
+            if ((pixel1 == -65281  || pixel2 == -65281 || pixel3 == -65281) && !fred.cuerda && (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.QUIETO)) {
+                fred.vida--
+                fred.tocado = 1
+            }
+
+            if (fred.vida == 0) finish()
+
+        }
+
+
+
+
+    }
 
 
     private fun establecerListeners() {
@@ -504,8 +540,9 @@ class MainActivity : AppCompatActivity() {
             offsety += 160
         }
 
-
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
         // TODO Pintar los enemigos
         listaEnemigos.forEach { enemigo ->
             // si las coordenadas de la entidad enemiga están dentro de la zona visible....
@@ -516,9 +553,12 @@ class MainActivity : AppCompatActivity() {
                 rectDestino.offsetTo((diferenciaX * 128) + pasoX + enemigo.offsetX, (diferenciaY * 160) + pasoY + enemigo.offsetY)
                 lienzo.drawBitmap(enemigoBitmap, null, rectDestino, null)
             }
-
-
         }
+
+        // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        // detectar Colisiones de Fred con enemigos u objetos
+        val bitmapFred = Bitmap.createBitmap(bitmapFondo, 384, 240, 128, 160)
+        detectarColision(bitmapFred)
 
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         // Pintar a Fred
@@ -564,12 +604,8 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
-
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         // TODO Pintar los objetos
-
-
 
 
         //pintamos finalmente el fondo compuesto con todos los bitmaps

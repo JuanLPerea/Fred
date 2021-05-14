@@ -159,5 +159,45 @@ class Laberinto {
         return posiblesSalidas
     }
 
+    fun posiblesUbicacionesEspinete (miLaberinto : Laberinto)  : MutableList<Coordenada> {
+        var listaCoordenadas : MutableList<Coordenada> = mutableListOf()
+
+        for (y in 2..32 step 2) {
+            for (x in 2..34) {
+                // tiene que haber 3 bloques solidos debajo como mínimo
+                if (miLaberinto.map[x][y] == 0 &&
+                    miLaberinto.map[x - 1][y] == 0 &&
+                    miLaberinto.map[x + 1][y] == 0 &&
+                    miLaberinto.map[x][y+1] == 2  &&
+                    miLaberinto.map[x-1][y+1] == 2 &&
+                    miLaberinto.map[x+1][y+1] == 2) {
+                    listaCoordenadas.add(Coordenada(x,y))
+                }
+            }
+        }
+        listaCoordenadas.shuffle()
+        return listaCoordenadas
+    }
+    
+    fun posiblesUbicacionesGota (miLaberinto: Laberinto) : MutableList<Coordenada> {
+        var listaCoordenadas : MutableList<Coordenada> = mutableListOf()
+
+        for (y in 2..32 step 2) {
+            for (x in 2..34) {
+                if (miLaberinto.map[x][y] == 0 &&
+                    miLaberinto.map[x][y - 1] == 2 &&
+                    miLaberinto.map[x][y+1] == 2  &&
+                    miLaberinto.map[x-1][y - 1] == 2 &&
+                    miLaberinto.map[x-1][y+1] == 2 &&
+                    miLaberinto.map[x+1][y - 1] == 2 &&
+                    miLaberinto.map[x+1][y+1] == 2) {
+                    listaCoordenadas.add(Coordenada(x,y))
+                }
+            }
+        }
+        listaCoordenadas.shuffle()
+        return listaCoordenadas
+    }
+
 
 }

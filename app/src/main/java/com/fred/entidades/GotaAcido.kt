@@ -4,7 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
+import com.fred.Coordenada
 import com.fred.Laberinto
+import com.fred.Lado
 import com.fred.R
 
 class GotaAcido() : Enemigo () {
@@ -20,7 +22,7 @@ class GotaAcido() : Enemigo () {
     lateinit var gota10 : Bitmap
     lateinit var gota11 : Bitmap
 
-    fun newGotaAcido (context : Context , miLaberinto : Laberinto) {
+    fun newGotaAcido (context : Context , miLaberinto : Laberinto, coordenada: Coordenada) {
         // Las gotas pueden existir en las filas pares, de la 4 a la 32
         // siempre que haya bloques de piedra encima y debajo en su columna y en las dos de alrededor
         // y no exista ya una gota en esa posición
@@ -36,23 +38,8 @@ class GotaAcido() : Enemigo () {
         gota10 = BitmapFactory.decodeResource(context.resources, R.drawable.gota10)
         gota11 = BitmapFactory.decodeResource(context.resources, R.drawable.gota11)
 
-        do {
-            val xAleat = (2..34).shuffled().last()          // La gota puede estar en cualquier posición horizontal siempre que se cumpla la condición mas abajo
-            val yAleat = ((2..15).shuffled().last()) * 2    // En vertical puede estar de la fila 4 a la 30 (pares)
-
-            if (miLaberinto.map[xAleat][yAleat] == 0 &&
-                miLaberinto.map[xAleat][yAleat - 1] == 2 &&
-                miLaberinto.map[xAleat][yAleat+1] == 2  &&
-                miLaberinto.map[xAleat-1][yAleat - 1] == 2 &&
-                miLaberinto.map[xAleat-1][yAleat+1] == 2 &&
-                miLaberinto.map[xAleat+1][yAleat - 1] == 2 &&
-                miLaberinto.map[xAleat+1][yAleat+1] == 2) {
-                pX = xAleat
-                pY = yAleat
-            }
-
-        } while (pX == 0 && pY == 0)
-
+        pX = coordenada.coordenadaX
+        pY = coordenada.coordenadaY
         animacionTick = (0..10).shuffled().last()
         offsetX = 384
         offsetY = 400
@@ -84,15 +71,38 @@ class GotaAcido() : Enemigo () {
     }
 
     override fun detectarColision(fX : Int , fY : Int, pasoX : Int, pasoY : Int, fred: Fred): Boolean {
+
+       // Log.d("Miapp", "fx: ${fX} pX: ${pX} py: ${pY} pasoX: ${pasoX} lado: ${fred.lado}")
+
         if (animacionTick > 5) {
-            if ((fX == pX && fY == pY && pasoX < 64 && pasoX > -64  ) ||
-                (fX + 1 == pX  && fY == pY && pasoX < -64) ||
-                (fX - 1 == pX  && fY == pY && pasoX > 64))  {
-             //   Log.d("Miapp" , "Colisión!!!")
-                return true
+
+            if (fX == pX && fY == pY) {
+                if (fred.lado == Lado.DERECHA) {
+                    if (pasoX > -64) return true
+                } else {
+                    if (pasoX < 64) return true
+                }
+            } else {
+                // si está en el tile de la derecha
+                if (fX + 1 == pX && fY == pY) {
+                    if (fred.lado == Lado.DERECHA) {
+                        if (pasoX < -32) return true
+                    }
+                } else {
+                    if (fX - 1 == pX && fY == pY) {
+                        // si está en el tile de la izquierda
+                        if (fred.lado == Lado.IZQUIERDA) {
+                            if (pasoX > 32) return true
+
+                        }
+                    }
+                }
             }
+
         }
 
         return false
     }
+
+
 }
