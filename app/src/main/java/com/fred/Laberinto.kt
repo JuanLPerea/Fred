@@ -57,8 +57,8 @@ class Laberinto {
 
     fun generarLaberinto() {
         // obtenemos la posición inicial aleatoriamente entre la columna 2 y la 32
-        var posicionX = valorRandom(3..18) * 2
-        var posicionY = 34
+        var posicionX = valorRandom(3..16) * 2
+        var posicionY = valorRandom(3..16) * 2
         var bifurcaciones = Array(600) { IntArray(2) }
         var indice_bifurcaciones = 0
         map[posicionX][posicionY] = 0
@@ -191,6 +191,20 @@ class Laberinto {
                     miLaberinto.map[x-1][y+1] == 2 &&
                     miLaberinto.map[x+1][y - 1] == 2 &&
                     miLaberinto.map[x+1][y+1] == 2) {
+                    listaCoordenadas.add(Coordenada(x,y))
+                }
+            }
+        }
+        listaCoordenadas.shuffle()
+        return listaCoordenadas
+    }
+
+    fun posiblesUbicacionesFantasma (miLaberinto: Laberinto) : MutableList<Coordenada> {
+        var listaCoordenadas : MutableList<Coordenada> = mutableListOf()
+        // Los fantasmas existen en cualquier sitio siempre que no sea un muro
+        for (y in 2..32) {
+            for (x in 2..34) {
+                if (miLaberinto.map[x][y] == 0) {
                     listaCoordenadas.add(Coordenada(x,y))
                 }
             }

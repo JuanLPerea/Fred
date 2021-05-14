@@ -29,10 +29,9 @@ class Espinete : Enemigo () {
         pY = coordenada.coordenadaY
         Log.d("Miapp" , "Espinete en: " + pX + " - " + pY)
 
-        animacionTick = (0..10).shuffled().last()
+        animacionTick = (0..1).shuffled().last()
         offsetX = 384
         offsetY = 400
-
     }
 
 

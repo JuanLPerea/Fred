@@ -11,10 +11,7 @@ import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import com.fred.entidades.Enemigo
-import com.fred.entidades.Espinete
-import com.fred.entidades.Fred
-import com.fred.entidades.GotaAcido
+import com.fred.entidades.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
@@ -133,7 +130,7 @@ class MainActivity : AppCompatActivity() {
         // crear enemigos optimizar para que no caiga en bucle infinito
         // Crear Gotas de ácido
         var listaUbicacionesGotasAcido = miLaberinto.posiblesUbicacionesGota(miLaberinto)
-        var numeroGotasAcidoEnLaberinto = 100
+        var numeroGotasAcidoEnLaberinto = 1
         if (numeroGotasAcidoEnLaberinto > listaUbicacionesGotasAcido.size) numeroGotasAcidoEnLaberinto = listaUbicacionesGotasAcido.size - 1
         for (n in 1..numeroGotasAcidoEnLaberinto) {
             val gotaAcidoTMP = GotaAcido()
@@ -149,6 +146,16 @@ class MainActivity : AppCompatActivity() {
             val espineteTMP = Espinete()
             espineteTMP.newEspinete(this , miLaberinto, listaUbicacionesEspinete.get(n))
             listaEnemigos.add(espineteTMP)
+        }
+
+        // Crear fantasmas
+        var listaUbicacionesFantasma = miLaberinto.posiblesUbicacionesFantasma(miLaberinto)
+        var numeroFantasmasEnLaberinto = 50
+        if (numeroFantasmasEnLaberinto > listaUbicacionesFantasma.size) numeroFantasmasEnLaberinto = listaUbicacionesFantasma.size - 1
+        for (n in 1..numeroFantasmasEnLaberinto) {
+            val fantasmaTMP = Fantasma()
+            fantasmaTMP.newFantasma(this, miLaberinto, listaUbicacionesFantasma.get(n))
+            listaEnemigos.add(fantasmaTMP)
         }
 
 
@@ -358,23 +365,6 @@ class MainActivity : AppCompatActivity() {
             val pixel2 = bitmapFred.getPixel(90, 144)
             val pixel3 = bitmapFred.getPixel(64, 144)
 
-        //    Log.d("Miapp" , "Color del pixel: ${pixel} ${pixelgota1} ${pixelgota2} ${pixelgota3}  ${pixelgota31} ${pixelgota4}  ${pixelgota41}  ${pixelgota42} ${pixelgota5} ${pixelgota6} ${pixelgota7} ${pixelgota8} ${pixelgota9} ${pixelgota61} ")
-/*
-
-            // Detectar Gotas de Ácido
-            if (fred.lado == Lado.DERECHA) {
-                if (pixelgota7 == -14293723 ||pixelgota41 == -16711936 || pixelgota2 == -16711936 || pixelgota6 == -16711936 || pixelgota1 == -16711936 || pixelgota9 == -16711936 || pixelgota61 == -16711936) {
-                    fred.vida--
-                    fred.tocado = 1
-                }
-            } else {
-                if (pixel == -16711936 || pixelgota6 == -11809974 || pixelgota1 == -16711936 || pixelgota41 == -16711936 || pixelgota9 == -16711936 || pixelgota61 == -16711936) {
-                    fred.vida--
-                    fred.tocado = 1
-                }
-
-            }
-*/
             // Detectar Espinetes
             if ((pixel1 == -65281  || pixel2 == -65281 || pixel3 == -65281) && !fred.cuerda && (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.QUIETO)) {
                 fred.vida--
@@ -751,6 +741,9 @@ class MainActivity : AppCompatActivity() {
 
 }
 
+enum class Direcciones {
+    ARRIBA, DERECHA, IZQUIERDA, ABAJO, PARADO
+}
 
 enum class Lado {
     DERECHA, IZQUIERDA
