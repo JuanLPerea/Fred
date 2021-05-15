@@ -39,6 +39,7 @@ class Fantasma : Enemigo() {
         // Pueden atravesar muros
         // Se mueven en la misma dirección hasta que encuentran una bifurcacion en el laberinto
         // entonces deciden una nueva dirección sin tener en cuenta los muros
+
         // También se paran de vez en cuando y cambian de dirección aleatoriamente
         if ((0..5).shuffled().last() == 0 && offsetX== 384 && offsetY == 400) movimiento = Direcciones.PARADO
 

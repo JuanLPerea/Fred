@@ -227,5 +227,18 @@ class Laberinto {
         return listaCoordenadas
     }
 
+    fun posiblesUbicacionesMomia (miLaberinto: Laberinto) : MutableList<Coordenada> {
+        var listaCoordenadas : MutableList<Coordenada> = mutableListOf()
+        // Las momias existen en los pasillos horizontales siempre que haya suelo debajo y de la fila 4 a la 16 (Parte alta del laberinto)
+        for (y in 4..32) {
+            for (x in 4..34) {
+                if (miLaberinto.map[x][y+1] == 2 && miLaberinto.map[x][y] == 0) {
+                    listaCoordenadas.add(Coordenada(x,y))
+                }
+            }
+        }
+        listaCoordenadas.shuffle()
+        return listaCoordenadas
+    }
 
 }

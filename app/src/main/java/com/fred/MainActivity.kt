@@ -42,7 +42,8 @@ class MainActivity : AppCompatActivity() {
     var numeroGotasAcidoEnLaberinto = 1
     var numeroEspinetesEnLaberinto = 1
     var numeroFantasmasEnLaberinto = 1
-    var numeroLagartijasEnLaberinto = 50
+    var numeroLagartijasEnLaberinto = 1
+    var numeroMomiasEnLaberinto = 30
 
 
     lateinit var fredd : Bitmap                                     // 0
@@ -364,6 +365,15 @@ class MainActivity : AppCompatActivity() {
             val lagartijaTMP = Lagartija()
             lagartijaTMP.newLagartija(this, miLaberinto, listaUbicacionesLagartija.get(n))
             listaEnemigos.add(lagartijaTMP)
+        }
+
+        // Crear momias
+        var listaUbicacionesMomia = miLaberinto.posiblesUbicacionesMomia(miLaberinto)
+        if (numeroMomiasEnLaberinto > listaUbicacionesMomia.size) numeroMomiasEnLaberinto = listaUbicacionesMomia.size - 1
+        for (n in 1..numeroMomiasEnLaberinto) {
+            val momiaTMP = Momia()
+            momiaTMP.newMomia(this, miLaberinto, listaUbicacionesMomia.get(n))
+            listaEnemigos.add(momiaTMP)
         }
 
     }
