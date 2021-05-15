@@ -92,7 +92,7 @@ class GotaAcido() : Enemigo () {
                     if (fX - 1 == pX && fY == pY) {
                         // si está en el tile de la izquierda
                         if (fred.lado == Lado.IZQUIERDA) {
-                            if (pasoX > 32) return true
+                            if (pasoX > 64) return true
 
                         }
                     }

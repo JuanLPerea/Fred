@@ -1,7 +1,6 @@
 package com.fred
 
 import android.graphics.*
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -38,6 +37,13 @@ class MainActivity : AppCompatActivity() {
     var pulsadoDerecha = false
     var pulsadoDisparo = false
     var velocidadJuego = 150L
+
+    // Establecemos el número de enemigos de cada tipo
+    var numeroGotasAcidoEnLaberinto = 1
+    var numeroEspinetesEnLaberinto = 1
+    var numeroFantasmasEnLaberinto = 1
+    var numeroLagartijasEnLaberinto = 50
+
 
     lateinit var fredd : Bitmap                                     // 0
     lateinit var  fredd1 : Bitmap                                   // 1
@@ -126,38 +132,7 @@ class MainActivity : AppCompatActivity() {
         } while (miLaberinto.map[cX][cY] != 0)
         crearFondo(cX - 4, cY - 3, pasoX, pasoY)
 
-
-        // crear enemigos optimizar para que no caiga en bucle infinito
-        // Crear Gotas de ácido
-        var listaUbicacionesGotasAcido = miLaberinto.posiblesUbicacionesGota(miLaberinto)
-        var numeroGotasAcidoEnLaberinto = 1
-        if (numeroGotasAcidoEnLaberinto > listaUbicacionesGotasAcido.size) numeroGotasAcidoEnLaberinto = listaUbicacionesGotasAcido.size - 1
-        for (n in 1..numeroGotasAcidoEnLaberinto) {
-            val gotaAcidoTMP = GotaAcido()
-            gotaAcidoTMP.newGotaAcido(this, miLaberinto, listaUbicacionesGotasAcido.get(n))
-            listaEnemigos.add(gotaAcidoTMP)
-        }
-
-        // Crear espinetes
-        var listaUbicacionesEspinete = miLaberinto.posiblesUbicacionesEspinete(miLaberinto)
-        var numeroEspinetesEnLaberinto = 1
-        if (numeroEspinetesEnLaberinto > listaUbicacionesEspinete.size) numeroEspinetesEnLaberinto = listaUbicacionesEspinete.size - 1
-        for (n in (1..numeroEspinetesEnLaberinto)) {
-            val espineteTMP = Espinete()
-            espineteTMP.newEspinete(this , miLaberinto, listaUbicacionesEspinete.get(n))
-            listaEnemigos.add(espineteTMP)
-        }
-
-        // Crear fantasmas
-        var listaUbicacionesFantasma = miLaberinto.posiblesUbicacionesFantasma(miLaberinto)
-        var numeroFantasmasEnLaberinto = 50
-        if (numeroFantasmasEnLaberinto > listaUbicacionesFantasma.size) numeroFantasmasEnLaberinto = listaUbicacionesFantasma.size - 1
-        for (n in 1..numeroFantasmasEnLaberinto) {
-            val fantasmaTMP = Fantasma()
-            fantasmaTMP.newFantasma(this, miLaberinto, listaUbicacionesFantasma.get(n))
-            listaEnemigos.add(fantasmaTMP)
-        }
-
+        crearEnemigos()
 
         // TODO crear objetos
 
@@ -166,7 +141,6 @@ class MainActivity : AppCompatActivity() {
         // Con este Timer se actualiza la pantalla cada 200ms osea 5 fps!!
         // lo que le da ese toque tan rítmico que enganchaba en los 80's tic-tac-tic-tac-tic-tac
         // ¿fundiré un procesador del siglo 21??? sometiéndole a este terrible trabajo :D ???
-
         val timer = Timer()
         val ticks = object : TimerTask() {
             override fun run() {
@@ -354,9 +328,49 @@ class MainActivity : AppCompatActivity() {
         timer.schedule(ticks, velocidadJuego, velocidadJuego)
     }
 
+    private fun crearEnemigos() {
+        // crear enemigos optimizar para que no caiga en bucle infinito
+        // Crear Gotas de ácido
+        var listaUbicacionesGotasAcido = miLaberinto.posiblesUbicacionesGota(miLaberinto)
+        if (numeroGotasAcidoEnLaberinto > listaUbicacionesGotasAcido.size) numeroGotasAcidoEnLaberinto = listaUbicacionesGotasAcido.size - 1
+        for (n in 1..numeroGotasAcidoEnLaberinto) {
+            val gotaAcidoTMP = GotaAcido()
+            gotaAcidoTMP.newGotaAcido(this, miLaberinto, listaUbicacionesGotasAcido.get(n))
+            listaEnemigos.add(gotaAcidoTMP)
+        }
+
+        // Crear espinetes
+        var listaUbicacionesEspinete = miLaberinto.posiblesUbicacionesEspinete(miLaberinto)
+        if (numeroEspinetesEnLaberinto > listaUbicacionesEspinete.size) numeroEspinetesEnLaberinto = listaUbicacionesEspinete.size - 1
+        for (n in (1..numeroEspinetesEnLaberinto)) {
+            val espineteTMP = Espinete()
+            espineteTMP.newEspinete(this , miLaberinto, listaUbicacionesEspinete.get(n))
+            listaEnemigos.add(espineteTMP)
+        }
+
+        // Crear fantasmas
+        var listaUbicacionesFantasma = miLaberinto.posiblesUbicacionesFantasma(miLaberinto)
+        if (numeroFantasmasEnLaberinto > listaUbicacionesFantasma.size) numeroFantasmasEnLaberinto = listaUbicacionesFantasma.size - 1
+        for (n in 1..numeroFantasmasEnLaberinto) {
+            val fantasmaTMP = Fantasma()
+            fantasmaTMP.newFantasma(this, miLaberinto, listaUbicacionesFantasma.get(n))
+            listaEnemigos.add(fantasmaTMP)
+        }
+
+        // Crear lagartijas
+        var listaUbicacionesLagartija = miLaberinto.posiblesUbicacionesLagartija(miLaberinto)
+        if (numeroLagartijasEnLaberinto > listaUbicacionesLagartija.size) numeroLagartijasEnLaberinto = listaUbicacionesLagartija.size - 1
+        for (n in 1..numeroLagartijasEnLaberinto) {
+            val lagartijaTMP = Lagartija()
+            lagartijaTMP.newLagartija(this, miLaberinto, listaUbicacionesLagartija.get(n))
+            listaEnemigos.add(lagartijaTMP)
+        }
+
+    }
+
     private fun detectarColision(bitmapFred: Bitmap) {
      // crear un bitmap con un recorte centrado en Fred
-     // chequear algunos pixeles en la imágen y si no son amarillos
+     // chequear algunos pixeles en la imagen y si no son amarillos
      // decidir si hay daño o es un objeto ...
 
         // Si Fred no está tocado
@@ -531,9 +545,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-        // TODO Pintar los enemigos
+        // Pintar los enemigos
         listaEnemigos.forEach { enemigo ->
             // si las coordenadas de la entidad enemiga están dentro de la zona visible....
             if (enemigo.pX > (cX-5) && enemigo.pX < (cX + 5) && enemigo.pY > (cY-4) && enemigo.pY < (cY + 4)) {
@@ -673,7 +685,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun esPosibleMoverDerecha(): Boolean {
         if ((miLaberinto.map[cX + 1][cY] == 0 && pasoY == -160) || pasoX != 0) {
-            if (cX < 34) {
+            if (cX < 35) {
                 return true
             }
         }
@@ -737,8 +749,6 @@ class MainActivity : AppCompatActivity() {
         pasillo = BitmapFactory.decodeResource(resources, R.drawable.pasillo_negro)
 
     }
-
-
 }
 
 enum class Direcciones {

@@ -162,8 +162,8 @@ class Laberinto {
     fun posiblesUbicacionesEspinete (miLaberinto : Laberinto)  : MutableList<Coordenada> {
         var listaCoordenadas : MutableList<Coordenada> = mutableListOf()
 
-        for (y in 2..32 step 2) {
-            for (x in 2..34) {
+        for (y in 4..32 step 2) {
+            for (x in 4..34) {
                 // tiene que haber 3 bloques solidos debajo como mínimo
                 if (miLaberinto.map[x][y] == 0 &&
                     miLaberinto.map[x - 1][y] == 0 &&
@@ -182,8 +182,8 @@ class Laberinto {
     fun posiblesUbicacionesGota (miLaberinto: Laberinto) : MutableList<Coordenada> {
         var listaCoordenadas : MutableList<Coordenada> = mutableListOf()
 
-        for (y in 2..32 step 2) {
-            for (x in 2..34) {
+        for (y in 4..32 step 2) {
+            for (x in 4..34) {
                 if (miLaberinto.map[x][y] == 0 &&
                     miLaberinto.map[x][y - 1] == 2 &&
                     miLaberinto.map[x][y+1] == 2  &&
@@ -202,9 +202,23 @@ class Laberinto {
     fun posiblesUbicacionesFantasma (miLaberinto: Laberinto) : MutableList<Coordenada> {
         var listaCoordenadas : MutableList<Coordenada> = mutableListOf()
         // Los fantasmas existen en cualquier sitio siempre que no sea un muro
-        for (y in 2..32) {
-            for (x in 2..34) {
+        for (y in 6..32 step 2) {
+            for (x in 6..34 step 2) {
                 if (miLaberinto.map[x][y] == 0) {
+                    listaCoordenadas.add(Coordenada(x,y))
+                }
+            }
+        }
+        listaCoordenadas.shuffle()
+        return listaCoordenadas
+    }
+
+    fun posiblesUbicacionesLagartija (miLaberinto: Laberinto) : MutableList<Coordenada> {
+        var listaCoordenadas : MutableList<Coordenada> = mutableListOf()
+        // Las lagartijas existen en los pasillos verticales siempre que haya muros a los dos lados
+        for (y in 5..33) {
+            for (x in 4..34 step 2) {
+                if (miLaberinto.map[x][y] == 0 && miLaberinto.map[x+1][y] == 2 && miLaberinto.map[x-1][y] == 2) {
                     listaCoordenadas.add(Coordenada(x,y))
                 }
             }
