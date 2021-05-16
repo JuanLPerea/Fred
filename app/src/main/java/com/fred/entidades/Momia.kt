@@ -19,15 +19,16 @@ class Momia : Enemigo() {
     lateinit var momiacuerdai: Bitmap
     lateinit var momiapopd: Bitmap
     lateinit var momiapopi: Bitmap
+    lateinit var posicionesSpawn : MutableList<Coordenada>
 
     lateinit var direccion: Direcciones
     lateinit var direccionBak: Direcciones
     var choque = false
-    var posicionXinicial = 0
-    var posicionYinicial = 0
+    var indiceSpawn = 1
+    var momiaID = 0
 
-    fun newMomia(context: Context, miLaberinto: Laberinto, coordenada: Coordenada) {
 
+    fun newMomia(context: Context, listaCoordenadas: MutableList<Coordenada>, id : Int) {
         momia1d = BitmapFactory.decodeResource(context.resources, R.drawable.momia1d)
         momia2d = BitmapFactory.decodeResource(context.resources, R.drawable.momia2d)
         momia1i = BitmapFactory.decodeResource(context.resources, R.drawable.momia1i)
@@ -36,16 +37,19 @@ class Momia : Enemigo() {
         momiacuerdai = BitmapFactory.decodeResource(context.resources, R.drawable.momia3i)
         momiapopd = BitmapFactory.decodeResource(context.resources, R.drawable.momia4d)
         momiapopi = BitmapFactory.decodeResource(context.resources, R.drawable.momia4i)
+        posicionesSpawn = listaCoordenadas
+
+        momiaID = id
 
         var azar = (0..1).shuffled().last()
         if (azar == 0) direccion = Direcciones.IZQUIERDA else direccion = Direcciones.DERECHA
         direccionBak = direccion
 
-        pX = coordenada.coordenadaX
-        pY = coordenada.coordenadaY
+        indiceSpawn = (1..(posicionesSpawn.size - 1)).shuffled().last()
+        pX = posicionesSpawn.get(indiceSpawn).coordenadaX
+        pY = posicionesSpawn.get(indiceSpawn).coordenadaY
 
-        posicionXinicial = coordenada.coordenadaX
-        posicionYinicial = coordenada.coordenadaY
+        Log.d("Miapp", "Momia ${momiaID} en ${pX} - ${pY}")
 
         animacionTick = (0..1).shuffled().last()
         offsetX = 384
@@ -58,7 +62,7 @@ class Momia : Enemigo() {
         // actualizar la animación
         if (animacionTick == 0) animacionTick = 1 else animacionTick = 0
 
-        // Log.d("Miapp", "offsetX ${offsetX} offsetY ${offsetY}")
+     //    Log.d("Miapp", "direccion: ${direccion} ID: ${momiaID}")
 
         when (direccion) {
             Direcciones.DERECHA -> {
@@ -166,6 +170,19 @@ class Momia : Enemigo() {
 
             }
 
+            Direcciones.PARADO -> {
+                // Pop
+                // Teletransporte
+                if (direccionBak == Direcciones.DERECHA) direccion = Direcciones.IZQUIERDA else direccion = Direcciones.DERECHA
+                choque = false
+                indiceSpawn = (1..(posicionesSpawn.size - 1)).shuffled().last()
+                pX = posicionesSpawn.get(indiceSpawn).coordenadaX
+                pY = posicionesSpawn.get(indiceSpawn).coordenadaY
+                Log.d("Miapp", "Momia ${momiaID} popped at: ${pX} - ${pY} indice: ${indiceSpawn} dirección: ${direccion}")
+                offsetX = 384
+                offsetY = 400
+            }
+
         }
 
 
@@ -186,15 +203,6 @@ class Momia : Enemigo() {
             }
 
             Direcciones.PARADO -> {
-                // Pop
-                // Teletransporte
-                if (direccionBak == Direcciones.DERECHA) direccion =
-                    Direcciones.IZQUIERDA else direccion = Direcciones.DERECHA
-                choque = false
-                pX = posicionXinicial
-                pY = posicionYinicial
-                offsetX = 384
-                offsetY = 400
                 if (direccion == Direcciones.DERECHA) return momiapopi else return momiapopd
             }
         }

@@ -17,7 +17,7 @@ class Espinete : Enemigo () {
     lateinit var espinete2I : Bitmap
     var direccion = 0
 
-    fun newEspinete (context: Context , miLaberinto: Laberinto, coordenada: Coordenada) {
+    fun newEspinete (context: Context, coordenada: Coordenada) {
         // los espinetes existen en los pasillos que tienen 3 o mas tiles de ancho
         // siempre tiene que ser en una fila par
         espinete1D = BitmapFactory.decodeResource(context.resources , R.drawable.espinete1d)

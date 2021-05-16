@@ -332,29 +332,27 @@ class MainActivity : AppCompatActivity() {
     private fun crearEnemigos() {
         // crear enemigos optimizar para que no caiga en bucle infinito
         // Crear Gotas de ácido
-        var listaUbicacionesGotasAcido = miLaberinto.posiblesUbicacionesGota(miLaberinto)
-        if (numeroGotasAcidoEnLaberinto > listaUbicacionesGotasAcido.size) numeroGotasAcidoEnLaberinto = listaUbicacionesGotasAcido.size - 1
+        var listaUbicacionesPasilloHorizontal = miLaberinto.posiblesUbicacionesGota(miLaberinto)
+        if (numeroGotasAcidoEnLaberinto > listaUbicacionesPasilloHorizontal.size) numeroGotasAcidoEnLaberinto = listaUbicacionesPasilloHorizontal.size - 1
         for (n in 1..numeroGotasAcidoEnLaberinto) {
             val gotaAcidoTMP = GotaAcido()
-            gotaAcidoTMP.newGotaAcido(this, miLaberinto, listaUbicacionesGotasAcido.get(n))
+            gotaAcidoTMP.newGotaAcido(this, listaUbicacionesPasilloHorizontal.get(n))
             listaEnemigos.add(gotaAcidoTMP)
         }
-
+        listaUbicacionesPasilloHorizontal.shuffle()
         // Crear espinetes
-        var listaUbicacionesEspinete = miLaberinto.posiblesUbicacionesEspinete(miLaberinto)
-        if (numeroEspinetesEnLaberinto > listaUbicacionesEspinete.size) numeroEspinetesEnLaberinto = listaUbicacionesEspinete.size - 1
+        if (numeroEspinetesEnLaberinto > listaUbicacionesPasilloHorizontal.size) numeroEspinetesEnLaberinto = listaUbicacionesPasilloHorizontal.size - 1
         for (n in (1..numeroEspinetesEnLaberinto)) {
             val espineteTMP = Espinete()
-            espineteTMP.newEspinete(this , miLaberinto, listaUbicacionesEspinete.get(n))
+            espineteTMP.newEspinete(this , listaUbicacionesPasilloHorizontal.get(n))
             listaEnemigos.add(espineteTMP)
         }
-
+        listaUbicacionesPasilloHorizontal.shuffle()
         // Crear fantasmas
-        var listaUbicacionesFantasma = miLaberinto.posiblesUbicacionesFantasma(miLaberinto)
-        if (numeroFantasmasEnLaberinto > listaUbicacionesFantasma.size) numeroFantasmasEnLaberinto = listaUbicacionesFantasma.size - 1
+        if (numeroFantasmasEnLaberinto > listaUbicacionesPasilloHorizontal.size) numeroFantasmasEnLaberinto = listaUbicacionesPasilloHorizontal.size - 1
         for (n in 1..numeroFantasmasEnLaberinto) {
             val fantasmaTMP = Fantasma()
-            fantasmaTMP.newFantasma(this, miLaberinto, listaUbicacionesFantasma.get(n))
+            fantasmaTMP.newFantasma(this, listaUbicacionesPasilloHorizontal.get(n))
             listaEnemigos.add(fantasmaTMP)
         }
 
@@ -363,16 +361,15 @@ class MainActivity : AppCompatActivity() {
         if (numeroLagartijasEnLaberinto > listaUbicacionesLagartija.size) numeroLagartijasEnLaberinto = listaUbicacionesLagartija.size - 1
         for (n in 1..numeroLagartijasEnLaberinto) {
             val lagartijaTMP = Lagartija()
-            lagartijaTMP.newLagartija(this, miLaberinto, listaUbicacionesLagartija.get(n))
+            lagartijaTMP.newLagartija(this, listaUbicacionesLagartija.get(n))
             listaEnemigos.add(lagartijaTMP)
         }
 
         // Crear momias
-        var listaUbicacionesMomia = miLaberinto.posiblesUbicacionesMomia(miLaberinto)
-        if (numeroMomiasEnLaberinto > listaUbicacionesMomia.size) numeroMomiasEnLaberinto = listaUbicacionesMomia.size - 1
+        if (numeroMomiasEnLaberinto > listaUbicacionesPasilloHorizontal.size) numeroMomiasEnLaberinto = listaUbicacionesPasilloHorizontal.size - 1
         for (n in 1..numeroMomiasEnLaberinto) {
             val momiaTMP = Momia()
-            momiaTMP.newMomia(this, miLaberinto, listaUbicacionesMomia.get(n))
+            momiaTMP.newMomia(this, listaUbicacionesPasilloHorizontal, n)
             listaEnemigos.add(momiaTMP)
         }
 

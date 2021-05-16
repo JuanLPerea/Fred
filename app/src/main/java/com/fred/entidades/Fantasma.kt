@@ -19,7 +19,7 @@ class Fantasma : Enemigo() {
     var movimiento = Direcciones.PARADO
 
 
-    fun newFantasma (context: Context, miLaberinto: Laberinto, coordenada: Coordenada) {
+    fun newFantasma (context: Context, coordenada: Coordenada) {
         fantasma1d = BitmapFactory.decodeResource(context.resources , R.drawable.fantasmad1)
         fantasma2d = BitmapFactory.decodeResource(context.resources , R.drawable.fantasmad2)
         fantasma1i = BitmapFactory.decodeResource(context.resources , R.drawable.fantasmai1)

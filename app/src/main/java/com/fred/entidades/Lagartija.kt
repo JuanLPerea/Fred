@@ -21,7 +21,7 @@ class Lagartija : Enemigo() {
     var direccion = Direcciones.ARRIBA
     var cambiando = false
 
-    fun newLagartija (context: Context, miLaberinto: Laberinto, coordenada: Coordenada) {
+    fun newLagartija (context: Context, coordenada: Coordenada) {
         // las lagartijas existen en los pasillos verticales, siempre que haya muros a los 2 lados
         // siempre tiene que ser en una columna par
         lagartija1DAbajo = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija1d)

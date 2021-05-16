@@ -22,7 +22,7 @@ class GotaAcido() : Enemigo () {
     lateinit var gota10 : Bitmap
     lateinit var gota11 : Bitmap
 
-    fun newGotaAcido (context : Context , miLaberinto : Laberinto, coordenada: Coordenada) {
+    fun newGotaAcido (context : Context , coordenada: Coordenada) {
         // Las gotas pueden existir en las filas pares, de la 4 a la 32
         // siempre que haya bloques de piedra encima y debajo en su columna y en las dos de alrededor
         // y no exista ya una gota en esa posición
