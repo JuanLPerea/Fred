@@ -43,7 +43,9 @@ class MainActivity : AppCompatActivity() {
     var numeroEspinetesEnLaberinto = 1
     var numeroFantasmasEnLaberinto = 1
     var numeroLagartijasEnLaberinto = 1
-    var numeroMomiasEnLaberinto = 30
+    var numeroMomiasEnLaberinto = 1
+    var numeroVampirosEnLaberinto = 1
+    var numeroEsqueletosEnLaberinto = 0
 
 
     lateinit var fredd : Bitmap                                     // 0
@@ -371,6 +373,17 @@ class MainActivity : AppCompatActivity() {
             val momiaTMP = Momia()
             momiaTMP.newMomia(this, listaUbicacionesPasilloHorizontal, n)
             listaEnemigos.add(momiaTMP)
+        }
+
+        listaUbicacionesPasilloHorizontal.shuffle()
+        // Crear Vampiros
+        if (numeroVampirosEnLaberinto > listaUbicacionesPasilloHorizontal.size) numeroVampirosEnLaberinto = listaUbicacionesPasilloHorizontal.size - 1
+        for (n in 1..numeroVampirosEnLaberinto) {
+            val vampiroTMP = Vampiro()
+            val coordenada = listaUbicacionesPasilloHorizontal.get(n)
+            val coordenadaTMP = Coordenada(cX, cY)
+            vampiroTMP.newVampiro(this, coordenadaTMP)
+            listaEnemigos.add(vampiroTMP)
         }
 
     }
