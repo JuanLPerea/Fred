@@ -67,6 +67,7 @@ class Vampiro : Enemigo() {
                 mirandoA = Direcciones.DERECHA
                 offsetX += velocidad
                 if (offsetX >= 512) {
+                    Log.d("Miapp", "Salto Derecha ${offsetX}")
                     offsetX = 384
                     pX++
                     if (pX == 34) movimiento = Direcciones.PARADO
@@ -77,7 +78,8 @@ class Vampiro : Enemigo() {
             Direcciones.IZQUIERDA -> {
                 mirandoA = Direcciones.IZQUIERDA
                 offsetX -= velocidad
-                if (offsetX >= 256) {
+                if (offsetX <= 256) {
+                    Log.d("Miapp", "Salto Izquierda ${offsetX}")
                     offsetX = 384
                     pX--
                     if (pX == 4) movimiento = Direcciones.PARADO
@@ -87,7 +89,8 @@ class Vampiro : Enemigo() {
 
             Direcciones.ARRIBA -> {
                 offsetY -= velocidad
-                if (offsetY >= 240) {
+                if (offsetY <= 240) {
+                    Log.d("Miapp", "Salto Arriba: ${offsetY}")
                     offsetY = 400
                     pY--
                     if (pY == 4) movimiento = Direcciones.PARADO
@@ -98,6 +101,7 @@ class Vampiro : Enemigo() {
             Direcciones.ABAJO -> {
                 offsetY += velocidad
                 if (offsetY >= 560) {
+                    Log.d("Miapp", "Salto Arriba: ${offsetY}")
                     offsetY = 400
                     pY++
                     if (pY == 34) movimiento = Direcciones.PARADO

@@ -39,12 +39,12 @@ class MainActivity : AppCompatActivity() {
     var velocidadJuego = 150L
 
     // Establecemos el número de enemigos de cada tipo
-    var numeroGotasAcidoEnLaberinto = 1
-    var numeroEspinetesEnLaberinto = 1
-    var numeroFantasmasEnLaberinto = 1
-    var numeroLagartijasEnLaberinto = 1
-    var numeroMomiasEnLaberinto = 1
-    var numeroVampirosEnLaberinto = 1
+    var numeroGotasAcidoEnLaberinto = 10
+    var numeroEspinetesEnLaberinto = 10
+    var numeroFantasmasEnLaberinto = 10
+    var numeroLagartijasEnLaberinto = 10
+    var numeroMomiasEnLaberinto = 10
+    var numeroVampirosEnLaberinto = 10
     var numeroEsqueletosEnLaberinto = 0
 
 
@@ -381,8 +381,7 @@ class MainActivity : AppCompatActivity() {
         for (n in 1..numeroVampirosEnLaberinto) {
             val vampiroTMP = Vampiro()
             val coordenada = listaUbicacionesPasilloHorizontal.get(n)
-            val coordenadaTMP = Coordenada(cX, cY)
-            vampiroTMP.newVampiro(this, coordenadaTMP)
+            vampiroTMP.newVampiro(this, coordenada)
             listaEnemigos.add(vampiroTMP)
         }
 
