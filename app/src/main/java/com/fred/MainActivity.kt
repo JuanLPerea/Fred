@@ -636,17 +636,22 @@ class MainActivity : AppCompatActivity() {
 // **********************************************************************************************************************
 
     private fun dibujarLaberintoTexto(miLaberinto: Laberinto) {
+        var contarCasillas = 0
         var fila = ""
         for (y in 0..35) {
             for (x in 0..36) {
                 when (miLaberinto.map[x][y]) {
-                    0 -> fila += " "
+                    0 -> {
+                        fila += " "
+                        contarCasillas++
+                    }
                     2 -> fila += "X"
                 }
             }
             fila += "\n"
             Log.d("Miapp", fila)
         }
+        Log.d("Miapp", "casillas totales: ${contarCasillas}")
     }
 
 
