@@ -39,13 +39,13 @@ class MainActivity : AppCompatActivity() {
     var velocidadJuego = 150L
 
     // Establecemos el número de enemigos de cada tipo
-    var numeroGotasAcidoEnLaberinto = 10
-    var numeroEspinetesEnLaberinto = 10
-    var numeroFantasmasEnLaberinto = 10
-    var numeroLagartijasEnLaberinto = 10
-    var numeroMomiasEnLaberinto = 10
-    var numeroVampirosEnLaberinto = 10
-    var numeroEsqueletosEnLaberinto = 0
+    var numeroGotasAcidoEnLaberinto = 0
+    var numeroEspinetesEnLaberinto = 0
+    var numeroFantasmasEnLaberinto = 0
+    var numeroLagartijasEnLaberinto = 0
+    var numeroMomiasEnLaberinto = 0
+    var numeroVampirosEnLaberinto = 0
+    var numeroEsqueletosEnLaberinto = 1
 
 
     lateinit var fredd : Bitmap                                     // 0
@@ -383,6 +383,18 @@ class MainActivity : AppCompatActivity() {
             val coordenada = listaUbicacionesPasilloHorizontal.get(n)
             vampiroTMP.newVampiro(this, coordenada)
             listaEnemigos.add(vampiroTMP)
+        }
+
+        listaUbicacionesPasilloHorizontal.shuffle()
+        // Crear Esqueletos
+        if (numeroEsqueletosEnLaberinto > listaUbicacionesPasilloHorizontal.size) numeroEsqueletosEnLaberinto = listaUbicacionesPasilloHorizontal.size - 1
+        for (n in 1..numeroEsqueletosEnLaberinto) {
+            val esqueletoTMP = Esqueleto()
+            val coordenada = listaUbicacionesPasilloHorizontal.get(n)
+            esqueletoTMP.newEsqueleto(this, coordenada, miLaberinto)
+            esqueletoTMP.pX = cX
+            esqueletoTMP.pY = cY
+            listaEnemigos.add(esqueletoTMP)
         }
 
     }
