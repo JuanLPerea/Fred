@@ -19,10 +19,6 @@ class Esqueleto : Enemigo() {
 
     var direccion = Direcciones.PARADO
     lateinit var laberintoEsqueleto : Laberinto
-    var valorsalidaderecha = 0
-    var valorsalidaizquierda = 0
-    var valorsalidaarriba = 0
-    var valorsalidaabajo = 0
 
     fun newEsqueleto(context: Context, coordenada: Coordenada, miLaberinto: Laberinto) {
          esqueleto1d = BitmapFactory.decodeResource(context.resources, R.drawable.esqueleto1d)
@@ -42,12 +38,13 @@ class Esqueleto : Enemigo() {
 
         // Cada esqueleto se acuerda de su propio laberinto, así que lo copiamos para cada esqueleto
         // (No creo que en el Spectrum lo hicieran así, espero que no pete la memoria!!!!)
-        laberintoEsqueleto = miLaberinto
+        laberintoEsqueleto = Laberinto()
+        //laberintoEsqueleto = miLaberinto
         // decrementamos el valor de la posición del esqueleto ...
         // ... a menor valor, mayor número de veces que el esqueleto ha pasado por allí
         // siempre elegirá el valor mas alto para decidir la dirección a la que va
         laberintoEsqueleto.map[pX][pY]--
-        direccion = elegirDireccion(miLaberinto)
+        direccion = elegirDireccion(miLaberinto, 0, 0)
 
         Log.d("Miapp", "Esqueleto en: ${pX} - ${pY} ")
 
@@ -61,42 +58,36 @@ class Esqueleto : Enemigo() {
         // en el laberinto siempre hay 512 tiles de pasillo
         // si ven a Fred, van a por el!!
 
-        val direccionFred = fredALaVista(cX , cY)
-
-        if (direccionFred != Direcciones.PARADO) {
-            // Si ve a Fred, elegir la dirección
-            direccion = direccionFred
-        } else {
-            // si no ve a Fred, elige la dirección mas conveniente cuando estemos en el centro del tile
+            // Mover el esqueleto
             if (offsetX == 512) {
                 offsetX = 384
                 pX++
                 laberintoEsqueleto.map[pX][pY]--            // Decrementamos en 1 el valor de la posición del laberinto del esqueleto
-                direccion = elegirDireccion(miLaberinto)
+                direccion = elegirDireccion(miLaberinto, cX, cY)
             }
 
             if (offsetX == 256) {
                 offsetX = 384
                 pX--
                 laberintoEsqueleto.map[pX][pY]--            // Decrementamos en 1 el valor de la posición del laberinto del esqueleto
-                direccion = elegirDireccion(miLaberinto)
+                direccion = elegirDireccion(miLaberinto, cX, cY)
             }
 
             if (offsetY == 560) {
                 offsetY = 400
                 pY++
                 laberintoEsqueleto.map[pX][pY]--            // Decrementamos en 1 el valor de la posición del laberinto del esqueleto
-                direccion = elegirDireccion(miLaberinto)
+                direccion = elegirDireccion(miLaberinto, cX, cY)
             }
 
             if (offsetY == 240) {
                 offsetY = 400
                 pY--
                 laberintoEsqueleto.map[pX][pY]--            // Decrementamos en 1 el valor de la posición del laberinto del esqueleto
-                direccion = elegirDireccion(miLaberinto)
+                direccion = elegirDireccion(miLaberinto, cX, cY)
             }
 
-        }
+
 
         // actualizamos la animación
         animacionTick++
@@ -120,49 +111,89 @@ class Esqueleto : Enemigo() {
 
     }
 
-    private fun elegirDireccion (miLaberinto: Laberinto) : Direcciones {
+    private fun elegirDireccion (miLaberinto: Laberinto, cX: Int, cY: Int) : Direcciones {
         var direccionElegida = Direcciones.DERECHA
         // comprobar las salidas posibles y elegir según los criterios
         var salidas = mutableListOf<DecisionEsqueleto>()
+        var valorsalida = 0
+
 
         // Mirar que direcciones podemos ir, si el valor es menor de '2' (Muro) esque podemos movernos...
-        valorsalidaderecha = miLaberinto.map[pX + 1][pY]
-        if (valorsalidaderecha < 2) salidas.add(DecisionEsqueleto(Direcciones.DERECHA, valorsalidaderecha))
-        valorsalidaizquierda = miLaberinto.map[pX - 1][pY]
-        if (valorsalidaizquierda < 2) salidas.add(DecisionEsqueleto(Direcciones.IZQUIERDA, valorsalidaizquierda))
-        valorsalidaabajo = miLaberinto.map[pX][pY + 1]
-        if (valorsalidaabajo < 2) salidas.add(DecisionEsqueleto(Direcciones.ABAJO, valorsalidaabajo))
-        valorsalidaarriba = miLaberinto.map[pX][pY - 1]
-        if (valorsalidaarriba < 2) salidas.add(DecisionEsqueleto(Direcciones.ARRIBA, valorsalidaarriba))
+        if (miLaberinto.map[pX + 1][pY] < 2) {
+            valorsalida = laberintoEsqueleto.map[pX + 1][pY]
+            salidas.add(DecisionEsqueleto(Direcciones.DERECHA, valorsalida))
+        }
+        if (miLaberinto.map[pX - 1][pY] < 2) {
+            valorsalida = laberintoEsqueleto.map[pX - 1][pY]
+            salidas.add(DecisionEsqueleto(Direcciones.IZQUIERDA, valorsalida))
+        }
+        if (miLaberinto.map[pX][pY + 1] < 2) {
+            valorsalida = laberintoEsqueleto.map[pX][pY + 1]
+            salidas.add(DecisionEsqueleto(Direcciones.ABAJO, valorsalida))
+        }
+        if (miLaberinto.map[pX][pY - 1] < 2) {
+            valorsalida = laberintoEsqueleto.map[pX][pY - 1]
+            salidas.add(DecisionEsqueleto(Direcciones.ARRIBA, valorsalida))
+        }
 
-        // ordenamos las salidas por su valor y elegimos la mas alta, que será la que no hemos recorrido o hemos pasado menos veces
-        salidas.sortBy { it.valor }
-        return salidas.first().direccion
+
+        Log.d("Miapp" , "El esqueleto tiene ${salidas.size} salidas")
+
+        when (salidas.size) {
+            0 -> {
+                // En teoría siempre tiene que haber una salida, pongo esto por curiosidad
+                Log.d("Miapp" , "Esto es imposible, no puedes verlo")
+            }
+            1 -> {
+                // Callejón sin salida
+                laberintoEsqueleto.map[pX][pY]--            // Decrementamos en 1 el valor de la posición del laberinto del esqueleto porque es un callejón sin salida
+                return salidas.first().direccion
+            }
+            2 -> {
+                salidas.sortBy { it.valor }
+                return salidas.last().direccion
+            }
+            else -> {
+                // hay mas de 2 salidas, comprobar que no ve a fred
+                val direccionFred = fredALaVista(cX, cY , miLaberinto)
+                if (direccionFred != Direcciones.PARADO) {
+                    // Fred está cerca, el esqueleto puede verlo....
+                    return direccionFred
+                } else {
+                    // No ve a Fred, elegir la dirección según los valores establecidos en el laberinto del esqueleto
+                    // ordenamos las salidas por su valor y elegimos la mas alta, que será la que no hemos recorrido o hemos pasado menos veces
+                    salidas.sortBy { it.valor }
+                    return salidas.last().direccion
+                }
+            }
+        }
+        return Direcciones.PARADO
     }
 
-    private fun fredALaVista (cX: Int , cY: Int) : Direcciones {
-        // Niños no hardcodeeis esto en casa
+    private fun fredALaVista (cX: Int , cY: Int , miLaberinto: Laberinto) : Direcciones {
+
+        // Niños no hardcodeéis esto en casa
         when {
             // Mirar a la izquierda a ver si ve a Fred
-            (pX > 4 && laberintoEsqueleto.map[pX-1][pY] != 2 && cX - 1 == pX && cY == pY) -> return Direcciones.IZQUIERDA
-            (pX > 5 && laberintoEsqueleto.map[pX-1][pY] != 2 && laberintoEsqueleto.map[pX-2][pY] != 2 && cX - 2 == pX && cY == pY) -> return Direcciones.IZQUIERDA
-            (pX > 6 && laberintoEsqueleto.map[pX-1][pY] != 2 && laberintoEsqueleto.map[pX-2][pY] != 2 && laberintoEsqueleto.map[pX-3][pY] != 2 && cX - 3 == pX && cY == pY) -> return Direcciones.IZQUIERDA
-            (pX > 7 && laberintoEsqueleto.map[pX-1][pY] != 2 && laberintoEsqueleto.map[pX-2][pY] != 2 && laberintoEsqueleto.map[pX-3][pY] != 2 && laberintoEsqueleto.map[pX-4][pY] != 2 && cX - 4 == pX && cY == pY) -> return Direcciones.IZQUIERDA
+            (pX > 4 && miLaberinto.map[pX-1][pY] == 0 && cX  == pX - 1 && cY == pY) -> return Direcciones.IZQUIERDA
+            (pX > 5 && miLaberinto.map[pX-1][pY] == 0 && miLaberinto.map[pX-2][pY] == 0 && cX == pX - 2 && cY == pY) -> return Direcciones.IZQUIERDA
+            (pX > 6 && miLaberinto.map[pX-1][pY] == 0 && miLaberinto.map[pX-2][pY] == 0 && miLaberinto.map[pX-3][pY] == 0 && cX == pX - 3 && cY == pY) -> return Direcciones.IZQUIERDA
+            (pX > 7 && miLaberinto.map[pX-1][pY] == 0 && miLaberinto.map[pX-2][pY] == 0 && miLaberinto.map[pX-3][pY] == 0 && miLaberinto.map[pX-4][pY] == 0 && cX == pX - 4 && cY == pY) -> return Direcciones.IZQUIERDA
             // Mirar a la derecha a ver si ve a Fred
-            (pX < 34 && laberintoEsqueleto.map[pX+1][pY] != 2 && cX + 1 == pX && cY == pY) -> return Direcciones.DERECHA
-            (pX < 33 && laberintoEsqueleto.map[pX+1][pY] != 2 && laberintoEsqueleto.map[pX+2][pY] != 2 && cX + 2 == pX && cY == pY) -> return Direcciones.DERECHA
-            (pX < 32 && laberintoEsqueleto.map[pX+1][pY] != 2 && laberintoEsqueleto.map[pX+2][pY] != 2 && laberintoEsqueleto.map[pX+3][pY] != 2 && cX + 3 == pX && cY == pY) -> return Direcciones.DERECHA
-            (pX < 31 && laberintoEsqueleto.map[pX+1][pY] != 2 && laberintoEsqueleto.map[pX+2][pY] != 2 && laberintoEsqueleto.map[pX+3][pY] != 2 && laberintoEsqueleto.map[pX+4][pY] != 2 && cX + 4 == pX && cY == pY) -> return Direcciones.DERECHA
+            (pX < 34 && miLaberinto.map[pX+1][pY] == 0 && cX == pX + 1 && cY == pY) -> return Direcciones.DERECHA
+            (pX < 33 && miLaberinto.map[pX+1][pY] == 0 && miLaberinto.map[pX+2][pY] == 0 && cX == pX +2 && cY == pY) -> return Direcciones.DERECHA
+            (pX < 32 && miLaberinto.map[pX+1][pY] == 0 && miLaberinto.map[pX+2][pY] == 0 && miLaberinto.map[pX+3][pY] == 0 && cX == pX +3 && cY == pY) -> return Direcciones.DERECHA
+            (pX < 31 && miLaberinto.map[pX+1][pY] == 0 && miLaberinto.map[pX+2][pY] == 0 && miLaberinto.map[pX+3][pY] == 0 && miLaberinto.map[pX+4][pY] == 0 && cX == pX + 4 && cY == pY) -> return Direcciones.DERECHA
             // Mirar abajo a ver si ve a Fred
-            (pY < 34 && laberintoEsqueleto.map[pX][pY+1] != 2 && cX == pX && cY + 1 == pY) -> return Direcciones.ABAJO
-            (pY < 33 && laberintoEsqueleto.map[pX][pY+1] != 2 && laberintoEsqueleto.map[pX][pY+2] != 2 && cX == pX && cY + 2 == pY ) -> return Direcciones.ABAJO
-            (pY < 32 && laberintoEsqueleto.map[pX][pY+1] != 2 && laberintoEsqueleto.map[pX][pY+2] != 2 && laberintoEsqueleto.map[pX][pY+3] != 2 && cX == pX && cY + 3 == pY) -> return Direcciones.ABAJO
-            (pY < 31 && laberintoEsqueleto.map[pX][pY+1] != 2 && laberintoEsqueleto.map[pX][pY+2] != 2 && laberintoEsqueleto.map[pX][pY+3] != 2 && laberintoEsqueleto.map[pX][pY + 4] != 2 && cX == pX && cY + 4 == pY) -> return Direcciones.ABAJO
+            (pY < 34 && miLaberinto.map[pX][pY+1] == 0 && cX == pX && cY == pY + 1) -> return Direcciones.ABAJO
+            (pY < 33 && miLaberinto.map[pX][pY+1] == 0 && miLaberinto.map[pX][pY+2] == 0 && cX == pX && cY == pY + 2 ) -> return Direcciones.ABAJO
+            (pY < 32 && miLaberinto.map[pX][pY+1] == 0 && miLaberinto.map[pX][pY+2] == 0 && miLaberinto.map[pX][pY+3] == 0 && cX == pX && cY == pY + 3) -> return Direcciones.ABAJO
+            (pY < 31 && miLaberinto.map[pX][pY+1] == 0 && miLaberinto.map[pX][pY+2] == 0 && miLaberinto.map[pX][pY+3] == 0 && miLaberinto.map[pX][pY + 4] == 0 && cX == pX && cY == pY + 4) -> return Direcciones.ABAJO
             // Mirar arriba a ver si ve a Fred
-            (pY > 4 && laberintoEsqueleto.map[pX][pY-1] != 2 && cX == pX && cY - 1 == pY) -> return Direcciones.ABAJO
-            (pY > 5 && laberintoEsqueleto.map[pX][pY-1] != 2 && laberintoEsqueleto.map[pX][pY-2] != 2 && cX == pX && cY - 2 == pY ) -> return Direcciones.ABAJO
-            (pY > 6 && laberintoEsqueleto.map[pX][pY-1] != 2 && laberintoEsqueleto.map[pX][pY-2] != 2 && laberintoEsqueleto.map[pX][pY-3] != 2 && cX == pX && cY - 3 == pY) -> return Direcciones.ABAJO
-            (pY > 7 && laberintoEsqueleto.map[pX][pY-1] != 2 && laberintoEsqueleto.map[pX][pY-2] != 2 && laberintoEsqueleto.map[pX][pY-3] != 2 && laberintoEsqueleto.map[pX][pY - 4] != 2 && cX == pX && cY - 4 == pY) -> return Direcciones.ABAJO
+            (pY > 4 && miLaberinto.map[pX][pY-1] == 0 && cX == pX && cY == pY - 1) -> return Direcciones.ARRIBA
+            (pY > 5 && miLaberinto.map[pX][pY-1] == 0 && miLaberinto.map[pX][pY-2] == 0 && cX == pX && cY == pY - 2 ) -> return Direcciones.ARRIBA
+            (pY > 6 && miLaberinto.map[pX][pY-1] == 0 && miLaberinto.map[pX][pY-2] == 0 && miLaberinto.map[pX][pY-3] == 0 && cX == pX && cY == pY - 3) -> return Direcciones.ARRIBA
+            (pY > 7 && miLaberinto.map[pX][pY-1] == 0 && miLaberinto.map[pX][pY-2] == 0 && miLaberinto.map[pX][pY-3] == 0 && miLaberinto.map[pX][pY - 4] == 0 && cX == pX && cY == pY - 4) -> return Direcciones.ARRIBA
         }
         return Direcciones.PARADO
     }
