@@ -11,20 +11,10 @@
 
     <FrameLayout
         android:id="@+id/frame_fondo"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center|center_horizontal|center_vertical"
         android:layout_weight="2">
-
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/boton_disparo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="50dp"
-            android:layout_marginBottom="50dp"
-            app:srcCompat="@android:drawable/btn_star_big_on" />
 
         <ImageView
             android:id="@+id/image_view_juego"
@@ -33,11 +23,46 @@
             android:cropToPadding="true"
             android:padding="5dp" />
 
+        <RelativeLayout
+            android:id="@+id/relative_botones"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/flecha_abajo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@id/flecha_izquierda" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/flecha_arriba"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/flecha_derecha"
+                android:layout_toRightOf="@id/flecha_izquierda" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/flecha_izquierda"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/flecha_abajo" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/flecha_derecha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/flecha_abajo"
+                android:layout_toRightOf="@id/flecha_abajo" />
+
+        </RelativeLayout>
+
     </FrameLayout>
 
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center_horizontal"
@@ -45,7 +70,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:gravity="center_horizontal"
@@ -54,13 +79,14 @@
             <TextView
                 android:id="@+id/balasTV"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
+                android:layout_weight="1"
                 android:background="@color/white"
                 android:fontFamily="monospace"
                 android:text="Balas: 6 "
@@ -69,12 +95,13 @@
             <TextView
                 android:id="@+id/alturaTV"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
+                android:layout_weight="1"
                 android:background="@color/white"
                 android:fontFamily="monospace"
                 android:text="Altura: "
@@ -83,71 +110,132 @@
             <TextView
                 android:id="@+id/nivelTV"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
+                android:layout_weight="1"
                 android:background="@color/white"
                 android:fontFamily="monospace"
                 android:text="Nivel: 1"
                 android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/vidaTV"
+            <Space
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/mapTV"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_weight="1"
                 android:background="@color/white"
                 android:fontFamily="monospace"
-                android:text="Vida: ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓"
+                android:text="MAPA"
                 android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:src="@drawable/fondomapa"
+                android:layout_weight="4"
+                android:background="@android:color/holo_blue_dark" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/vidaTV"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:fontFamily="monospace"
+                android:text="Vida:"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@android:color/holo_green_dark" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/puntosTV"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:fontFamily="monospace"
+                android:text="Puntos: 000000"
+                android:textSize="16sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/maxTV"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:fontFamily="monospace"
+                android:text="MAX: 000000"
+                android:textSize="16sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/relative_botones"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/boton_disparo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="20dp"
+            app:srcCompat="@android:drawable/btn_star_big_on" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/flecha_abajo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="10dp"/>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/flecha_arriba"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/flecha_derecha"
-                android:layout_centerHorizontal="true" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/flecha_izquierda"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/flecha_abajo"
-                android:layout_toLeftOf="@id/flecha_abajo"
-                />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/flecha_derecha"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/flecha_abajo"
-                android:layout_toRightOf="@id/flecha_arriba"
-              />
-
-        </RelativeLayout>
-    </LinearLayout>
+    </FrameLayout>
 
 
 </LinearLayout>

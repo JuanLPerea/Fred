@@ -40,12 +40,12 @@ class MainActivity : AppCompatActivity() {
 
     // Establecemos el número de enemigos de cada tipo
     var numeroGotasAcidoEnLaberinto = 0
-    var numeroEspinetesEnLaberinto = 0
+    var numeroEspinetesEnLaberinto = 1
     var numeroFantasmasEnLaberinto = 0
     var numeroLagartijasEnLaberinto = 0
     var numeroMomiasEnLaberinto = 0
     var numeroVampirosEnLaberinto = 0
-    var numeroEsqueletosEnLaberinto = 1
+    var numeroEsqueletosEnLaberinto = 0
 
 
     lateinit var fredd : Bitmap                                     // 0
@@ -300,12 +300,16 @@ class MainActivity : AppCompatActivity() {
                 listaEnemigos.forEach { enemigo ->
                     // actualizar enemigos
                     enemigo.actualizarEntidad(miLaberinto, cX, cY)
+                    /*
                     if (enemigo is GotaAcido) {
                         if (enemigo.detectarColision(cX,cY, pasoX,pasoY,fred) && fred.tocado == 0) {
                             fred.vida--
                             fred.tocado = 1
                         }
+
                     }
+
+                    */
                 }
 
 
@@ -316,13 +320,9 @@ class MainActivity : AppCompatActivity() {
 
                 runOnUiThread {
                     crearFondo(cX - 4, cY - 3, pasoX, pasoY)
-                    alturaTV.text = "Altura: $cY + Posicion X : $cX"
+                    alturaTV.text = "Altura: $cY"
                     balasTV.text = "Balas ${fred.balas}"
-                    var charvida = ""
-                    for (n in 0..fred.vida) {
-                        charvida += "▓"
-                    }
-                    vidaTV.text = "Vida: " + charvida
+                    vidaTV.text = "Vida: " + fred.vida
                 }
                 //    Log.d("Miapp" , "pasoX: " + pasoX + " PasoY: " + pasoY)
             }
@@ -347,6 +347,8 @@ class MainActivity : AppCompatActivity() {
         for (n in (1..numeroEspinetesEnLaberinto)) {
             val espineteTMP = Espinete()
             espineteTMP.newEspinete(this , listaUbicacionesPasilloHorizontal.get(n))
+            espineteTMP.pX = cX
+            espineteTMP.pY = cY
             listaEnemigos.add(espineteTMP)
         }
         listaUbicacionesPasilloHorizontal.shuffle()
@@ -392,13 +394,11 @@ class MainActivity : AppCompatActivity() {
             val esqueletoTMP = Esqueleto()
             val coordenada = listaUbicacionesPasilloHorizontal.get(n)
             esqueletoTMP.newEsqueleto(this, coordenada, miLaberinto)
-            esqueletoTMP.pX = cX
-            esqueletoTMP.pY = cY
             listaEnemigos.add(esqueletoTMP)
         }
 
     }
-
+/*
     private fun detectarColision(bitmapFred: Bitmap) {
      // crear un bitmap con un recorte centrado en Fred
      // chequear algunos pixeles en la imagen y si no son amarillos
@@ -420,12 +420,9 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-
-
-
     }
 
-
+*/
     private fun establecerListeners() {
 
         botonDisparo.setOnTouchListener { v , event ->
@@ -580,6 +577,18 @@ class MainActivity : AppCompatActivity() {
         listaEnemigos.forEach { enemigo ->
             // si las coordenadas de la entidad enemiga están dentro de la zona visible....
             if (enemigo.pX > (cX-5) && enemigo.pX < (cX + 5) && enemigo.pY > (cY-4) && enemigo.pY < (cY + 4)) {
+
+                // Detectar colisiones ...
+                   if (enemigo.detectarColision(cX, cY, pasoX, pasoY, fred)) {
+                    //   fred.vida--
+                       fred.tocado = 1
+                       if (fred.vida == 0) {
+                           finish()
+                       }
+                   }
+
+
+                // Pintar enemigo ...
                 val diferenciaX = enemigo.pX - cX
                 val diferenciaY = enemigo.pY - cY
                 val enemigoBitmap = enemigo.devolverBitmap()
@@ -590,8 +599,8 @@ class MainActivity : AppCompatActivity() {
 
         // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         // detectar Colisiones de Fred con enemigos u objetos
-        val bitmapFred = Bitmap.createBitmap(bitmapFondo, 384, 240, 128, 160)
-        detectarColision(bitmapFred)
+      //  val bitmapFred = Bitmap.createBitmap(bitmapFondo, 384, 240, 128, 160)
+        //Colision(bitmapFred)
 
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         // Pintar a Fred

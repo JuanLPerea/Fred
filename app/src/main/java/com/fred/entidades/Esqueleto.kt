@@ -137,7 +137,7 @@ class Esqueleto : Enemigo() {
         }
 
 
-        Log.d("Miapp" , "El esqueleto tiene ${salidas.size} salidas")
+     //   Log.d("Miapp" , "El esqueleto tiene ${salidas.size} salidas")
 
         when (salidas.size) {
             0 -> {
@@ -175,25 +175,25 @@ class Esqueleto : Enemigo() {
         // Niños no hardcodeéis esto en casa
         when {
             // Mirar a la izquierda a ver si ve a Fred
-            (pX > 4 && miLaberinto.map[pX-1][pY] == 0 && cX  == pX - 1 && cY == pY) -> return Direcciones.IZQUIERDA
-            (pX > 5 && miLaberinto.map[pX-1][pY] == 0 && miLaberinto.map[pX-2][pY] == 0 && cX == pX - 2 && cY == pY) -> return Direcciones.IZQUIERDA
-            (pX > 6 && miLaberinto.map[pX-1][pY] == 0 && miLaberinto.map[pX-2][pY] == 0 && miLaberinto.map[pX-3][pY] == 0 && cX == pX - 3 && cY == pY) -> return Direcciones.IZQUIERDA
-            (pX > 7 && miLaberinto.map[pX-1][pY] == 0 && miLaberinto.map[pX-2][pY] == 0 && miLaberinto.map[pX-3][pY] == 0 && miLaberinto.map[pX-4][pY] == 0 && cX == pX - 4 && cY == pY) -> return Direcciones.IZQUIERDA
+            (direccion != Direcciones.DERECHA && pX > 4 && miLaberinto.map[pX-1][pY] == 0 && cX  == pX - 1 && cY == pY) -> return Direcciones.IZQUIERDA
+            (direccion != Direcciones.DERECHA && pX > 5 && miLaberinto.map[pX-1][pY] == 0 && miLaberinto.map[pX-2][pY] == 0 && cX == pX - 2 && cY == pY) -> return Direcciones.IZQUIERDA
+            (direccion != Direcciones.DERECHA && pX > 6 && miLaberinto.map[pX-1][pY] == 0 && miLaberinto.map[pX-2][pY] == 0 && miLaberinto.map[pX-3][pY] == 0 && cX == pX - 3 && cY == pY) -> return Direcciones.IZQUIERDA
+            (direccion != Direcciones.DERECHA && pX > 7 && miLaberinto.map[pX-1][pY] == 0 && miLaberinto.map[pX-2][pY] == 0 && miLaberinto.map[pX-3][pY] == 0 && miLaberinto.map[pX-4][pY] == 0 && cX == pX - 4 && cY == pY) -> return Direcciones.IZQUIERDA
             // Mirar a la derecha a ver si ve a Fred
-            (pX < 34 && miLaberinto.map[pX+1][pY] == 0 && cX == pX + 1 && cY == pY) -> return Direcciones.DERECHA
-            (pX < 33 && miLaberinto.map[pX+1][pY] == 0 && miLaberinto.map[pX+2][pY] == 0 && cX == pX +2 && cY == pY) -> return Direcciones.DERECHA
-            (pX < 32 && miLaberinto.map[pX+1][pY] == 0 && miLaberinto.map[pX+2][pY] == 0 && miLaberinto.map[pX+3][pY] == 0 && cX == pX +3 && cY == pY) -> return Direcciones.DERECHA
-            (pX < 31 && miLaberinto.map[pX+1][pY] == 0 && miLaberinto.map[pX+2][pY] == 0 && miLaberinto.map[pX+3][pY] == 0 && miLaberinto.map[pX+4][pY] == 0 && cX == pX + 4 && cY == pY) -> return Direcciones.DERECHA
+            (direccion != Direcciones.IZQUIERDA && pX < 34 && miLaberinto.map[pX+1][pY] == 0 && cX == pX + 1 && cY == pY) -> return Direcciones.DERECHA
+            (direccion != Direcciones.IZQUIERDA &&pX < 33 && miLaberinto.map[pX+1][pY] == 0 && miLaberinto.map[pX+2][pY] == 0 && cX == pX +2 && cY == pY) -> return Direcciones.DERECHA
+            (direccion != Direcciones.IZQUIERDA &&pX < 32 && miLaberinto.map[pX+1][pY] == 0 && miLaberinto.map[pX+2][pY] == 0 && miLaberinto.map[pX+3][pY] == 0 && cX == pX +3 && cY == pY) -> return Direcciones.DERECHA
+            (direccion != Direcciones.IZQUIERDA &&pX < 31 && miLaberinto.map[pX+1][pY] == 0 && miLaberinto.map[pX+2][pY] == 0 && miLaberinto.map[pX+3][pY] == 0 && miLaberinto.map[pX+4][pY] == 0 && cX == pX + 4 && cY == pY) -> return Direcciones.DERECHA
             // Mirar abajo a ver si ve a Fred
-            (pY < 34 && miLaberinto.map[pX][pY+1] == 0 && cX == pX && cY == pY + 1) -> return Direcciones.ABAJO
-            (pY < 33 && miLaberinto.map[pX][pY+1] == 0 && miLaberinto.map[pX][pY+2] == 0 && cX == pX && cY == pY + 2 ) -> return Direcciones.ABAJO
-            (pY < 32 && miLaberinto.map[pX][pY+1] == 0 && miLaberinto.map[pX][pY+2] == 0 && miLaberinto.map[pX][pY+3] == 0 && cX == pX && cY == pY + 3) -> return Direcciones.ABAJO
-            (pY < 31 && miLaberinto.map[pX][pY+1] == 0 && miLaberinto.map[pX][pY+2] == 0 && miLaberinto.map[pX][pY+3] == 0 && miLaberinto.map[pX][pY + 4] == 0 && cX == pX && cY == pY + 4) -> return Direcciones.ABAJO
+            (direccion != Direcciones.ARRIBA && pY < 34 && miLaberinto.map[pX][pY+1] == 0 && cX == pX && cY == pY + 1) -> return Direcciones.ABAJO
+            (direccion != Direcciones.ARRIBA && pY < 33 && miLaberinto.map[pX][pY+1] == 0 && miLaberinto.map[pX][pY+2] == 0 && cX == pX && cY == pY + 2 ) -> return Direcciones.ABAJO
+            (direccion != Direcciones.ARRIBA && pY < 32 && miLaberinto.map[pX][pY+1] == 0 && miLaberinto.map[pX][pY+2] == 0 && miLaberinto.map[pX][pY+3] == 0 && cX == pX && cY == pY + 3) -> return Direcciones.ABAJO
+            (direccion != Direcciones.ARRIBA && pY < 31 && miLaberinto.map[pX][pY+1] == 0 && miLaberinto.map[pX][pY+2] == 0 && miLaberinto.map[pX][pY+3] == 0 && miLaberinto.map[pX][pY + 4] == 0 && cX == pX && cY == pY + 4) -> return Direcciones.ABAJO
             // Mirar arriba a ver si ve a Fred
-            (pY > 4 && miLaberinto.map[pX][pY-1] == 0 && cX == pX && cY == pY - 1) -> return Direcciones.ARRIBA
-            (pY > 5 && miLaberinto.map[pX][pY-1] == 0 && miLaberinto.map[pX][pY-2] == 0 && cX == pX && cY == pY - 2 ) -> return Direcciones.ARRIBA
-            (pY > 6 && miLaberinto.map[pX][pY-1] == 0 && miLaberinto.map[pX][pY-2] == 0 && miLaberinto.map[pX][pY-3] == 0 && cX == pX && cY == pY - 3) -> return Direcciones.ARRIBA
-            (pY > 7 && miLaberinto.map[pX][pY-1] == 0 && miLaberinto.map[pX][pY-2] == 0 && miLaberinto.map[pX][pY-3] == 0 && miLaberinto.map[pX][pY - 4] == 0 && cX == pX && cY == pY - 4) -> return Direcciones.ARRIBA
+            (direccion != Direcciones.ABAJO && pY > 4 && miLaberinto.map[pX][pY-1] == 0 && cX == pX && cY == pY - 1) -> return Direcciones.ARRIBA
+            (direccion != Direcciones.ABAJO && pY > 5 && miLaberinto.map[pX][pY-1] == 0 && miLaberinto.map[pX][pY-2] == 0 && cX == pX && cY == pY - 2 ) -> return Direcciones.ARRIBA
+            (direccion != Direcciones.ABAJO && pY > 6 && miLaberinto.map[pX][pY-1] == 0 && miLaberinto.map[pX][pY-2] == 0 && miLaberinto.map[pX][pY-3] == 0 && cX == pX && cY == pY - 3) -> return Direcciones.ARRIBA
+            (direccion != Direcciones.ABAJO && pY > 7 && miLaberinto.map[pX][pY-1] == 0 && miLaberinto.map[pX][pY-2] == 0 && miLaberinto.map[pX][pY-3] == 0 && miLaberinto.map[pX][pY - 4] == 0 && cX == pX && cY == pY - 4) -> return Direcciones.ARRIBA
         }
         return Direcciones.PARADO
     }

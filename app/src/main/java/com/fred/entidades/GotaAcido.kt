@@ -73,7 +73,7 @@ class GotaAcido() : Enemigo () {
     override fun detectarColision(fX : Int , fY : Int, pasoX : Int, pasoY : Int, fred: Fred): Boolean {
 
        // Log.d("Miapp", "fx: ${fX} pX: ${pX} py: ${pY} pasoX: ${pasoX} lado: ${fred.lado}")
-
+/*
         if (animacionTick > 5) {
 
             if (fX == pX && fY == pY) {
@@ -100,7 +100,7 @@ class GotaAcido() : Enemigo () {
             }
 
         }
-
+*/
         return false
     }
 
