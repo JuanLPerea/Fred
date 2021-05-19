@@ -40,8 +40,8 @@ class MainActivity : AppCompatActivity() {
 
     // Establecemos el número de enemigos de cada tipo
     var numeroGotasAcidoEnLaberinto = 0
-    var numeroEspinetesEnLaberinto = 1
-    var numeroFantasmasEnLaberinto = 0
+    var numeroEspinetesEnLaberinto = 0
+    var numeroFantasmasEnLaberinto = 100
     var numeroLagartijasEnLaberinto = 0
     var numeroMomiasEnLaberinto = 0
     var numeroVampirosEnLaberinto = 0
@@ -291,9 +291,6 @@ class MainActivity : AppCompatActivity() {
                             } else fred.estadoFred = EstadosFred.QUIETO
                         }
                     }
-
-
-
                 }
 
 
@@ -347,8 +344,6 @@ class MainActivity : AppCompatActivity() {
         for (n in (1..numeroEspinetesEnLaberinto)) {
             val espineteTMP = Espinete()
             espineteTMP.newEspinete(this , listaUbicacionesPasilloHorizontal.get(n))
-            espineteTMP.pX = cX
-            espineteTMP.pY = cY
             listaEnemigos.add(espineteTMP)
         }
         listaUbicacionesPasilloHorizontal.shuffle()
@@ -398,31 +393,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-/*
-    private fun detectarColision(bitmapFred: Bitmap) {
-     // crear un bitmap con un recorte centrado en Fred
-     // chequear algunos pixeles en la imagen y si no son amarillos
-     // decidir si hay daño o es un objeto ...
 
-        // Si Fred no está tocado
-        if (fred.tocado == 0) {
-            val pixel1 = bitmapFred.getPixel(30, 144)
-            val pixel2 = bitmapFred.getPixel(90, 144)
-            val pixel3 = bitmapFred.getPixel(64, 144)
-
-            // Detectar Espinetes
-            if ((pixel1 == -65281  || pixel2 == -65281 || pixel3 == -65281) && !fred.cuerda && (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.QUIETO)) {
-                fred.vida--
-                fred.tocado = 1
-            }
-
-            if (fred.vida == 0) finish()
-
-        }
-
-    }
-
-*/
     private fun establecerListeners() {
 
         botonDisparo.setOnTouchListener { v , event ->
@@ -580,23 +551,14 @@ class MainActivity : AppCompatActivity() {
 
                 // Detectar colisiones ...
 
-              if (enemigo is Espinete) {
+              if (enemigo is Fantasma) {
                   val coordenadas = enemigo.dibujarCajasColision(cX,cY,pasoX,pasoY,fred)
                   var pintura = Paint()
                   pintura.style = Paint.Style.STROKE
                   pintura.strokeWidth = 4F
                   pintura.setARGB(255,0,255,255)
-                  var pintura2 = Paint()
-                  pintura2.style = Paint.Style.STROKE
-                  pintura2.strokeWidth = 4F
-                  pintura2.setARGB(128,255,255,255)
-
-                  //lienzo.drawCircle(coordenadas.x1, coordenadas.y1, 20F, pintura)
                   lienzo.drawRect(coordenadas.x1 , coordenadas.y1 , coordenadas.x2  , coordenadas.y2, pintura)
-                  lienzo.drawRect(coordenadas.fredx1 , coordenadas.fredy1 , coordenadas.fredx2  , coordenadas.fredy2, pintura2)
               }
-
-
 
                    if (enemigo.detectarColision(cX, cY, pasoX, pasoY, fred)) {
                     //   fred.vida--
@@ -616,10 +578,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        // detectar Colisiones de Fred con enemigos u objetos
-      //  val bitmapFred = Bitmap.createBitmap(bitmapFondo, 384, 240, 128, 160)
-        //Colision(bitmapFred)
 
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         // Pintar a Fred
@@ -664,6 +622,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
+        // pintar la caja de colision
+        var pintura2 = Paint()
+        pintura2.style = Paint.Style.STROKE
+        pintura2.strokeWidth = 4F
+        pintura2.setARGB(128,255,255,255)
+
+        val coordenadas = fred.cajaColisionFred()
+        lienzo.drawRect(coordenadas.x1 , coordenadas.y1 , coordenadas.x2  , coordenadas.y2, pintura2)
 
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         // TODO Pintar los objetos

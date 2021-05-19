@@ -4,10 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
-import com.fred.Coordenada
-import com.fred.Laberinto
-import com.fred.Lado
-import com.fred.R
+import com.fred.*
 
 class GotaAcido() : Enemigo () {
     lateinit var gota1 : Bitmap
@@ -70,39 +67,52 @@ class GotaAcido() : Enemigo () {
         return gota11
     }
 
-    override fun detectarColision(fX : Int , fY : Int, pasoX : Int, pasoY : Int, fred: Fred): Boolean {
+    override fun detectarColision(cX : Int , cY : Int, pasoX : Int, pasoY : Int, fred: Fred): Boolean {
+        val coordenadasCaja = calcularCoordenadas(cX, cY,pasoX,pasoY,fred)
+        // finalmente comprobamos que las coordenadas no se solapen
+        var colision = true
+        val cajaColisionFred = fred.cajaColisionFred()
+        if (coordenadasCaja.x1 > cajaColisionFred.x2) colision = false
+        if (coordenadasCaja.x2 < cajaColisionFred.x1) colision = false
+        if (coordenadasCaja.y1 > cajaColisionFred.y2) colision = false
+        if (coordenadasCaja.y2 < cajaColisionFred.y1) colision = false
 
-       // Log.d("Miapp", "fx: ${fX} pX: ${pX} py: ${pY} pasoX: ${pasoX} lado: ${fred.lado}")
-/*
-        if (animacionTick > 5) {
-
-            if (fX == pX && fY == pY) {
-                if (fred.lado == Lado.DERECHA) {
-                    if (pasoX > -64) return true
-                } else {
-                    if (pasoX < 64) return true
-                }
-            } else {
-                // si está en el tile de la derecha
-                if (fX + 1 == pX && fY == pY) {
-                    if (fred.lado == Lado.DERECHA) {
-                        if (pasoX < -32) return true
-                    }
-                } else {
-                    if (fX - 1 == pX && fY == pY) {
-                        // si está en el tile de la izquierda
-                        if (fred.lado == Lado.IZQUIERDA) {
-                            if (pasoX > 64) return true
-
-                        }
-                    }
-                }
-            }
-
-        }
-*/
-        return false
+        //    Log.d ("Miapp" , "Espinete: ${coordenadasCaja.x1},${coordenadasCaja.y1}   ${coordenadasCaja.x2},${coordenadasCaja.y2}    Fred: ${coordenadasCaja.fredx1},${coordenadasCaja.fredy1}    ${coordenadasCaja.fredx2},${coordenadasCaja.fredy2}     ${colision}")
+        return colision
     }
 
+    fun dibujarCajasColision (cX: Int, cY: Int, pasoX: Int, pasoY: Int, fred: Fred) : CajaDeColision {
+        val coordenadasCaja = calcularCoordenadas(cX, cY,pasoX,pasoY,fred)
+        return coordenadasCaja
+    }
+
+    fun calcularCoordenadas (cX: Int, cY: Int, pasoX: Int, pasoY: Int, fred: Fred) : CajaDeColision {
+        // Calcular el punto de arriba de la izquierda del sprite
+        var desplazamientoX = 45
+        var desplazamientoY = 0
+
+        when (animacionTick) {
+            6 -> desplazamientoY = 32
+            7 -> desplazamientoY = 65
+            8 -> desplazamientoY = 97
+            9 -> desplazamientoY = 125
+           10 -> desplazamientoY = 150
+        }
+
+        val anchuraGota = 40
+        val alturaGota = 20
+        val diferenciaX = pX - cX
+        val diferenciaY = pY - cY
+
+        // punto de la esquina de arriba de la izquierda del sprite
+        val x1 = (diferenciaX * 128) + pasoX + offsetX + desplazamientoX
+        val y1 = (diferenciaY * 160) + pasoY + offsetY + desplazamientoY
+        val x2 = x1 + anchuraGota
+        val y2 = y1 + alturaGota
+
+        // ------------------------------------------------------------------------------------------------------------------------------------------
+        val coordenadasCaja = CajaDeColision(x1.toFloat(),y1.toFloat(),x2.toFloat(),y2.toFloat())
+        return coordenadasCaja
+    }
 
 }

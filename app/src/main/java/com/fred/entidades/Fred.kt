@@ -1,6 +1,7 @@
 package com.fred.entidades
 
 import android.util.Log
+import com.fred.CajaDeColision
 import com.fred.EstadosFred
 import com.fred.Lado
 
@@ -20,7 +21,7 @@ class Fred() {
     var lado = Lado.DERECHA
 
     fun animacionFred(): Int {
-        // Lógica Planteamiento: Estados de Fred
+        // Lógica Planteamiento: EstadosFred. de Fred
         // Parado
         // Caminando
         // Saltando
@@ -139,6 +140,62 @@ class Fred() {
             else -> Log.d("Miapp" , "Fred sin estado!!!!")
         }
         return 99
+    }
+
+    fun cajaColisionFred () : CajaDeColision {
+        // Sprite Fred completo
+        var fredx1 = 384
+        var fredy1 = 240
+        var fredx2 = 512
+        var fredy2 = 400
+        // Coordenadas de Fred, dependen de como se esté moviendo
+        when {
+            !cuerda && lado == Lado.DERECHA && (estadoFred == EstadosFred.QUIETO || (estadoFred == EstadosFred.CAMINANDO && scrollTick != 2 ))-> {
+                // Fred quieto derecha o caminando en la animacion 0 ò 1
+                fredx1 = 400
+                fredy1 = 264
+                fredx2 = 496
+                fredy2 = 400
+            }
+            !cuerda && lado == Lado.IZQUIERDA && (estadoFred == EstadosFred.QUIETO || (estadoFred == EstadosFred.CAMINANDO  && scrollTick != 2))-> {
+                // fred quieto izquierda o caminando en la animacion 0 ó 1
+                fredx1 = 400
+                fredy1 = 264
+                fredx2 = 490
+                fredy2 = 400
+            }
+            estadoFred == EstadosFred.CAMINANDO && scrollTick == 2 -> {
+                // fred caminando derecha o izquierda
+                fredx1 = 384
+                fredy1 = 264
+                fredx2 = 512
+                fredy2 = 400
+            }
+            estadoFred == EstadosFred.SALTANDO || estadoFred == EstadosFred.SALTANDOCUERDA -> {
+                // fred saltando
+                fredx1 = 384
+                fredy1 = 246
+                fredx2 = 512
+                fredy2 = 372
+            }
+            lado == Lado.IZQUIERDA && cuerda -> {
+                // fred cuerda derecha
+                fredx1 = 432
+                fredy1 = 241
+                fredx2 = 512
+                fredy2 = 340
+            }
+            lado == Lado.DERECHA && cuerda -> {
+                // fred cuerda izquierda
+                fredx1 = 384
+                fredy1 = 241
+                fredx2 = 464
+                fredy2 = 340
+            }
+
+        }
+        val coordenada = CajaDeColision(fredx1.toFloat(), fredy1.toFloat(), fredx2.toFloat(), fredy2.toFloat())
+        return coordenada
     }
 
 }
