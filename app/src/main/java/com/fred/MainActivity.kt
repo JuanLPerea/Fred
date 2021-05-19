@@ -27,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var balasTV : TextView
     lateinit var vidaTV : TextView
     lateinit var fred: Fred
+    lateinit var barraVida : ImageView
+
     var cX = 0
     var cY = 0
     var pasoX = 0
@@ -36,16 +38,16 @@ class MainActivity : AppCompatActivity() {
     var pulsadoIzquierda = false
     var pulsadoDerecha = false
     var pulsadoDisparo = false
-    var velocidadJuego = 150L
+    var velocidadJuego = 200L
 
     // Establecemos el número de enemigos de cada tipo
-    var numeroGotasAcidoEnLaberinto = 0
-    var numeroEspinetesEnLaberinto = 0
-    var numeroFantasmasEnLaberinto = 0
-    var numeroLagartijasEnLaberinto = 0
-    var numeroMomiasEnLaberinto = 100
-    var numeroVampirosEnLaberinto = 0
-    var numeroEsqueletosEnLaberinto = 0
+    var numeroGotasAcidoEnLaberinto = 10
+    var numeroEspinetesEnLaberinto = 10
+    var numeroFantasmasEnLaberinto = 5
+    var numeroLagartijasEnLaberinto = 10
+    var numeroMomiasEnLaberinto = 5
+    var numeroVampirosEnLaberinto = 1
+    var numeroEsqueletosEnLaberinto = 1
 
 
     lateinit var fredd : Bitmap                                     // 0
@@ -112,6 +114,7 @@ class MainActivity : AppCompatActivity() {
         alturaTV = findViewById(R.id.alturaTV)
         balasTV = findViewById(R.id.balasTV)
         vidaTV = findViewById(R.id.vidaTV)
+        barraVida = findViewById(R.id.barraVida)
 
         // Creamos a nuestro protagonista
         fred = Fred()
@@ -134,7 +137,7 @@ class MainActivity : AppCompatActivity() {
             cX = (3..29).shuffled().last()
         } while (miLaberinto.map[cX][cY] != 0)
         crearFondo(cX - 4, cY - 3, pasoX, pasoY)
-
+        actualizarBarraVida()
         crearEnemigos()
 
         // TODO crear objetos
@@ -320,6 +323,8 @@ class MainActivity : AppCompatActivity() {
                     alturaTV.text = "Altura: $cY"
                     balasTV.text = "Balas ${fred.balas}"
                     vidaTV.text = "Vida: " + fred.vida
+
+
                 }
                 //    Log.d("Miapp" , "pasoX: " + pasoX + " PasoY: " + pasoY)
             }
@@ -562,13 +567,16 @@ class MainActivity : AppCompatActivity() {
               }
                 */
                    if (enemigo.detectarColision(cX, cY, pasoX, pasoY, fred)) {
-                    //   fred.vida--
-                       fred.tocado = 1
+                       if (fred.tocado == 0) {
+                           fred.vida--
+                           fred.tocado = 1
+                           actualizarBarraVida()
+                       }
+
                        if (fred.vida == 0) {
                            finish()
                        }
                    }
-
 
                 // Pintar enemigo ...
                 val diferenciaX = enemigo.pX - cX
@@ -640,17 +648,26 @@ class MainActivity : AppCompatActivity() {
         fondo.setImageBitmap(bitmapFondo)
     }
 
+    private fun actualizarBarraVida() {
+        var bitmapVida = Bitmap.createBitmap(150, 20, Bitmap.Config.ARGB_8888)
+        var lienzovida = Canvas(bitmapVida)
+        var pinturavida = Paint()
+        pinturavida.style = Paint.Style.FILL
+        pinturavida.strokeWidth = 4F
+        pinturavida.setARGB(255,50 + (fred.vida * 10),150 - (fred.vida * -10),25 )
+        lienzovida.drawRect(0F,0F, (fred.vida  * 10).toFloat(),20F, pinturavida)
+        barraVida.setImageBitmap(bitmapVida)
+    }
+
 // **********************************************************************************************************************
 
     private fun dibujarLaberintoTexto(miLaberinto: Laberinto) {
-        var contarCasillas = 0
         var fila = ""
         for (y in 0..35) {
             for (x in 0..36) {
                 when (miLaberinto.map[x][y]) {
                     0 -> {
                         fila += " "
-                        contarCasillas++
                     }
                     2 -> fila += "X"
                 }
@@ -658,7 +675,6 @@ class MainActivity : AppCompatActivity() {
             fila += "\n"
             Log.d("Miapp", fila)
         }
-        Log.d("Miapp", "casillas totales: ${contarCasillas}")
     }
 
 

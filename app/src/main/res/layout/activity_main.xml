@@ -145,9 +145,8 @@
                 android:id="@+id/imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:src="@drawable/fondomapa"
                 android:layout_weight="4"
-                android:background="@android:color/holo_blue_dark" />
+                android:src="@drawable/fondomapa" />
 
             <Space
                 android:layout_width="match_parent"
@@ -169,14 +168,14 @@
                 android:textSize="16sp" />
 
             <ImageView
+                android:id="@+id/barraVida"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:background="@android:color/holo_green_dark" />
+                android:layout_weight="1" />
 
             <Space
                 android:layout_width="match_parent"
