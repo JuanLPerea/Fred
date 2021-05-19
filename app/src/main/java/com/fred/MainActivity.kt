@@ -579,6 +579,25 @@ class MainActivity : AppCompatActivity() {
             if (enemigo.pX > (cX-5) && enemigo.pX < (cX + 5) && enemigo.pY > (cY-4) && enemigo.pY < (cY + 4)) {
 
                 // Detectar colisiones ...
+
+              if (enemigo is Espinete) {
+                  val coordenadas = enemigo.dibujarCajasColision(cX,cY,pasoX,pasoY,fred)
+                  var pintura = Paint()
+                  pintura.style = Paint.Style.STROKE
+                  pintura.strokeWidth = 4F
+                  pintura.setARGB(255,0,255,255)
+                  var pintura2 = Paint()
+                  pintura2.style = Paint.Style.STROKE
+                  pintura2.strokeWidth = 4F
+                  pintura2.setARGB(128,255,255,255)
+
+                  //lienzo.drawCircle(coordenadas.x1, coordenadas.y1, 20F, pintura)
+                  lienzo.drawRect(coordenadas.x1 , coordenadas.y1 , coordenadas.x2  , coordenadas.y2, pintura)
+                  lienzo.drawRect(coordenadas.fredx1 , coordenadas.fredy1 , coordenadas.fredx2  , coordenadas.fredy2, pintura2)
+              }
+
+
+
                    if (enemigo.detectarColision(cX, cY, pasoX, pasoY, fred)) {
                     //   fred.vida--
                        fred.tocado = 1
