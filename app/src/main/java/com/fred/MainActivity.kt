@@ -41,9 +41,9 @@ class MainActivity : AppCompatActivity() {
     // Establecemos el número de enemigos de cada tipo
     var numeroGotasAcidoEnLaberinto = 0
     var numeroEspinetesEnLaberinto = 0
-    var numeroFantasmasEnLaberinto = 100
+    var numeroFantasmasEnLaberinto = 0
     var numeroLagartijasEnLaberinto = 0
-    var numeroMomiasEnLaberinto = 0
+    var numeroMomiasEnLaberinto = 100
     var numeroVampirosEnLaberinto = 0
     var numeroEsqueletosEnLaberinto = 0
 
@@ -550,8 +550,9 @@ class MainActivity : AppCompatActivity() {
             if (enemigo.pX > (cX-5) && enemigo.pX < (cX + 5) && enemigo.pY > (cY-4) && enemigo.pY < (cY + 4)) {
 
                 // Detectar colisiones ...
-
-              if (enemigo is Fantasma) {
+                /*
+                // Descomentar este bloque de código para ver las cajas de colisión
+              if (enemigo is Lagartija) {
                   val coordenadas = enemigo.dibujarCajasColision(cX,cY,pasoX,pasoY,fred)
                   var pintura = Paint()
                   pintura.style = Paint.Style.STROKE
@@ -559,7 +560,7 @@ class MainActivity : AppCompatActivity() {
                   pintura.setARGB(255,0,255,255)
                   lienzo.drawRect(coordenadas.x1 , coordenadas.y1 , coordenadas.x2  , coordenadas.y2, pintura)
               }
-
+                */
                    if (enemigo.detectarColision(cX, cY, pasoX, pasoY, fred)) {
                     //   fred.vida--
                        fred.tocado = 1
@@ -622,16 +623,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
+/*
         // pintar la caja de colision
         var pintura2 = Paint()
         pintura2.style = Paint.Style.STROKE
         pintura2.strokeWidth = 4F
         pintura2.setARGB(128,255,255,255)
-
         val coordenadas = fred.cajaColisionFred()
         lienzo.drawRect(coordenadas.x1 , coordenadas.y1 , coordenadas.x2  , coordenadas.y2, pintura2)
-
+*/
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         // TODO Pintar los objetos
 

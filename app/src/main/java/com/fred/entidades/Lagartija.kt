@@ -126,7 +126,50 @@ class Lagartija : Enemigo() {
         return lagartija1DArriba
     }
 
-    override fun detectarColision(fX: Int, fY: Int, pasoX: Int, pasoY: Int, fred: Fred): Boolean {
-      return false
+
+
+    override fun detectarColision(cX: Int, cY: Int, pasoX: Int, pasoY: Int, fred: Fred): Boolean {
+        val coordenadasCaja = calcularCoordenadas(cX, cY,pasoX,pasoY,fred)
+        // finalmente comprobamos que las coordenadas no se solapen
+        var colision = true
+        val cajaColisionFred = fred.cajaColisionFred()
+        if (coordenadasCaja.x1 > cajaColisionFred.x2) colision = false
+        if (coordenadasCaja.x2 < cajaColisionFred.x1) colision = false
+        if (coordenadasCaja.y1 > cajaColisionFred.y2) colision = false
+        if (coordenadasCaja.y2 < cajaColisionFred.y1) colision = false
+
+        //    Log.d ("Miapp" , "Espinete: ${coordenadasCaja.x1},${coordenadasCaja.y1}   ${coordenadasCaja.x2},${coordenadasCaja.y2}    Fred: ${coordenadasCaja.fredx1},${coordenadasCaja.fredy1}    ${coordenadasCaja.fredx2},${coordenadasCaja.fredy2}     ${colision}")
+        return colision
+    }
+
+
+    fun dibujarCajasColision (cX: Int, cY: Int, pasoX: Int, pasoY: Int, fred: Fred) : CajaDeColision {
+        val coordenadasCaja = calcularCoordenadas(cX, cY,pasoX,pasoY,fred)
+        return coordenadasCaja
+    }
+
+    fun calcularCoordenadas (cX: Int, cY: Int, pasoX: Int, pasoY: Int, fred: Fred) : CajaDeColision {
+        // Calcular el punto de arriba de la izquierda del sprite
+        var desplazamientoX = 20
+        var desplazamientoY = 10
+        val anchura = 32
+        val altura = 54
+
+        if (lado == Lado.IZQUIERDA) desplazamientoX = 0 else desplazamientoX = 96
+        if (direccion == Direcciones.ABAJO) desplazamientoY = 0 else desplazamientoY = 96
+
+
+        val diferenciaX = pX - cX
+        val diferenciaY = pY - cY
+
+        // punto de la esquina de arriba de la izquierda del sprite
+        val x1 = (diferenciaX * 128) + pasoX + offsetX + desplazamientoX
+        val y1 = (diferenciaY * 160) + pasoY + offsetY + desplazamientoY
+        val x2 = x1 + anchura
+        val y2 = y1 + altura
+
+        // ------------------------------------------------------------------------------------------------------------------------------------------
+        val coordenadasCaja = CajaDeColision(x1.toFloat(),y1.toFloat(),x2.toFloat(),y2.toFloat())
+        return coordenadasCaja
     }
 }

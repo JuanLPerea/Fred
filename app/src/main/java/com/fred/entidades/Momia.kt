@@ -4,10 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
-import com.fred.Coordenada
-import com.fred.Direcciones
-import com.fred.Laberinto
-import com.fred.R
+import com.fred.*
 
 class Momia : Enemigo() {
 
@@ -150,14 +147,14 @@ class Momia : Enemigo() {
             }
 
             Direcciones.ABAJO -> {
-              //  Log.d("Miapp" , "offsetY: ${offsetY}")
-                offsetY += 64
-                // comprobar si puede seguir cayendo o ha llegado hasta un pasillo
-
+                if (offsetY == 400) {
+                    // esto es para que haga un pequeño rebote cuando cae y choca contra el suelo
+                    direccion = direccionBak
+                } else {
+                    // comprobar si puede seguir cayendo o ha llegado hasta un pasillo
+                    offsetY += 64
                     if (miLaberinto.map[pX][pY + 1] == 2) {
-                        // Ha llegado a un pasillo, hacemos que de un pequeño rebote
                         offsetY = 400
-                        direccion = direccionBak
                         choque = false
                     } else {
                         // sigue cayendo
@@ -166,6 +163,9 @@ class Momia : Enemigo() {
                             pY++
                         }
                     }
+                }
+
+
 
 
             }
@@ -210,7 +210,45 @@ class Momia : Enemigo() {
         return momia1d
     }
 
-    override fun detectarColision(fX: Int, fY: Int, pasoX: Int, pasoY: Int, fred: Fred): Boolean {
-        return false
+
+    override fun detectarColision(cX: Int, cY: Int, pasoX: Int, pasoY: Int, fred: Fred): Boolean {
+        val coordenadasCaja = calcularCoordenadas(cX, cY,pasoX,pasoY,fred)
+        // finalmente comprobamos que las coordenadas no se solapen
+        var colision = true
+        val cajaColisionFred = fred.cajaColisionFred()
+        if (coordenadasCaja.x1 > cajaColisionFred.x2) colision = false
+        if (coordenadasCaja.x2 < cajaColisionFred.x1) colision = false
+        if (coordenadasCaja.y1 > cajaColisionFred.y2) colision = false
+        if (coordenadasCaja.y2 < cajaColisionFred.y1) colision = false
+
+        //    Log.d ("Miapp" , "Espinete: ${coordenadasCaja.x1},${coordenadasCaja.y1}   ${coordenadasCaja.x2},${coordenadasCaja.y2}    Fred: ${coordenadasCaja.fredx1},${coordenadasCaja.fredy1}    ${coordenadasCaja.fredx2},${coordenadasCaja.fredy2}     ${colision}")
+        return colision
+    }
+
+
+    fun dibujarCajasColision (cX: Int, cY: Int, pasoX: Int, pasoY: Int, fred: Fred) : CajaDeColision {
+        val coordenadasCaja = calcularCoordenadas(cX, cY,pasoX,pasoY,fred)
+        return coordenadasCaja
+    }
+
+    fun calcularCoordenadas (cX: Int, cY: Int, pasoX: Int, pasoY: Int, fred: Fred) : CajaDeColision {
+        // Calcular el punto de arriba de la izquierda del sprite
+        var desplazamientoX = 20
+        var desplazamientoY = 52
+
+        val anchura = 90
+        val altura = 108
+        val diferenciaX = pX - cX
+        val diferenciaY = pY - cY
+
+        // punto de la esquina de arriba de la izquierda del sprite
+        val x1 = (diferenciaX * 128) + pasoX + offsetX + desplazamientoX
+        val y1 = (diferenciaY * 160) + pasoY + offsetY + desplazamientoY
+        val x2 = x1 + anchura
+        val y2 = y1 + altura
+
+        // ------------------------------------------------------------------------------------------------------------------------------------------
+        val coordenadasCaja = CajaDeColision(x1.toFloat(),y1.toFloat(),x2.toFloat(),y2.toFloat())
+        return coordenadasCaja
     }
 }
