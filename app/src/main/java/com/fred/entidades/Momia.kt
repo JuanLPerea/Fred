@@ -3,10 +3,14 @@ package com.fred.entidades
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Build
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.fred.*
 
-class Momia : Enemigo() {
+class Momia() : Enemigo() {
 
     lateinit var momia1d: Bitmap
     lateinit var momia2d: Bitmap
@@ -23,6 +27,20 @@ class Momia : Enemigo() {
     var choque = false
     var indiceSpawn = 1
     var momiaID = 0
+
+    constructor(parcel: Parcel) : this() {
+        momia1d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        momia2d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        momia1i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        momia2i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        momiacuerdad = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        momiacuerdai = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        momiapopd = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        momiapopi = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        choque = parcel.readByte() != 0.toByte()
+        indiceSpawn = parcel.readInt()
+        momiaID = parcel.readInt()
+    }
 
 
     fun newMomia(context: Context, listaCoordenadas: MutableList<Coordenada>, id : Int) {
@@ -46,7 +64,7 @@ class Momia : Enemigo() {
         pX = posicionesSpawn.get(indiceSpawn).coordenadaX
         pY = posicionesSpawn.get(indiceSpawn).coordenadaY
 
-        Log.d("Miapp", "Momia ${momiaID} en ${pX} - ${pY}")
+      //  Log.d("Miapp", "Momia ${momiaID} en ${pX} - ${pY}")
 
         animacionTick = (0..1).shuffled().last()
         offsetX = 384
@@ -178,7 +196,7 @@ class Momia : Enemigo() {
                 indiceSpawn = (1..(posicionesSpawn.size - 1)).shuffled().last()
                 pX = posicionesSpawn.get(indiceSpawn).coordenadaX
                 pY = posicionesSpawn.get(indiceSpawn).coordenadaY
-                Log.d("Miapp", "Momia ${momiaID} popped at: ${pX} - ${pY} indice: ${indiceSpawn} dirección: ${direccion}")
+            //    Log.d("Miapp", "Momia ${momiaID} popped at: ${pX} - ${pY} indice: ${indiceSpawn} dirección: ${direccion}")
                 offsetX = 384
                 offsetY = 400
             }
@@ -251,4 +269,41 @@ class Momia : Enemigo() {
         val coordenadasCaja = CajaDeColision(x1.toFloat(),y1.toFloat(),x2.toFloat(),y2.toFloat())
         return coordenadasCaja
     }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeParcelable(momia1d, flags)
+        parcel.writeParcelable(momia2d, flags)
+        parcel.writeParcelable(momia1i, flags)
+        parcel.writeParcelable(momia2i, flags)
+        parcel.writeParcelable(momiacuerdad, flags)
+        parcel.writeParcelable(momiacuerdai, flags)
+        parcel.writeParcelable(momiapopd, flags)
+        parcel.writeParcelable(momiapopi, flags)
+        parcel.writeBoolean(choque)
+        parcel.writeInt(indiceSpawn)
+        parcel.writeInt(momiaID)
+        parcel.writeInt( pX )
+        parcel.writeInt( pY )
+        parcel.writeInt( animacionTick )
+        parcel.writeInt( offsetX )
+        parcel.writeInt( offsetY )
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR = object : Parcelable.Creator<Momia> {
+            override fun createFromParcel(source: Parcel): Momia {
+                return Momia(source)
+            }
+            override fun newArray(size: Int): Array<Momia?> {
+                return arrayOfNulls(size)
+            }
+        }
+    }
+
 }

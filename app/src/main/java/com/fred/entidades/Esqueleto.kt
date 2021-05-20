@@ -3,10 +3,12 @@ package com.fred.entidades
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
 import com.fred.*
 
-class Esqueleto : Enemigo() {
+class Esqueleto() : Enemigo() {
 
     lateinit var esqueleto1d : Bitmap
     lateinit var esqueleto2d : Bitmap
@@ -19,6 +21,17 @@ class Esqueleto : Enemigo() {
 
     var direccion = Direcciones.PARADO
     lateinit var laberintoEsqueleto : Laberinto
+
+    constructor(parcel: Parcel) : this() {
+        esqueleto1d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        esqueleto2d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        esqueleto3d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        esqueleto1i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        esqueleto2i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        esqueleto3i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        esqueletocuerda1 = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        esqueletocuerda2 = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+    }
 
     fun newEsqueleto(context: Context, coordenada: Coordenada, miLaberinto: Laberinto) {
          esqueleto1d = BitmapFactory.decodeResource(context.resources, R.drawable.esqueleto1d)
@@ -46,7 +59,7 @@ class Esqueleto : Enemigo() {
         laberintoEsqueleto.map[pX][pY]--
         direccion = elegirDireccion(miLaberinto, 0, 0)
 
-        Log.d("Miapp", "Esqueleto en: ${pX} - ${pY} ")
+      //  Log.d("Miapp", "Esqueleto en: ${pX} - ${pY} ")
 
     }
 
@@ -273,5 +286,37 @@ class Esqueleto : Enemigo() {
         // ------------------------------------------------------------------------------------------------------------------------------------------
         val coordenadasCaja = CajaDeColision(x1.toFloat(),y1.toFloat(),x2.toFloat(),y2.toFloat())
         return coordenadasCaja
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeParcelable(esqueleto1d, flags)
+        parcel.writeParcelable(esqueleto2d, flags)
+        parcel.writeParcelable(esqueleto3d, flags)
+        parcel.writeParcelable(esqueleto1i, flags)
+        parcel.writeParcelable(esqueleto2i, flags)
+        parcel.writeParcelable(esqueleto3i, flags)
+        parcel.writeParcelable(esqueletocuerda1, flags)
+        parcel.writeParcelable(esqueletocuerda2, flags)
+        parcel.writeInt( pX )
+        parcel.writeInt( pY )
+        parcel.writeInt( animacionTick )
+        parcel.writeInt( offsetX )
+        parcel.writeInt( offsetY )
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR = object : Parcelable.Creator<Esqueleto> {
+            override fun createFromParcel(source: Parcel): Esqueleto {
+                return Esqueleto(source)
+            }
+            override fun newArray(size: Int): Array<Esqueleto?> {
+                return arrayOfNulls(size)
+            }
+        }
     }
 }

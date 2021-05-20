@@ -3,6 +3,8 @@ package com.fred
 import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcelable
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.Window
@@ -13,6 +15,7 @@ import android.widget.TextView
 import com.fred.entidades.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
@@ -49,6 +52,7 @@ class MainActivity : AppCompatActivity() {
     var numeroVampirosEnLaberinto = 1
     var numeroEsqueletosEnLaberinto = 1
 
+    val timer = Timer()
 
     lateinit var fredd : Bitmap                                     // 0
     lateinit var  fredd1 : Bitmap                                   // 1
@@ -96,7 +100,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var cielo : Bitmap
     lateinit var pasillo : Bitmap
 
-    var listaEnemigos : MutableList<Enemigo> = mutableListOf()
+    var listaEnemigos : ArrayList<Enemigo> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,25 +125,30 @@ class MainActivity : AppCompatActivity() {
 
         // Necesitamos un laberinto para jugar
         miLaberinto = Laberinto()
-        miLaberinto.generarLaberinto()
 
-        dibujarLaberintoTexto(miLaberinto)
+     //   dibujarLaberintoTexto(miLaberinto)
 
-        // Variables para la posición
-        cX = 0
-        cY = 0
-        pasoX = 0
-        pasoY = -160
+        // Variables para la posición -------------------------------------------------------------------------------------------------------
+        if (savedInstanceState == null) {
+            miLaberinto.generarLaberinto()
+            cX = 0
+            cY = 0
+            pasoX = 0
+            pasoY = -160
 
-        // Situar al personaje en un punto aleatorio en la fila de mas abajo del laberinto
-        cY = 34
-        do {
-            cX = (3..29).shuffled().last()
-        } while (miLaberinto.map[cX][cY] != 0)
-        crearFondo(cX - 4, cY - 3, pasoX, pasoY)
-        actualizarBarraVida()
-        crearEnemigos()
+            // Situar al personaje en un punto aleatorio en la fila de mas abajo del laberinto
+            cY = 34
+            do {
+                cX = (3..29).shuffled().last()
+            } while (miLaberinto.map[cX][cY] != 0)
+            crearFondo(cX - 4, cY - 3, pasoX, pasoY)
+            actualizarBarraVida()
+            crearEnemigos()
+        } else {
+            Log.d("Miapp" , "Recuperar estado en on create")
 
+        }
+        // ---------------------------------------------------------------------------------------------------------------------------------------
         // TODO crear objetos
 
         establecerListeners()
@@ -147,7 +156,8 @@ class MainActivity : AppCompatActivity() {
         // Con este Timer se actualiza la pantalla cada 200ms osea 5 fps!!
         // lo que le da ese toque tan rítmico que enganchaba en los 80's tic-tac-tic-tac-tic-tac
         // ¿fundiré un procesador del siglo 21??? sometiéndole a este terrible trabajo :D ???
-        val timer = Timer()
+
+
         val ticks = object : TimerTask() {
             override fun run() {
 
@@ -796,16 +806,44 @@ class MainActivity : AppCompatActivity() {
         pasillo = BitmapFactory.decodeResource(resources, R.drawable.pasillo_negro)
 
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        timer.cancel()
+        outState.putInt("POSICIONX", cX)
+        outState.putInt("POSICIONY", cY)
+        outState.putInt("OFFSETX", pasoX)
+        outState.putInt("OFFSETY", pasoY)
+        outState.putParcelableArrayList("LISTAENEMIGOS", listaEnemigos)
+        outState.putParcelable("LABERINTO", miLaberinto)
+        outState.putParcelable("FRED", fred)
+
+        Log.d("Miapp" , "Salvar estado")
+
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        Log.d("Miapp" , "Recuperar estado")
+        cX = savedInstanceState.getInt("POSICIONX")
+        cY = savedInstanceState.getInt("POSICIONY")
+        pasoX = savedInstanceState.getInt("OFFSETX")
+        pasoY = savedInstanceState.getInt("OFFSETY")
+        listaEnemigos.addAll(savedInstanceState.getParcelableArrayList("LISTAENEMIGOS")!!)
+        miLaberinto = savedInstanceState.getParcelable("LABERINTO")!!
+        fred = savedInstanceState.getParcelable("FRED")!!
+    }
+
 }
 
-enum class Direcciones {
+enum class Direcciones  {
     ARRIBA, DERECHA, IZQUIERDA, ABAJO, PARADO
 }
 
-enum class Lado {
+enum class Lado  {
     DERECHA, IZQUIERDA
 }
 
-enum class EstadosFred {
+enum class EstadosFred  {
     QUIETO, CAMINANDO, MOVIENDOCUERDA, SALTANDO, SALTANDOCUERDA, DECISIONSALTO
 }

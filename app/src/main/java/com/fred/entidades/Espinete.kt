@@ -3,16 +3,27 @@ package com.fred.entidades
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
+import android.widget.TextView
 import com.fred.*
 
-class Espinete : Enemigo () {
+class   Espinete() : Enemigo () {
 
     lateinit var espinete1D : Bitmap
     lateinit var espinete2D : Bitmap
     lateinit var espinete1I : Bitmap
     lateinit var espinete2I : Bitmap
     var direccion = 0
+
+    constructor(parcel: Parcel) : this() {
+        espinete1D = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        espinete2D = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        espinete1I = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        espinete2I = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        direccion = parcel.readInt()
+    }
 
     fun newEspinete (context: Context, coordenada: Coordenada) {
         // los espinetes existen en los pasillos que tienen 3 o mas tiles de ancho
@@ -24,7 +35,7 @@ class Espinete : Enemigo () {
 
         pX = coordenada.coordenadaX
         pY = coordenada.coordenadaY
-        Log.d("Miapp" , "Espinete en: " + pX + " - " + pY)
+    //    Log.d("Miapp" , "Espinete en: " + pX + " - " + pY)
 
         animacionTick = (0..1).shuffled().last()
         offsetX = 384
@@ -121,6 +132,35 @@ class Espinete : Enemigo () {
 
         return coordenadasCaja
     }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeParcelable(espinete1D, flags)
+        parcel.writeParcelable(espinete2D, flags)
+        parcel.writeParcelable(espinete1I, flags)
+        parcel.writeParcelable(espinete2I, flags)
+        parcel.writeInt(direccion)
+        parcel.writeInt( pX )
+        parcel.writeInt( pY )
+        parcel.writeInt( animacionTick )
+        parcel.writeInt( offsetX )
+        parcel.writeInt( offsetY )
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object {
+    @JvmField
+    val CREATOR = object : Parcelable.Creator<Espinete> {
+        override fun createFromParcel(source: Parcel): Espinete {
+            return Espinete(source)
+            }
+        override fun newArray(size: Int): Array<Espinete?> {
+            return arrayOfNulls(size)
+            }
+        }
+     }
 
 
 

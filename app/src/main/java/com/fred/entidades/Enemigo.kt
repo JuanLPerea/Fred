@@ -1,9 +1,10 @@
 package com.fred.entidades
 
 import android.graphics.Bitmap
+import android.os.Parcelable
 import com.fred.Laberinto
 
-abstract class Enemigo {
+abstract class Enemigo : Parcelable {
     var pX = 0
     var pY = 0
     var animacionTick = 0

@@ -3,6 +3,8 @@ package com.fred.entidades
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
 import com.fred.*
 
@@ -18,6 +20,20 @@ class GotaAcido() : Enemigo () {
     lateinit var gota9 : Bitmap
     lateinit var gota10 : Bitmap
     lateinit var gota11 : Bitmap
+
+    constructor(parcel: Parcel) : this() {
+        gota1 = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        gota2 = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        gota3 = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        gota4 = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        gota5 = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        gota6 = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        gota7 = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        gota8 = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        gota9 = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        gota10 = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        gota11 = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+    }
 
     fun newGotaAcido (context : Context , coordenada: Coordenada) {
         // Las gotas pueden existir en las filas pares, de la 4 a la 32
@@ -113,6 +129,41 @@ class GotaAcido() : Enemigo () {
         // ------------------------------------------------------------------------------------------------------------------------------------------
         val coordenadasCaja = CajaDeColision(x1.toFloat(),y1.toFloat(),x2.toFloat(),y2.toFloat())
         return coordenadasCaja
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeParcelable(gota1, flags)
+        parcel.writeParcelable(gota2, flags)
+        parcel.writeParcelable(gota3, flags)
+        parcel.writeParcelable(gota4, flags)
+        parcel.writeParcelable(gota5, flags)
+        parcel.writeParcelable(gota6, flags)
+        parcel.writeParcelable(gota7, flags)
+        parcel.writeParcelable(gota8, flags)
+        parcel.writeParcelable(gota9, flags)
+        parcel.writeParcelable(gota10, flags)
+        parcel.writeParcelable(gota11, flags)
+        parcel.writeInt( pX )
+        parcel.writeInt( pY )
+        parcel.writeInt( animacionTick )
+        parcel.writeInt( offsetX )
+        parcel.writeInt( offsetY )
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR = object : Parcelable.Creator<GotaAcido> {
+            override fun createFromParcel(source: Parcel): GotaAcido {
+                return GotaAcido(source)
+            }
+            override fun newArray(size: Int): Array<GotaAcido?> {
+                return arrayOfNulls(size)
+            }
+        }
     }
 
 }

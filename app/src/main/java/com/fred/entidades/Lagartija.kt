@@ -3,10 +3,14 @@ package com.fred.entidades
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Build
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.fred.*
 
-class Lagartija : Enemigo() {
+class Lagartija() : Enemigo() {
 
     lateinit var lagartija1DAbajo : Bitmap
     lateinit var lagartija2DAbajo : Bitmap
@@ -20,6 +24,18 @@ class Lagartija : Enemigo() {
     var lado = Lado.DERECHA
     var direccion = Direcciones.ARRIBA
     var cambiando = false
+
+    constructor(parcel: Parcel) : this() {
+        lagartija1DAbajo = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        lagartija2DAbajo = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        lagartija1IAbajo = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        lagartija2IAbajo = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        lagartija1DArriba = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        lagartija2DArriba = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        lagartija1IArriba = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        lagartija2IArriba = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        cambiando = parcel.readByte() != 0.toByte()
+    }
 
     fun newLagartija (context: Context, coordenada: Coordenada) {
         // las lagartijas existen en los pasillos verticales, siempre que haya muros a los 2 lados
@@ -35,7 +51,7 @@ class Lagartija : Enemigo() {
 
         pX = coordenada.coordenadaX
         pY = coordenada.coordenadaY
-        Log.d("Miapp" , "Lagartija en: " + pX + " - " + pY)
+     //   Log.d("Miapp" , "Lagartija en: " + pX + " - " + pY)
 
         animacionTick = (0..1).shuffled().last()
         offsetX = 384
@@ -171,5 +187,40 @@ class Lagartija : Enemigo() {
         // ------------------------------------------------------------------------------------------------------------------------------------------
         val coordenadasCaja = CajaDeColision(x1.toFloat(),y1.toFloat(),x2.toFloat(),y2.toFloat())
         return coordenadasCaja
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeParcelable(lagartija1DAbajo, flags)
+        parcel.writeParcelable(lagartija2DAbajo, flags)
+        parcel.writeParcelable(lagartija1IAbajo, flags)
+        parcel.writeParcelable(lagartija2IAbajo, flags)
+        parcel.writeParcelable(lagartija1DArriba, flags)
+        parcel.writeParcelable(lagartija2DArriba, flags)
+        parcel.writeParcelable(lagartija1IArriba, flags)
+        parcel.writeParcelable(lagartija2IArriba, flags)
+        parcel.writeBoolean(cambiando)
+        parcel.writeInt( pX )
+        parcel.writeInt( pY )
+        parcel.writeInt( animacionTick )
+        parcel.writeInt( offsetX )
+        parcel.writeInt( offsetY )
+
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR = object : Parcelable.Creator<Lagartija> {
+            override fun createFromParcel(source: Parcel): Lagartija {
+                return Lagartija(source)
+            }
+            override fun newArray(size: Int): Array<Lagartija?> {
+                return arrayOfNulls(size)
+            }
+        }
     }
 }

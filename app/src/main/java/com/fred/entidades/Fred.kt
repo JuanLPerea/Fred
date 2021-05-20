@@ -1,11 +1,16 @@
 package com.fred.entidades
 
+import android.os.Build
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.fred.CajaDeColision
 import com.fred.EstadosFred
+import com.fred.Laberinto
 import com.fred.Lado
 
-class Fred() {
+class Fred() : Parcelable {
 
     var vida = 15
     var balas = 6
@@ -19,6 +24,19 @@ class Fred() {
     var scrollTickCuerda = 0
     var scrollTickSaltoCuerda = 0
     var lado = Lado.DERECHA
+
+    constructor(parcel: Parcel) : this() {
+        vida = parcel.readInt()
+        balas = parcel.readInt()
+        puntos = parcel.readInt()
+        cuerda = parcel.readByte() != 0.toByte()
+        disparando = parcel.readByte() != 0.toByte()
+        tocado = parcel.readInt()
+        scrollTick = parcel.readInt()
+        scrollTickSalto = parcel.readInt()
+        scrollTickCuerda = parcel.readInt()
+        scrollTickSaltoCuerda = parcel.readInt()
+    }
 
     fun animacionFred(): Int {
         // Lógica Planteamiento: EstadosFred. de Fred
@@ -196,6 +214,37 @@ class Fred() {
         }
         val coordenada = CajaDeColision(fredx1.toFloat(), fredy1.toFloat(), fredx2.toFloat(), fredy2.toFloat())
         return coordenada
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(vida)
+        parcel.writeInt(balas)
+        parcel.writeInt(puntos)
+        parcel.writeBoolean(cuerda)
+        parcel.writeBoolean(disparando)
+        parcel.writeInt(tocado)
+        parcel.writeInt(scrollTick)
+        parcel.writeInt(scrollTickSalto)
+        parcel.writeInt(scrollTickCuerda)
+        parcel.writeInt(scrollTickSaltoCuerda)
+        //parcel.writeValue(lado)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR = object : Parcelable.Creator<Fred> {
+            override fun createFromParcel(source: Parcel): Fred {
+                return Fred(source)
+            }
+            override fun newArray(size: Int): Array<Fred?> {
+                return arrayOfNulls(size)
+            }
+        }
     }
 
 }

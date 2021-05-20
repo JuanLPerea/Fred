@@ -3,10 +3,12 @@ package com.fred.entidades
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
 import com.fred.*
 
-class Vampiro : Enemigo() {
+class Vampiro() : Enemigo() {
 
     lateinit var vampiro1d : Bitmap
     lateinit var vampiro2d : Bitmap
@@ -16,6 +18,14 @@ class Vampiro : Enemigo() {
     var mirandoA = Direcciones.DERECHA
     var movimiento = Direcciones.PARADO
     var velocidad = 32
+
+    constructor(parcel: Parcel) : this() {
+        vampiro1d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        vampiro2d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        vampiro1i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        vampiro2i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        velocidad = parcel.readInt()
+    }
 
     fun newVampiro (context: Context, coordenada: Coordenada) {
         vampiro1d = BitmapFactory.decodeResource(context.resources , R.drawable.vampiro1d)
@@ -29,7 +39,7 @@ class Vampiro : Enemigo() {
         offsetX = 384
         offsetY = 400
 
-        Log.d("Miapp", "Vampiro at: ${pX} - ${pY} ")
+     //   Log.d("Miapp", "Vampiro at: ${pX} - ${pY} ")
     }
 
     override fun actualizarEntidad(miLaberinto: Laberinto, cX: Int, cY: Int) {
@@ -45,7 +55,7 @@ class Vampiro : Enemigo() {
         // También pueden volar muy rápido aleatoriamente
         if ((0..50).shuffled().last() == 0) velocidad = 48
 
-        Log.d("Miapp", "Vampiro at: ${pX} - ${pY} offsetX: ${offsetX} offsetY: ${offsetY} velocidad: ${velocidad} movimiento: ${movimiento}")
+    //    Log.d("Miapp", "Vampiro at: ${pX} - ${pY} offsetX: ${offsetX} offsetY: ${offsetY} velocidad: ${velocidad} movimiento: ${movimiento}")
 
         when (movimiento) {
             Direcciones.PARADO -> {
@@ -64,7 +74,7 @@ class Vampiro : Enemigo() {
                 mirandoA = Direcciones.DERECHA
                 offsetX += velocidad
                 if (offsetX >= 512) {
-                    Log.d("Miapp", "Salto Derecha ${offsetX}")
+                 //   Log.d("Miapp", "Salto Derecha ${offsetX}")
                     offsetX = 384
                     pX++
                     if (pX == 34) movimiento = Direcciones.PARADO
@@ -76,7 +86,7 @@ class Vampiro : Enemigo() {
                 mirandoA = Direcciones.IZQUIERDA
                 offsetX -= velocidad
                 if (offsetX <= 256) {
-                    Log.d("Miapp", "Salto Izquierda ${offsetX}")
+                 //   Log.d("Miapp", "Salto Izquierda ${offsetX}")
                     offsetX = 384
                     pX--
                     if (pX == 4) movimiento = Direcciones.PARADO
@@ -87,7 +97,7 @@ class Vampiro : Enemigo() {
             Direcciones.ARRIBA -> {
                 offsetY -= velocidad
                 if (offsetY <= 240) {
-                    Log.d("Miapp", "Salto Arriba: ${offsetY}")
+                 //   Log.d("Miapp", "Salto Arriba: ${offsetY}")
                     offsetY = 400
                     pY--
                     if (pY == 4) movimiento = Direcciones.PARADO
@@ -98,7 +108,7 @@ class Vampiro : Enemigo() {
             Direcciones.ABAJO -> {
                 offsetY += velocidad
                 if (offsetY >= 560) {
-                    Log.d("Miapp", "Salto Arriba: ${offsetY}")
+                 //   Log.d("Miapp", "Salto Arriba: ${offsetY}")
                     offsetY = 400
                     pY++
                     if (pY == 34) movimiento = Direcciones.PARADO
@@ -167,5 +177,34 @@ class Vampiro : Enemigo() {
         // ------------------------------------------------------------------------------------------------------------------------------------------
         val coordenadasCaja = CajaDeColision(x1.toFloat(),y1.toFloat(),x2.toFloat(),y2.toFloat())
         return coordenadasCaja
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeParcelable(vampiro1d, flags)
+        parcel.writeParcelable(vampiro2d, flags)
+        parcel.writeParcelable(vampiro1i, flags)
+        parcel.writeParcelable(vampiro2i, flags)
+        parcel.writeInt(velocidad)
+        parcel.writeInt( pX )
+        parcel.writeInt( pY )
+        parcel.writeInt( animacionTick )
+        parcel.writeInt( offsetX )
+        parcel.writeInt( offsetY )
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR = object : Parcelable.Creator<Vampiro> {
+            override fun createFromParcel(source: Parcel): Vampiro {
+                return Vampiro(source)
+            }
+            override fun newArray(size: Int): Array<Vampiro?> {
+                return arrayOfNulls(size)
+            }
+        }
     }
 }

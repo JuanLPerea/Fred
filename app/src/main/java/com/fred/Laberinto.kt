@@ -1,10 +1,13 @@
 package com.fred
 
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
+import com.fred.entidades.Espinete
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.random.Random as Random
 
-class Laberinto {
+class Laberinto() : Parcelable {
 
     // Array (36x37)
     var map = arrayOf(
@@ -48,6 +51,10 @@ class Laberinto {
             arrayOf(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2),
             arrayOf(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
     )
+
+    constructor(parcel: Parcel) : this() {
+
+    }
 
     // 1 -> Zona exterior del laberinto
     // 2 -> Muro
@@ -239,6 +246,26 @@ class Laberinto {
         }
         listaCoordenadas.shuffle()
         return listaCoordenadas
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeArray(map)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR = object : Parcelable.Creator<Laberinto> {
+            override fun createFromParcel(source: Parcel): Laberinto {
+                return Laberinto(source)
+            }
+            override fun newArray(size: Int): Array<Laberinto?> {
+                return arrayOfNulls(size)
+            }
+        }
     }
 
 }

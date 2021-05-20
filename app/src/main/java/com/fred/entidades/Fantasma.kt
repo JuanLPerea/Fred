@@ -3,9 +3,11 @@ package com.fred.entidades
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Parcel
+import android.os.Parcelable
 import com.fred.*
 
-class Fantasma : Enemigo() {
+class Fantasma() : Enemigo() {
 
     lateinit var fantasma1d : Bitmap
     lateinit var fantasma1i : Bitmap
@@ -14,6 +16,13 @@ class Fantasma : Enemigo() {
 
     var mirandoA = Direcciones.DERECHA
     var movimiento = Direcciones.PARADO
+
+    constructor(parcel: Parcel) : this() {
+        fantasma1d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        fantasma1i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        fantasma2d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+        fantasma2i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+    }
 
 
     fun newFantasma (context: Context, coordenada: Coordenada) {
@@ -148,5 +157,33 @@ class Fantasma : Enemigo() {
         // ------------------------------------------------------------------------------------------------------------------------------------------
         val coordenadasCaja = CajaDeColision(x1.toFloat(),y1.toFloat(),x2.toFloat(),y2.toFloat())
         return coordenadasCaja
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeParcelable(fantasma1d, flags)
+        parcel.writeParcelable(fantasma1i, flags)
+        parcel.writeParcelable(fantasma2d, flags)
+        parcel.writeParcelable(fantasma2i, flags)
+        parcel.writeInt( pX )
+        parcel.writeInt( pY )
+        parcel.writeInt( animacionTick )
+        parcel.writeInt( offsetX )
+        parcel.writeInt( offsetY )
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR = object : Parcelable.Creator<Fantasma> {
+            override fun createFromParcel(source: Parcel): Fantasma {
+                return Fantasma(source)
+            }
+            override fun newArray(size: Int): Array<Fantasma?> {
+                return arrayOfNulls(size)
+            }
+        }
     }
 }
