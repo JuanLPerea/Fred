@@ -84,7 +84,7 @@ class GotaAcido() : Enemigo () {
     }
 
     override fun detectarColision(cX : Int , cY : Int, pasoX : Int, pasoY : Int, fred: Fred): Boolean {
-        val coordenadasCaja = calcularCoordenadas(cX, cY,pasoX,pasoY,fred)
+        val coordenadasCaja = calcularCoordenadas(cX, cY,pasoX,pasoY)
         // finalmente comprobamos que las coordenadas no se solapen
         var colision = true
         val cajaColisionFred = fred.cajaColisionFred()
@@ -97,12 +97,12 @@ class GotaAcido() : Enemigo () {
         return colision
     }
 
-    fun dibujarCajasColision (cX: Int, cY: Int, pasoX: Int, pasoY: Int, fred: Fred) : CajaDeColision {
-        val coordenadasCaja = calcularCoordenadas(cX, cY,pasoX,pasoY,fred)
+    fun dibujarCajasColision (cX: Int, cY: Int, pasoX: Int, pasoY: Int) : CajaDeColision {
+        val coordenadasCaja = calcularCoordenadas(cX, cY,pasoX,pasoY)
         return coordenadasCaja
     }
 
-    fun calcularCoordenadas (cX: Int, cY: Int, pasoX: Int, pasoY: Int, fred: Fred) : CajaDeColision {
+    override fun calcularCoordenadas (cX: Int, cY: Int, pasoX: Int, pasoY: Int) : CajaDeColision {
         // Calcular el punto de arriba de la izquierda del sprite
         var desplazamientoX = 45
         var desplazamientoY = 0

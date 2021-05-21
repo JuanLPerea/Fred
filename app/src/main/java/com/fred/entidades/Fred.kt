@@ -110,7 +110,13 @@ class Fred() : Parcelable {
                     scrollTickSalto = 0
                     estadoFred = EstadosFred.DECISIONSALTO
                 }
-                    if (lado == Lado.DERECHA) return  6 else  return 7
+
+                    if (disparando) {
+                        if (lado == Lado.DERECHA) return  15 else  return 14
+                    } else {
+                        if (lado == Lado.DERECHA) return  6 else  return 7
+                    }
+
 
             }
             EstadosFred.MOVIENDOCUERDA -> {
@@ -143,13 +149,13 @@ class Fred() : Parcelable {
                 }
                 if (lado == Lado.DERECHA) {
                     if (scrollTickSaltoCuerda != 0 ) {
-                        return 6
+                        if (disparando) return 15 else return 6
                     } else {
                         if (cuerda) return 10 else return 0
                     }
                 } else {
                     if (scrollTickSaltoCuerda != 0 ) {
-                        return 7
+                        if (disparando) return 14 else return 7
                     } else {
                         if (cuerda) return 8 else return 3
                     }

@@ -1,5 +1,6 @@
 package com.fred
 
+import android.app.Dialog
 import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -30,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var balasTV : TextView
     lateinit var vidaTV : TextView
     lateinit var fred: Fred
+    lateinit var bala: Bala
     lateinit var barraVida : ImageView
 
     var cX = 0
@@ -122,6 +125,9 @@ class MainActivity : AppCompatActivity() {
 
         // Creamos a nuestro protagonista
         fred = Fred()
+        // Hay un objeto 'Bala' para gestionar los disparos
+        bala = Bala()
+        bala.newBala(this)
 
         // Necesitamos un laberinto para jugar
         miLaberinto = Laberinto()
@@ -171,8 +177,29 @@ class MainActivity : AppCompatActivity() {
 
                 if (pulsadoDisparo ) {
                     if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.SALTANDO || fred.estadoFred == EstadosFred.SALTANDOCUERDA || fred.estadoFred == EstadosFred.QUIETO) {
-                        if (fred.balas > 0) {
+                        if (fred.balas > 0 && !bala.disparo) {
                             fred.disparando = true
+                            bala.disparo = true
+                            if (fred.lado == Lado.DERECHA) {
+                                bala.bX = cX + 1
+                                bala.bY = cY
+                                bala.direccion = Direcciones.DERECHA
+                                if (fred.estadoFred == EstadosFred.SALTANDO || fred.estadoFred == EstadosFred.SALTANDOCUERDA) {
+                                    bala.balaOffsetY = 368
+                                } else {
+                                    bala.balaOffsetY = 400
+                                }
+
+                            } else {
+                                bala.bX = cX - 1
+                                bala.bY = cY
+                                bala.direccion = Direcciones.IZQUIERDA
+                                if (fred.estadoFred == EstadosFred.SALTANDO || fred.estadoFred == EstadosFred.SALTANDOCUERDA) {
+                                    bala.balaOffsetY = 368
+                                } else {
+                                    bala.balaOffsetY = 400
+                                }
+                            }
                         }
                     }
                     pulsadoDisparo = false
@@ -293,6 +320,9 @@ class MainActivity : AppCompatActivity() {
                         } else {
                             // si está en un pasillo ... saltar
                             fred.estadoFred = EstadosFred.SALTANDO
+                            if (miLaberinto.map[cX][cY-1] == 3) {
+                                // TODO final del nivel ha encontrado la salida
+                            }
                         }
                     }
 
@@ -310,22 +340,16 @@ class MainActivity : AppCompatActivity() {
                 listaEnemigos.forEach { enemigo ->
                     // actualizar enemigos
                     enemigo.actualizarEntidad(miLaberinto, cX, cY)
-                    /*
-                    if (enemigo is GotaAcido) {
-                        if (enemigo.detectarColision(cX,cY, pasoX,pasoY,fred) && fred.tocado == 0) {
-                            fred.vida--
-                            fred.tocado = 1
-                        }
 
-                    }
-
-                    */
                 }
 
 
                 // TODO detectar objetos
 
                 // TODO actualizar disparo y detectar enemigos en la trayectoria
+                if (bala.disparo) {
+                    bala.actualizarBala(miLaberinto)
+                }
 
 
                 runOnUiThread {
@@ -416,7 +440,6 @@ class MainActivity : AppCompatActivity() {
                 when (action) {
                     MotionEvent.ACTION_DOWN -> {
                         pulsadoDisparo = true
-                        // TODO crear bala
                     }
                     MotionEvent.ACTION_UP -> {
                        // pulsadoDisparo = false
@@ -563,7 +586,8 @@ class MainActivity : AppCompatActivity() {
         listaEnemigos.forEach { enemigo ->
             // si las coordenadas de la entidad enemiga están dentro de la zona visible....
             if (enemigo.pX > (cX-5) && enemigo.pX < (cX + 5) && enemigo.pY > (cY-4) && enemigo.pY < (cY + 4)) {
-
+                // Detectar que cada enemigo no le ha alcanzado una bala
+                    bala.detectarColision(enemigo, cX, cY , offsetx , offsety)
                 // Detectar colisiones ...
                 /*
                 // Descomentar este bloque de código para ver las cajas de colisión
@@ -639,6 +663,14 @@ class MainActivity : AppCompatActivity() {
                 14 -> lienzo.drawBitmap(fredDisparoSaltoIrojo, null, rectDestino, null)      // Disparo salto izquierda
                 15 -> lienzo.drawBitmap(fredDisparoSaltoDrojo, null, rectDestino, null)      // Disparo salto derecha
             }
+        }
+
+        // Pintar la bala si existe
+        if (bala.disparo) {
+            val diferenciaXbala = bala.bX - cX
+            val diferenciaYbala = bala.bY - cY
+            rectDestino.offsetTo((diferenciaXbala * 128) + pasoX + bala.balaOffsetX, (diferenciaYbala * 160) + pasoY + bala.balaOffsetY)
+            lienzo.drawBitmap(bala.devolverBitmap(),null, rectDestino,null)
         }
 
 /*
@@ -832,6 +864,20 @@ class MainActivity : AppCompatActivity() {
         listaEnemigos.addAll(savedInstanceState.getParcelableArrayList("LISTAENEMIGOS")!!)
         miLaberinto = savedInstanceState.getParcelable("LABERINTO")!!
         fred = savedInstanceState.getParcelable("FRED")!!
+    }
+
+    private fun dialogoFin(title: String) {
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialogofin)
+        val yesBtn = dialog.findViewById(R.id.botonfinjugar) as Button
+        yesBtn.setOnClickListener {
+            dialog.dismiss()
+            finish()
+        }
+        dialog.show()
+
     }
 
 }

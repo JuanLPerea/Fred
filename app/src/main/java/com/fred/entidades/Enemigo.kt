@@ -2,6 +2,7 @@ package com.fred.entidades
 
 import android.graphics.Bitmap
 import android.os.Parcelable
+import com.fred.CajaDeColision
 import com.fred.Laberinto
 
 abstract class Enemigo : Parcelable {
@@ -13,5 +14,6 @@ abstract class Enemigo : Parcelable {
     abstract fun actualizarEntidad (miLaberinto: Laberinto, cX : Int, cY : Int)
     abstract fun devolverBitmap () : Bitmap
     abstract fun detectarColision (fX : Int, fY : Int, pasoX : Int, pasoY : Int, fred : Fred) : Boolean
+    abstract fun calcularCoordenadas (cX: Int, cY: Int, pasoX: Int, pasoY: Int) : CajaDeColision
 
 }
