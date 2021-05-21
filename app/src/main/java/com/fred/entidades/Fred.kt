@@ -51,7 +51,6 @@ class Fred() : Parcelable {
                 if (lado == Lado.DERECHA) {
                     if (cuerda) return 10 else {
                         if (disparando) {
-                            balas--
                             disparando = false
                             return 13
                         } else return 0
@@ -59,7 +58,6 @@ class Fred() : Parcelable {
                 } else {
                     if (cuerda) return 8 else {
                         if (disparando) {
-                            balas--
                             disparando = false
                             return 12
                         } else return 3
@@ -74,12 +72,10 @@ class Fred() : Parcelable {
                     scrollTick++
                     if (scrollTick == 4) scrollTick = 0
                     if (disparando) {
-                        balas--
                         disparando = false
                         return 13
                     } else {
                         if (disparando) {
-                            balas--
                             disparando = false
                             return 12
                         } else {

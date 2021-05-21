@@ -4,8 +4,6 @@ import android.app.Dialog
 import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Parcelable
-import android.os.PersistableBundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.Window
@@ -39,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     var cY = 0
     var pasoX = 0
     var pasoY = 0
+    var eliminarEnemigo = -1
     var pulsadoAbajo = false
     var pulsadoArriba = false
     var pulsadoIzquierda = false
@@ -47,13 +46,13 @@ class MainActivity : AppCompatActivity() {
     var velocidadJuego = 200L
 
     // Establecemos el número de enemigos de cada tipo
-    var numeroGotasAcidoEnLaberinto = 10
-    var numeroEspinetesEnLaberinto = 10
-    var numeroFantasmasEnLaberinto = 5
-    var numeroLagartijasEnLaberinto = 10
-    var numeroMomiasEnLaberinto = 5
-    var numeroVampirosEnLaberinto = 1
-    var numeroEsqueletosEnLaberinto = 1
+    var numeroGotasAcidoEnLaberinto = 0
+    var numeroEspinetesEnLaberinto = 0
+    var numeroFantasmasEnLaberinto = 0
+    var numeroLagartijasEnLaberinto = 0
+    var numeroMomiasEnLaberinto = 30
+    var numeroVampirosEnLaberinto = 30
+    var numeroEsqueletosEnLaberinto = 30
 
     val timer = Timer()
 
@@ -179,27 +178,8 @@ class MainActivity : AppCompatActivity() {
                     if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.SALTANDO || fred.estadoFred == EstadosFred.SALTANDOCUERDA || fred.estadoFred == EstadosFred.QUIETO) {
                         if (fred.balas > 0 && !bala.disparo) {
                             fred.disparando = true
-                            bala.disparo = true
-                            if (fred.lado == Lado.DERECHA) {
-                                bala.bX = cX + 1
-                                bala.bY = cY
-                                bala.direccion = Direcciones.DERECHA
-                                if (fred.estadoFred == EstadosFred.SALTANDO || fred.estadoFred == EstadosFred.SALTANDOCUERDA) {
-                                    bala.balaOffsetY = 368
-                                } else {
-                                    bala.balaOffsetY = 400
-                                }
-
-                            } else {
-                                bala.bX = cX - 1
-                                bala.bY = cY
-                                bala.direccion = Direcciones.IZQUIERDA
-                                if (fred.estadoFred == EstadosFred.SALTANDO || fred.estadoFred == EstadosFred.SALTANDOCUERDA) {
-                                    bala.balaOffsetY = 368
-                                } else {
-                                    bala.balaOffsetY = 400
-                                }
-                            }
+                            // fred.balas--
+                            bala.disparar(cX, cY , fred.lado, fred.estadoFred)
                         }
                     }
                     pulsadoDisparo = false
@@ -322,6 +302,7 @@ class MainActivity : AppCompatActivity() {
                             fred.estadoFred = EstadosFred.SALTANDO
                             if (miLaberinto.map[cX][cY-1] == 3) {
                                 // TODO final del nivel ha encontrado la salida
+                                dialogoFin("¡¡Has salido!!")
                             }
                         }
                     }
@@ -340,7 +321,6 @@ class MainActivity : AppCompatActivity() {
                 listaEnemigos.forEach { enemigo ->
                     // actualizar enemigos
                     enemigo.actualizarEntidad(miLaberinto, cX, cY)
-
                 }
 
 
@@ -349,11 +329,16 @@ class MainActivity : AppCompatActivity() {
                 // TODO actualizar disparo y detectar enemigos en la trayectoria
                 if (bala.disparo) {
                     bala.actualizarBala(miLaberinto)
+                    if (bala.bX - cX > 4 || bala.bX - cX < -4) bala.eliminarBala()
                 }
 
 
                 runOnUiThread {
                     crearFondo(cX - 4, cY - 3, pasoX, pasoY)
+                    if (eliminarEnemigo != -1) {
+                        listaEnemigos.remove(listaEnemigos.get(eliminarEnemigo))
+                        eliminarEnemigo = -1
+                    }
                     alturaTV.text = "Altura: $cY"
                     balasTV.text = "Balas ${fred.balas}"
                     vidaTV.text = "Vida: " + fred.vida
@@ -369,12 +354,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun crearEnemigos() {
         // crear enemigos optimizar para que no caiga en bucle infinito
+        var totalEnemigos = 0
         // Crear Gotas de ácido
         var listaUbicacionesPasilloHorizontal = miLaberinto.posiblesUbicacionesGota(miLaberinto)
         if (numeroGotasAcidoEnLaberinto > listaUbicacionesPasilloHorizontal.size) numeroGotasAcidoEnLaberinto = listaUbicacionesPasilloHorizontal.size - 1
         for (n in 1..numeroGotasAcidoEnLaberinto) {
             val gotaAcidoTMP = GotaAcido()
             gotaAcidoTMP.newGotaAcido(this, listaUbicacionesPasilloHorizontal.get(n))
+            gotaAcidoTMP.id = totalEnemigos
+            totalEnemigos++
             listaEnemigos.add(gotaAcidoTMP)
         }
         listaUbicacionesPasilloHorizontal.shuffle()
@@ -383,6 +371,8 @@ class MainActivity : AppCompatActivity() {
         for (n in (1..numeroEspinetesEnLaberinto)) {
             val espineteTMP = Espinete()
             espineteTMP.newEspinete(this , listaUbicacionesPasilloHorizontal.get(n))
+            espineteTMP.id = totalEnemigos
+            totalEnemigos++
             listaEnemigos.add(espineteTMP)
         }
         listaUbicacionesPasilloHorizontal.shuffle()
@@ -391,6 +381,8 @@ class MainActivity : AppCompatActivity() {
         for (n in 1..numeroFantasmasEnLaberinto) {
             val fantasmaTMP = Fantasma()
             fantasmaTMP.newFantasma(this, listaUbicacionesPasilloHorizontal.get(n))
+            fantasmaTMP.id = totalEnemigos
+            totalEnemigos++
             listaEnemigos.add(fantasmaTMP)
         }
 
@@ -400,6 +392,8 @@ class MainActivity : AppCompatActivity() {
         for (n in 1..numeroLagartijasEnLaberinto) {
             val lagartijaTMP = Lagartija()
             lagartijaTMP.newLagartija(this, listaUbicacionesLagartija.get(n))
+            lagartijaTMP.id = totalEnemigos
+            totalEnemigos++
             listaEnemigos.add(lagartijaTMP)
         }
 
@@ -408,6 +402,8 @@ class MainActivity : AppCompatActivity() {
         for (n in 1..numeroMomiasEnLaberinto) {
             val momiaTMP = Momia()
             momiaTMP.newMomia(this, listaUbicacionesPasilloHorizontal, n)
+            momiaTMP.id = totalEnemigos
+            totalEnemigos++
             listaEnemigos.add(momiaTMP)
         }
 
@@ -418,6 +414,8 @@ class MainActivity : AppCompatActivity() {
             val vampiroTMP = Vampiro()
             val coordenada = listaUbicacionesPasilloHorizontal.get(n)
             vampiroTMP.newVampiro(this, coordenada)
+            vampiroTMP.id = totalEnemigos
+            totalEnemigos++
             listaEnemigos.add(vampiroTMP)
         }
 
@@ -428,6 +426,8 @@ class MainActivity : AppCompatActivity() {
             val esqueletoTMP = Esqueleto()
             val coordenada = listaUbicacionesPasilloHorizontal.get(n)
             esqueletoTMP.newEsqueleto(this, coordenada, miLaberinto)
+            esqueletoTMP.id = totalEnemigos
+            totalEnemigos++
             listaEnemigos.add(esqueletoTMP)
         }
 
@@ -587,7 +587,33 @@ class MainActivity : AppCompatActivity() {
             // si las coordenadas de la entidad enemiga están dentro de la zona visible....
             if (enemigo.pX > (cX-5) && enemigo.pX < (cX + 5) && enemigo.pY > (cY-4) && enemigo.pY < (cY + 4)) {
                 // Detectar que cada enemigo no le ha alcanzado una bala
-                    bala.detectarColision(enemigo, cX, cY , offsetx , offsety)
+                    if (!bala.impacto && bala.disparo && bala.detectarColision(enemigo)) {
+                        when {
+                            enemigo is Momia || enemigo is Esqueleto -> {
+                                // Se destruye el enemigo y se muestra la animación de la nube
+                                eliminarEnemigo = listaEnemigos.indexOf(enemigo)
+                                bala.impacto = true
+                            }
+                            enemigo is Vampiro && bala.balaOffsetY == 400 -> {
+                                eliminarEnemigo = listaEnemigos.indexOf(enemigo)
+                                bala.impacto = true
+                            }
+                            enemigo is Fantasma -> {
+                                bala.impacto = true
+                                when (enemigo.movimiento) {
+                                    Direcciones.DERECHA -> enemigo.movimiento = Direcciones.IZQUIERDA
+                                    Direcciones.IZQUIERDA -> enemigo.movimiento = Direcciones.DERECHA
+                                    Direcciones.ARRIBA -> enemigo.movimiento = Direcciones.ABAJO
+                                    Direcciones.ABAJO -> enemigo.movimiento = Direcciones.ARRIBA
+                                }
+
+                            }
+                        }
+                    }
+
+
+
+
                 // Detectar colisiones ...
                 /*
                 // Descomentar este bloque de código para ver las cajas de colisión
@@ -665,13 +691,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Pintar la bala si existe
-        if (bala.disparo) {
-            val diferenciaXbala = bala.bX - cX
-            val diferenciaYbala = bala.bY - cY
-            rectDestino.offsetTo((diferenciaXbala * 128) + pasoX + bala.balaOffsetX, (diferenciaYbala * 160) + pasoY + bala.balaOffsetY)
-            lienzo.drawBitmap(bala.devolverBitmap(),null, rectDestino,null)
-        }
+
 
 /*
         // pintar la caja de colision
@@ -684,6 +704,14 @@ class MainActivity : AppCompatActivity() {
 */
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         // TODO Pintar los objetos
+
+        // Pintar la bala si existe
+        if (bala.disparo) {
+            val diferenciaXbala = bala.bX - cX
+            val diferenciaYbala = bala.bY - cY
+            rectDestino.offsetTo((diferenciaXbala * 128)  + bala.balaOffsetX, (diferenciaYbala * 160) + pasoY + bala.balaOffsetY)
+            lienzo.drawBitmap(bala.devolverBitmap(),null, rectDestino,null)
+        }
 
 
         //pintamos finalmente el fondo compuesto con todos los bitmaps

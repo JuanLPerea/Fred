@@ -11,6 +11,7 @@ abstract class Enemigo : Parcelable {
     var animacionTick = 0
     var offsetX = 0
     var offsetY = 0
+    var id = 0
     abstract fun actualizarEntidad (miLaberinto: Laberinto, cX : Int, cY : Int)
     abstract fun devolverBitmap () : Bitmap
     abstract fun detectarColision (fX : Int, fY : Int, pasoX : Int, pasoY : Int, fred : Fred) : Boolean
