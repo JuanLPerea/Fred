@@ -13,6 +13,9 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import com.fred.entidades.*
+import com.fred.items.Mapa
+import com.fred.items.Objeto
+import com.fred.items.Pocima
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 import kotlin.collections.ArrayList
@@ -32,27 +35,35 @@ class MainActivity : AppCompatActivity() {
     lateinit var fred: Fred
     lateinit var bala: Bala
     lateinit var barraVida : ImageView
+    lateinit var imageViewMapa : ImageView
+    lateinit var mapa : Bitmap
 
     var cX = 0
     var cY = 0
     var pasoX = 0
     var pasoY = 0
     var eliminarEnemigo = -1
+    var eliminarObjeto = -1
     var pulsadoAbajo = false
     var pulsadoArriba = false
     var pulsadoIzquierda = false
     var pulsadoDerecha = false
     var pulsadoDisparo = false
-    var velocidadJuego = 200L
+    var velocidadJuego = 100L
+    var mapaEncontrado = false
+    var fin = false
 
     // Establecemos el número de enemigos de cada tipo
-    var numeroGotasAcidoEnLaberinto = 0
-    var numeroEspinetesEnLaberinto = 0
-    var numeroFantasmasEnLaberinto = 0
-    var numeroLagartijasEnLaberinto = 0
-    var numeroMomiasEnLaberinto = 0
-    var numeroVampirosEnLaberinto = 100
-    var numeroEsqueletosEnLaberinto = 0
+    var numeroGotasAcidoEnLaberinto = 20
+    var numeroEspinetesEnLaberinto = 20
+    var numeroFantasmasEnLaberinto = 5
+    var numeroLagartijasEnLaberinto = 10
+    var numeroMomiasEnLaberinto = 5
+    var numeroVampirosEnLaberinto = 1
+    var numeroEsqueletosEnLaberinto = 1
+
+    // Numero de objetos en el laberinto
+    var totalObjetos = 100
 
     val timer = Timer()
 
@@ -103,6 +114,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var pasillo : Bitmap
 
     var listaEnemigos : ArrayList<Enemigo> = arrayListOf()
+    var listaObjetos : ArrayList<Objeto> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,6 +133,7 @@ class MainActivity : AppCompatActivity() {
         balasTV = findViewById(R.id.balasTV)
         vidaTV = findViewById(R.id.vidaTV)
         barraVida = findViewById(R.id.barraVida)
+        imageViewMapa = findViewById(R.id.imageViewMapa)
 
         // Creamos a nuestro protagonista
         fred = Fred()
@@ -149,9 +162,7 @@ class MainActivity : AppCompatActivity() {
             crearFondo(cX - 4, cY - 3, pasoX, pasoY)
             actualizarBarraVida()
             crearEnemigos()
-        } else {
-            Log.d("Miapp" , "Recuperar estado en on create")
-
+            crearObjetos()
         }
         // ---------------------------------------------------------------------------------------------------------------------------------------
         // TODO crear objetos
@@ -179,7 +190,7 @@ class MainActivity : AppCompatActivity() {
                         if (fred.balas > 0 && !bala.disparo) {
                             fred.disparando = true
                             // fred.balas--
-                            bala.disparar(cX, cY , pasoX , pasoY , fred.lado, fred.estadoFred)
+                            bala.disparar(cX, cY , pasoX , fred.lado, fred.estadoFred)
                         }
                     }
                     pulsadoDisparo = false
@@ -301,8 +312,7 @@ class MainActivity : AppCompatActivity() {
                             // si está en un pasillo ... saltar
                             fred.estadoFred = EstadosFred.SALTANDO
                             if (miLaberinto.map[cX][cY-1] == 3) {
-                                // TODO final del nivel ha encontrado la salida
-                                dialogoFin("¡¡Has salido!!")
+                               fin = true
                             }
                         }
                     }
@@ -323,10 +333,6 @@ class MainActivity : AppCompatActivity() {
                     enemigo.actualizarEntidad(miLaberinto, cX, cY)
                 }
 
-
-                // TODO detectar objetos
-
-                // TODO actualizar disparo y detectar enemigos en la trayectoria
                 if (bala.disparo) {
                     bala.actualizarBala(miLaberinto)
                     if (bala.bX - cX > 4 || bala.bX - cX < -4) bala.eliminarBala()
@@ -334,14 +340,28 @@ class MainActivity : AppCompatActivity() {
 
 
                 runOnUiThread {
-                    crearFondo(cX - 4, cY - 3, pasoX, pasoY)
-                    if (eliminarEnemigo != -1) {
-                        listaEnemigos.remove(listaEnemigos.get(eliminarEnemigo))
-                        eliminarEnemigo = -1
+                    if (fin) {
+                        dialogoFin()
+                        fin = false
+                    } else {
+                        crearFondo(cX - 4, cY - 3, pasoX, pasoY)
+                        if (eliminarEnemigo != -1) {
+                            listaEnemigos.remove(listaEnemigos.get(eliminarEnemigo))
+                            eliminarEnemigo = -1
+                        }
+                        if (eliminarObjeto != -1) {
+                            listaObjetos.remove(listaObjetos.get(eliminarObjeto))
+                            eliminarObjeto = -1
+                        }
+                        alturaTV.text = "Altura: ${cY - 3}"
+                        balasTV.text = "Balas ${fred.balas}"
+                        vidaTV.text = "Vida: " + fred.vida
+                        if (mapaEncontrado) {
+                            imageViewMapa.setImageBitmap(mapa)
+                            mapaEncontrado = false
+                        }
+
                     }
-                    alturaTV.text = "Altura: ${cY - 3}"
-                    balasTV.text = "Balas ${fred.balas}"
-                    vidaTV.text = "Vida: " + fred.vida
 
 
                 }
@@ -350,6 +370,27 @@ class MainActivity : AppCompatActivity() {
         }
 
         timer.schedule(ticks, velocidadJuego, velocidadJuego)
+    }
+
+    private fun crearObjetos() {
+
+        // Ponemos un mapa en un sitio al azar
+        var listaUbicacionesPasilloHorizontal = miLaberinto.posiblesUbicacionesGota(miLaberinto)
+        listaUbicacionesPasilloHorizontal.shuffle()
+        val mapa = Mapa()
+         mapa.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.first().coordenadaX, listaUbicacionesPasilloHorizontal.first().coordenadaY)
+        listaObjetos.add(mapa)
+
+        if (totalObjetos > listaUbicacionesPasilloHorizontal.size) totalObjetos = listaUbicacionesPasilloHorizontal.size-1
+
+        // Creamos objetos al azar
+        for (n in 1..totalObjetos) {
+            val objeto = Pocima()
+            objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
+            listaObjetos.add(objeto)
+        }
+
+
     }
 
     private fun crearEnemigos() {
@@ -652,9 +693,42 @@ class MainActivity : AppCompatActivity() {
                 val enemigoBitmap = enemigo.devolverBitmap()
                 rectDestino.offsetTo((diferenciaX * 128) + pasoX + enemigo.offsetX, (diferenciaY * 160) + pasoY + enemigo.offsetY)
                 lienzo.drawBitmap(enemigoBitmap, null, rectDestino, null)
+
+
+
             }
         }
 
+        //Dibujar Objetos ---------------------------------------------------------------------------------------------------------------------------------------
+        listaObjetos.forEach { objeto ->
+            if (objeto.oX > (cX-5) && objeto.oX < (cX + 5) && objeto.oY > (cY-4) && objeto.oY < (cY + 4)) {
+
+                if (objeto.detectarColision(cX,cY)) {
+                    // Fred ha cogido el objeto
+                    eliminarObjeto = listaObjetos.indexOf(objeto)
+
+                    if (objeto is Mapa) {
+                        mapaEncontrado = true
+                        mapa = objeto.dibujarMapa(cX,cY,miLaberinto)
+                    }
+
+                    if (objeto is Pocima) {
+                        fred.vida += 2
+                        if (fred.vida > 15) fred.vida = 15
+                    }
+
+                }
+
+                // Pintar objeto ...
+                val diferenciaX = objeto.oX - cX
+                val diferenciaY = objeto.oY - cY
+                val objetoBitmap = objeto.devolverBitmap()
+                rectDestino.offsetTo((diferenciaX * 128) + pasoX + 384, (diferenciaY * 160) + pasoY + 400)
+                lienzo.drawBitmap(objetoBitmap, null, rectDestino, null)
+
+            }
+
+        }
 
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         // Pintar a Fred
@@ -711,7 +785,6 @@ class MainActivity : AppCompatActivity() {
         lienzo.drawRect(coordenadas.x1 , coordenadas.y1 , coordenadas.x2  , coordenadas.y2, pintura2)
 */
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        // TODO Pintar los objetos
 
         // Pintar la bala si existe
         if (bala.disparo) {
@@ -882,6 +955,7 @@ class MainActivity : AppCompatActivity() {
         outState.putInt("OFFSETX", pasoX)
         outState.putInt("OFFSETY", pasoY)
         outState.putParcelableArrayList("LISTAENEMIGOS", listaEnemigos)
+        outState.putParcelableArrayList("LISTAOBJETOS", listaObjetos)
         outState.putParcelable("LABERINTO", miLaberinto)
         outState.putParcelable("FRED", fred)
 
@@ -898,11 +972,12 @@ class MainActivity : AppCompatActivity() {
         pasoX = savedInstanceState.getInt("OFFSETX")
         pasoY = savedInstanceState.getInt("OFFSETY")
         listaEnemigos.addAll(savedInstanceState.getParcelableArrayList("LISTAENEMIGOS")!!)
+        listaObjetos.addAll(savedInstanceState.getParcelableArrayList("LISTAOBJETOS")!!)
         miLaberinto = savedInstanceState.getParcelable("LABERINTO")!!
         fred = savedInstanceState.getParcelable("FRED")!!
     }
 
-    private fun dialogoFin(title: String) {
+    private fun dialogoFin() {
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -910,7 +985,7 @@ class MainActivity : AppCompatActivity() {
         val yesBtn = dialog.findViewById(R.id.botonfinjugar) as Button
         yesBtn.setOnClickListener {
             dialog.dismiss()
-            finish()
+         //   finish()
         }
         dialog.show()
 

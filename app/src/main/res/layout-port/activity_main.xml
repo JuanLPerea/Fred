@@ -141,7 +141,7 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/imageViewMapa"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:src="@drawable/fondomapa" />

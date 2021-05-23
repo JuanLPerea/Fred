@@ -111,8 +111,8 @@ class Bala {
     }
 
     fun coordenadasCajaBala ( cX : Int, cY : Int , pasoX : Int, pasoY : Int) : Coordenada {
-        var desplazamientoX = 62
-        var desplazamientoY = 76
+        val desplazamientoX = 62
+        val desplazamientoY = 76
         val diferenciaXbala = bX - cX
         val diferenciaYbala = bY - cY
         val coordenadaX = diferenciaXbala * 128 + pasoX + balaOffsetX + desplazamientoX
@@ -126,7 +126,7 @@ class Bala {
         disparo = false
     }
 
-    fun disparar(fX : Int, fY : Int, offsetX : Int, offsetY : Int , lado: Lado, estadoFred: EstadosFred) {
+    fun disparar(fX : Int, fY : Int, offsetX : Int , lado: Lado, estadoFred: EstadosFred) {
         bX = fX
         bY = fY
 
