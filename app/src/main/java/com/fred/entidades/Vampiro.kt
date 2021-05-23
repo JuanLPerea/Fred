@@ -153,15 +153,15 @@ class Vampiro() : Enemigo() {
 
     override fun calcularCoordenadas (cX: Int, cY: Int, pasoX: Int, pasoY: Int) : CajaDeColision {
         // Calcular el punto de arriba de la izquierda del sprite
-        var desplazamientoX = 20
+        var desplazamientoX = 40
         var desplazamientoY = 10
-        val anchura = 90
+        val anchura = 80
         val altura = 60
 
         if (mirandoA == Direcciones.DERECHA) {
-            desplazamientoX = 0
+            desplazamientoX = 10
         } else {
-            desplazamientoX = 32
+            desplazamientoX = 40
         }
 
 

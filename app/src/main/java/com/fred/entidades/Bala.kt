@@ -8,8 +8,7 @@ import com.fred.*
 
 class Bala {
 
-    lateinit var baladerecha : Bitmap
-    lateinit var balaizquierda : Bitmap
+    lateinit var bala : Bitmap
     lateinit var nube1d : Bitmap
     lateinit var nube2d : Bitmap
     lateinit var nube3d : Bitmap
@@ -27,8 +26,7 @@ class Bala {
     var animacionNube = 1
 
     fun newBala (context: Context) {
-        baladerecha = BitmapFactory.decodeResource(context.resources , R.drawable.baladerecha)
-        balaizquierda = BitmapFactory.decodeResource(context.resources , R.drawable.balaizquierda)
+        bala = BitmapFactory.decodeResource(context.resources , R.drawable.bala)
         nube1d = BitmapFactory.decodeResource(context.resources , R.drawable.nube1d)
         nube2d = BitmapFactory.decodeResource(context.resources , R.drawable.nube2d)
         nube3d = BitmapFactory.decodeResource(context.resources , R.drawable.nube3d)
@@ -44,26 +42,32 @@ class Bala {
         if (!impacto) {
             if (direccion == Direcciones.DERECHA) {
                 // Movemos la bala
-                    if (miLaberinto.map[bX+1][bY] == 0 ) {
-                        bX++
-                        balaOffsetX = 384
-                    } else {
-                        // La bala ha chocado con un muro
-                        eliminarBala()
-                    }
+                    balaOffsetX+=96
+                 if (balaOffsetX >= 512) {
+                     if (miLaberinto.map[bX+1][bY] == 0 ) {
+                         bX++
+                         balaOffsetX = 384
+                     } else {
+                         // La bala ha chocado con un muro
+                         eliminarBala()
+                     }
+                 }
+
 
 
             } else {
                 // bala que va a la izquierda
                 // Movemos la bala
+                    balaOffsetX-=96
+                if (balaOffsetX <= 256) {
                     if (miLaberinto.map[bX-1][bY] == 0 ) {
                         bX--
                         balaOffsetX = 384
                     } else {
                         // La bala ha chocado con un muro
-                       eliminarBala()
+                        eliminarBala()
                     }
-
+                }
             }
         }
 
@@ -71,10 +75,9 @@ class Bala {
 
     fun devolverBitmap () : Bitmap {
         if (!impacto) {
-                if (direccion == Direcciones.IZQUIERDA) return baladerecha else return balaizquierda
+                return bala
         } else {
             animacionNube++
-            if (direccion == Direcciones.IZQUIERDA) {
                 when (animacionNube) {
                     1 -> return nube1d
                     2 -> return nube2d
@@ -84,39 +87,38 @@ class Bala {
                         eliminarBala()
                         return nube3d
                     }
-
                 }
-            } else {
-                when (animacionNube) {
-                    1 -> return nube1i
-                    2 -> return nube2i
-                    3 -> {
-                        impacto = false
-                        animacionNube = 1
-                        eliminarBala()
-                        return nube3i
-                    }
-
-                }
-            }
-
         }
 
         animacionNube = 1
-        return balaizquierda
+        return bala
 
     }
 
-    fun detectarColision( enemigo: Enemigo ): Boolean {
+    fun detectarColision( cX : Int, cY : Int , pasoX : Int, pasoY : Int , enemigo: Enemigo ): Boolean {
         // Detectar si la bala alcanza a algún enemigo
-        var impacto = false
-        if (bX == enemigo.pX && bY == enemigo.pY) {
-            impacto = true
-            balaOffsetX = enemigo.offsetX
-        }
+        var impacto = true
+        val coordenadasCaja = coordenadasCajaBala(cX,cY,pasoX,pasoY)
 
-        if (impacto) Log.d("Miapp" , "Bala en: ${bX},${bY} disparo: ${disparo} , impacto: ${impacto}     offsetX ${balaOffsetX}")
+        val cajaColisionEnemigo = enemigo.calcularCoordenadas(cX,cY, pasoX, pasoY)
+        if (coordenadasCaja.coordenadaX > cajaColisionEnemigo.x2) impacto = false
+        if (coordenadasCaja.coordenadaX < cajaColisionEnemigo.x1) impacto = false
+        if (coordenadasCaja.coordenadaY > cajaColisionEnemigo.y2) impacto = false
+        if (coordenadasCaja.coordenadaY < cajaColisionEnemigo.y1) impacto = false
+
+
         return impacto
+    }
+
+    fun coordenadasCajaBala ( cX : Int, cY : Int , pasoX : Int, pasoY : Int) : Coordenada {
+        var desplazamientoX = 62
+        var desplazamientoY = 76
+        val diferenciaXbala = bX - cX
+        val diferenciaYbala = bY - cY
+        val coordenadaX = diferenciaXbala * 128 + pasoX + balaOffsetX + desplazamientoX
+        val coordenadaY = diferenciaYbala * 160 + pasoY + balaOffsetY + desplazamientoY
+        val coordenada = Coordenada(coordenadaX, coordenadaY)
+        return coordenada
     }
 
 
@@ -124,20 +126,22 @@ class Bala {
         disparo = false
     }
 
-    fun disparar(fX : Int, fY : Int , lado: Lado, estadoFred: EstadosFred) {
+    fun disparar(fX : Int, fY : Int, offsetX : Int, offsetY : Int , lado: Lado, estadoFred: EstadosFred) {
         bX = fX
         bY = fY
-        balaOffsetX = 384
+
         if (lado == Lado.DERECHA) {
             direccion = Direcciones.DERECHA
+            balaOffsetX = 384 + (offsetX * -1)
         } else {
             direccion = Direcciones.IZQUIERDA
+            balaOffsetX = 384 + (offsetX * -1)
         }
         disparo = true
         impacto = false
-        if (estadoFred == EstadosFred.SALTANDO || estadoFred == EstadosFred.SALTANDOCUERDA) balaOffsetY = 368 else balaOffsetY = 400
+        if (estadoFred == EstadosFred.SALTANDO || estadoFred == EstadosFred.SALTANDOCUERDA) balaOffsetY = 372 else balaOffsetY = 400
 
-
+        Log.d("Miapp" , "Bala en: ${bX},${bY} disparo: ${disparo} , impacto: ${impacto}     balaoffsetX ${balaOffsetX}   offsetX: ${offsetX}")
     }
 
 }

@@ -50,9 +50,9 @@ class MainActivity : AppCompatActivity() {
     var numeroEspinetesEnLaberinto = 0
     var numeroFantasmasEnLaberinto = 0
     var numeroLagartijasEnLaberinto = 0
-    var numeroMomiasEnLaberinto = 30
-    var numeroVampirosEnLaberinto = 30
-    var numeroEsqueletosEnLaberinto = 30
+    var numeroMomiasEnLaberinto = 0
+    var numeroVampirosEnLaberinto = 100
+    var numeroEsqueletosEnLaberinto = 0
 
     val timer = Timer()
 
@@ -175,11 +175,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 if (pulsadoDisparo ) {
-                    if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.SALTANDO || fred.estadoFred == EstadosFred.SALTANDOCUERDA || fred.estadoFred == EstadosFred.QUIETO) {
+                    if ((fred.cuerda && fred.estadoFred== EstadosFred.SALTANDOCUERDA) || (!fred.cuerda && (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.SALTANDO || fred.estadoFred == EstadosFred.SALTANDOCUERDA || fred.estadoFred == EstadosFred.QUIETO))) {
                         if (fred.balas > 0 && !bala.disparo) {
                             fred.disparando = true
                             // fred.balas--
-                            bala.disparar(cX, cY , fred.lado, fred.estadoFred)
+                            bala.disparar(cX, cY , pasoX , pasoY , fred.lado, fred.estadoFred)
                         }
                     }
                     pulsadoDisparo = false
@@ -339,7 +339,7 @@ class MainActivity : AppCompatActivity() {
                         listaEnemigos.remove(listaEnemigos.get(eliminarEnemigo))
                         eliminarEnemigo = -1
                     }
-                    alturaTV.text = "Altura: $cY"
+                    alturaTV.text = "Altura: ${cY - 3}"
                     balasTV.text = "Balas ${fred.balas}"
                     vidaTV.text = "Vida: " + fred.vida
 
@@ -586,15 +586,23 @@ class MainActivity : AppCompatActivity() {
         listaEnemigos.forEach { enemigo ->
             // si las coordenadas de la entidad enemiga están dentro de la zona visible....
             if (enemigo.pX > (cX-5) && enemigo.pX < (cX + 5) && enemigo.pY > (cY-4) && enemigo.pY < (cY + 4)) {
+/*
+                val cajaBala = bala.coordenadasCajaBala(cX,cY,pasoX,pasoY)
+                var pintura = Paint()
+                pintura.style = Paint.Style.STROKE
+                pintura.strokeWidth = 4F
+                pintura.setARGB(255,0,255,255)
+                lienzo.drawCircle(cajaBala.coordenadaX.toFloat() , cajaBala.coordenadaY.toFloat() , 20F , pintura)
+*/
                 // Detectar que cada enemigo no le ha alcanzado una bala
-                    if (!bala.impacto && bala.disparo && bala.detectarColision(enemigo)) {
+                    if (!bala.impacto && bala.disparo && bala.detectarColision(cX, cY, pasoX, pasoY, enemigo)) {
                         when {
                             enemigo is Momia || enemigo is Esqueleto -> {
                                 // Se destruye el enemigo y se muestra la animación de la nube
                                 eliminarEnemigo = listaEnemigos.indexOf(enemigo)
                                 bala.impacto = true
                             }
-                            enemigo is Vampiro && bala.balaOffsetY == 400 -> {
+                            enemigo is Vampiro -> {
                                 eliminarEnemigo = listaEnemigos.indexOf(enemigo)
                                 bala.impacto = true
                             }
@@ -615,17 +623,17 @@ class MainActivity : AppCompatActivity() {
 
 
                 // Detectar colisiones ...
-                /*
+/*
                 // Descomentar este bloque de código para ver las cajas de colisión
-              if (enemigo is Lagartija) {
-                  val coordenadas = enemigo.dibujarCajasColision(cX,cY,pasoX,pasoY,fred)
+              if (enemigo is Vampiro) {
+                  val coordenadas = enemigo.dibujarCajasColision(cX,cY,pasoX,pasoY)
                   var pintura = Paint()
                   pintura.style = Paint.Style.STROKE
                   pintura.strokeWidth = 4F
                   pintura.setARGB(255,0,255,255)
                   lienzo.drawRect(coordenadas.x1 , coordenadas.y1 , coordenadas.x2  , coordenadas.y2, pintura)
               }
-                */
+*/
                    if (enemigo.detectarColision(cX, cY, pasoX, pasoY, fred)) {
                        if (fred.tocado == 0) {
                            fred.vida--
@@ -709,7 +717,7 @@ class MainActivity : AppCompatActivity() {
         if (bala.disparo) {
             val diferenciaXbala = bala.bX - cX
             val diferenciaYbala = bala.bY - cY
-            rectDestino.offsetTo((diferenciaXbala * 128)  + bala.balaOffsetX, (diferenciaYbala * 160) + pasoY + bala.balaOffsetY)
+            rectDestino.offsetTo((diferenciaXbala * 128) + pasoX + bala.balaOffsetX, (diferenciaYbala * 160) + pasoY + bala.balaOffsetY)
             lienzo.drawBitmap(bala.devolverBitmap(),null, rectDestino,null)
         }
 
