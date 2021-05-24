@@ -11,7 +11,6 @@ class Pocima() : Objeto() {
 
     lateinit var pocimaBitmap: Bitmap
 
-
     constructor(parcel: Parcel) : this() {
         pocimaBitmap = parcel.readParcelable(Bitmap::class.java.classLoader)!!
     }

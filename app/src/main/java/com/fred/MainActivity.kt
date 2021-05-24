@@ -13,9 +13,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import com.fred.entidades.*
-import com.fred.items.Mapa
-import com.fred.items.Objeto
-import com.fred.items.Pocima
+import com.fred.items.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 import kotlin.collections.ArrayList
@@ -32,6 +30,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var alturaTV: TextView
     lateinit var balasTV : TextView
     lateinit var vidaTV : TextView
+    lateinit var nivelTV : TextView
+    lateinit var puntosTV : TextView
+    lateinit var puntosMax : TextView
     lateinit var fred: Fred
     lateinit var bala: Bala
     lateinit var barraVida : ImageView
@@ -49,18 +50,20 @@ class MainActivity : AppCompatActivity() {
     var pulsadoIzquierda = false
     var pulsadoDerecha = false
     var pulsadoDisparo = false
-    var velocidadJuego = 100L
+    var velocidadJuego = 200L
     var mapaEncontrado = false
     var fin = false
+    var nivel = 1
+    var recordPuntos = 0
 
     // Establecemos el número de enemigos de cada tipo
-    var numeroGotasAcidoEnLaberinto = 20
-    var numeroEspinetesEnLaberinto = 20
-    var numeroFantasmasEnLaberinto = 5
-    var numeroLagartijasEnLaberinto = 10
-    var numeroMomiasEnLaberinto = 5
-    var numeroVampirosEnLaberinto = 1
-    var numeroEsqueletosEnLaberinto = 1
+    var numeroGotasAcidoEnLaberinto = 0
+    var numeroEspinetesEnLaberinto = 0
+    var numeroFantasmasEnLaberinto = 25
+    var numeroLagartijasEnLaberinto = 0
+    var numeroMomiasEnLaberinto = 25
+    var numeroVampirosEnLaberinto = 100
+    var numeroEsqueletosEnLaberinto = 100
 
     // Numero de objetos en el laberinto
     var totalObjetos = 100
@@ -134,6 +137,9 @@ class MainActivity : AppCompatActivity() {
         vidaTV = findViewById(R.id.vidaTV)
         barraVida = findViewById(R.id.barraVida)
         imageViewMapa = findViewById(R.id.imageViewMapa)
+        nivelTV = findViewById(R.id.nivelTV)
+        puntosTV = findViewById(R.id.puntosTV)
+        puntosMax = findViewById(R.id.maxTV)
 
         // Creamos a nuestro protagonista
         fred = Fred()
@@ -189,7 +195,7 @@ class MainActivity : AppCompatActivity() {
                     if ((fred.cuerda && fred.estadoFred== EstadosFred.SALTANDOCUERDA) || (!fred.cuerda && (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.SALTANDO || fred.estadoFred == EstadosFred.SALTANDOCUERDA || fred.estadoFred == EstadosFred.QUIETO))) {
                         if (fred.balas > 0 && !bala.disparo) {
                             fred.disparando = true
-                            // fred.balas--
+                            fred.balas--
                             bala.disparar(cX, cY , pasoX , fred.lado, fred.estadoFred)
                         }
                     }
@@ -341,8 +347,8 @@ class MainActivity : AppCompatActivity() {
 
                 runOnUiThread {
                     if (fin) {
-                        dialogoFin()
                         fin = false
+                        dialogoFin("Enhorabuena has salido!!")
                     } else {
                         crearFondo(cX - 4, cY - 3, pasoX, pasoY)
                         if (eliminarEnemigo != -1) {
@@ -355,7 +361,11 @@ class MainActivity : AppCompatActivity() {
                         }
                         alturaTV.text = "Altura: ${cY - 3}"
                         balasTV.text = "Balas ${fred.balas}"
-                        vidaTV.text = "Vida: " + fred.vida
+                        nivelTV.text = "Nivel: ${nivel}"
+                        vidaTV.text = "Vida: ${fred.vida}"
+                        puntosTV.text = "Puntos: ${fred.puntos}"
+                        puntosMax.text = "Max: ${recordPuntos}"
+
                         if (mapaEncontrado) {
                             imageViewMapa.setImageBitmap(mapa)
                             mapaEncontrado = false
@@ -385,9 +395,31 @@ class MainActivity : AppCompatActivity() {
 
         // Creamos objetos al azar
         for (n in 1..totalObjetos) {
-            val objeto = Pocima()
-            objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
-            listaObjetos.add(objeto)
+
+            val azar = (0..3).shuffled().last()
+            when (azar) {
+                0-> {
+                    val objeto = Pocima()
+                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
+                    listaObjetos.add(objeto)
+                }
+                1 -> {
+                    val objeto = Tesoro()
+                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
+                    listaObjetos.add(objeto)
+                }
+                2 -> {
+                    val objeto = Mapa()
+                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
+                    listaObjetos.add(objeto)
+                }
+                3 -> {
+                    val objeto = Balas()
+                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
+                    listaObjetos.add(objeto)
+                }
+            }
+
         }
 
 
@@ -648,7 +680,9 @@ class MainActivity : AppCompatActivity() {
                                 bala.impacto = true
                             }
                             enemigo is Fantasma -> {
-                                bala.impacto = true
+                                bala.impacto = false
+                                bala.eliminarBala()
+                                bala.animacionNube = 1
                                 when (enemigo.movimiento) {
                                     Direcciones.DERECHA -> enemigo.movimiento = Direcciones.IZQUIERDA
                                     Direcciones.IZQUIERDA -> enemigo.movimiento = Direcciones.DERECHA
@@ -683,7 +717,7 @@ class MainActivity : AppCompatActivity() {
                        }
 
                        if (fred.vida == 0) {
-                           finish()
+                           dialogoFin("D.E.P. Fred")
                        }
                    }
 
@@ -715,6 +749,14 @@ class MainActivity : AppCompatActivity() {
                     if (objeto is Pocima) {
                         fred.vida += 2
                         if (fred.vida > 15) fred.vida = 15
+                    }
+
+                    if (objeto is Tesoro) {
+                        fred.puntos += objeto.puntos
+                    }
+
+                    if (objeto is Balas) {
+                        fred.balas = 6
                     }
 
                 }
@@ -977,11 +1019,15 @@ class MainActivity : AppCompatActivity() {
         fred = savedInstanceState.getParcelable("FRED")!!
     }
 
-    private fun dialogoFin() {
+    private fun dialogoFin(texto : String) {
+        timer.cancel()
+
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.dialogofin)
+        val textofin = dialog.findViewById(R.id.textofinTV) as TextView
+        textofin.text = texto
         val yesBtn = dialog.findViewById(R.id.botonfinjugar) as Button
         yesBtn.setOnClickListener {
             dialog.dismiss()

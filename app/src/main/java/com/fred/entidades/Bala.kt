@@ -101,11 +101,17 @@ class Bala {
         val coordenadasCaja = coordenadasCajaBala(cX,cY,pasoX,pasoY)
 
         val cajaColisionEnemigo = enemigo.calcularCoordenadas(cX,cY, pasoX, pasoY)
-        if (coordenadasCaja.coordenadaX > cajaColisionEnemigo.x2) impacto = false
-        if (coordenadasCaja.coordenadaX < cajaColisionEnemigo.x1) impacto = false
+        if (coordenadasCaja.coordenadaX - 16 > cajaColisionEnemigo.x2) impacto = false
+        if (coordenadasCaja.coordenadaX + 16 < cajaColisionEnemigo.x1) impacto = false
         if (coordenadasCaja.coordenadaY > cajaColisionEnemigo.y2) impacto = false
         if (coordenadasCaja.coordenadaY < cajaColisionEnemigo.y1) impacto = false
 
+        if (impacto == true) {
+            bX = enemigo.pX
+            bY = enemigo.pY
+            balaOffsetX = enemigo.offsetX
+            balaOffsetY = enemigo.offsetY
+        }
 
         return impacto
     }
