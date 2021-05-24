@@ -2,6 +2,7 @@ package com.fred
 
 import android.app.Dialog
 import android.graphics.*
+import android.media.SoundPool
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -39,6 +40,16 @@ class MainActivity : AppCompatActivity() {
     lateinit var imageViewMapa : ImageView
     lateinit var mapa : Bitmap
 
+    // Sonidos
+    lateinit var soundPool : SoundPool
+    var tic = 0
+    var tac = 0
+    var toc = 0
+    var salto = 0
+    var hurt = 0
+    var beep = 0
+
+    // Variables
     var cX = 0
     var cY = 0
     var pasoX = 0
@@ -50,20 +61,20 @@ class MainActivity : AppCompatActivity() {
     var pulsadoIzquierda = false
     var pulsadoDerecha = false
     var pulsadoDisparo = false
-    var velocidadJuego = 200L
+    var velocidadJuego = 150L
     var mapaEncontrado = false
     var fin = false
     var nivel = 1
     var recordPuntos = 0
 
     // Establecemos el número de enemigos de cada tipo
-    var numeroGotasAcidoEnLaberinto = 0
-    var numeroEspinetesEnLaberinto = 0
-    var numeroFantasmasEnLaberinto = 25
+    var numeroGotasAcidoEnLaberinto = 20
+    var numeroEspinetesEnLaberinto = 20
+    var numeroFantasmasEnLaberinto = 10
     var numeroLagartijasEnLaberinto = 0
-    var numeroMomiasEnLaberinto = 25
-    var numeroVampirosEnLaberinto = 100
-    var numeroEsqueletosEnLaberinto = 100
+    var numeroMomiasEnLaberinto = 10
+    var numeroVampirosEnLaberinto = 5
+    var numeroEsqueletosEnLaberinto = 2
 
     // Numero de objetos en el laberinto
     var totalObjetos = 100
@@ -125,6 +136,9 @@ class MainActivity : AppCompatActivity() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main)
 
+        // Sonidos
+        // TODO sonidos
+
         cargarSprites()
 
         botonArriba = findViewById(R.id.flecha_arriba)
@@ -171,7 +185,6 @@ class MainActivity : AppCompatActivity() {
             crearObjetos()
         }
         // ---------------------------------------------------------------------------------------------------------------------------------------
-        // TODO crear objetos
 
         establecerListeners()
 
@@ -396,24 +409,24 @@ class MainActivity : AppCompatActivity() {
         // Creamos objetos al azar
         for (n in 1..totalObjetos) {
 
-            val azar = (0..3).shuffled().last()
+            val azar = (0..10).shuffled().last()
             when (azar) {
-                0-> {
+                in 1..3 -> {
                     val objeto = Pocima()
                     objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
                 }
-                1 -> {
+                in 4..7 -> {
                     val objeto = Tesoro()
                     objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
                 }
-                2 -> {
+                0 -> {
                     val objeto = Mapa()
                     objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
                 }
-                3 -> {
+                in 8..10 -> {
                     val objeto = Balas()
                     objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
@@ -1031,7 +1044,7 @@ class MainActivity : AppCompatActivity() {
         val yesBtn = dialog.findViewById(R.id.botonfinjugar) as Button
         yesBtn.setOnClickListener {
             dialog.dismiss()
-         //   finish()
+            finish()
         }
         dialog.show()
 

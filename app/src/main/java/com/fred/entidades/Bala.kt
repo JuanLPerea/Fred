@@ -104,7 +104,7 @@ class Bala {
         if (coordenadasCaja.coordenadaX - 16 > cajaColisionEnemigo.x2) impacto = false
         if (coordenadasCaja.coordenadaX + 16 < cajaColisionEnemigo.x1) impacto = false
         if (coordenadasCaja.coordenadaY > cajaColisionEnemigo.y2) impacto = false
-        if (coordenadasCaja.coordenadaY < cajaColisionEnemigo.y1) impacto = false
+        if (coordenadasCaja.coordenadaY + 32 < cajaColisionEnemigo.y1) impacto = false
 
         if (impacto == true) {
             bX = enemigo.pX
