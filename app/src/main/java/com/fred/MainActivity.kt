@@ -57,6 +57,8 @@ class MainActivity : AppCompatActivity() {
      var pow = 0
      var musicasalida = 0
      var fire = 0
+     var fredfrito = 0
+     var marchafunebre = 0
 
     // Variables
     var cX = 0
@@ -77,6 +79,9 @@ class MainActivity : AppCompatActivity() {
     var recordPuntos = 0
     var tick = 0
     var sonidoPow = false
+    var sonidoDisparo = false
+    var tickFinal = 0
+    var tesorosRecogidos = 0
 
 
     // Establecemos el número de enemigos de cada tipo
@@ -149,7 +154,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Sonidos
-
         cargarSonidos()
 
         // Cargar Sprites
@@ -175,28 +179,12 @@ class MainActivity : AppCompatActivity() {
         bala = Bala()
         bala.newBala(this)
 
-        // Necesitamos un laberinto para jugar
-        miLaberinto = Laberinto()
-
      //   dibujarLaberintoTexto(miLaberinto)
+        miLaberinto = Laberinto()
 
         // Variables para la posición -------------------------------------------------------------------------------------------------------
         if (savedInstanceState == null) {
-            miLaberinto.generarLaberinto()
-            cX = 0
-            cY = 0
-            pasoX = 0
-            pasoY = -160
-
-            // Situar al personaje en un punto aleatorio en la fila de mas abajo del laberinto
-            cY = 34
-            do {
-                cX = (3..29).shuffled().last()
-            } while (miLaberinto.map[cX][cY] != 0)
-            crearFondo(cX - 4, cY - 3, pasoX, pasoY)
-            actualizarBarraVida()
-            crearEnemigos()
-            crearObjetos()
+            iniciarNivel()
         }
         // ---------------------------------------------------------------------------------------------------------------------------------------
 
@@ -213,169 +201,183 @@ class MainActivity : AppCompatActivity() {
          //       Log.d("Miapp" , "cX: $cX cY: $cY pasoX: $pasoX pasoY: $pasoY")
                 // Cada tick se comprueban los botones y se muestra la pantalla actualizada
                 // aquí gestionamos el estado de Fred para mostrar la animación que corresponda
-                if (fred.tocado > 0) {
-                    fred.tocado++
-                    if (fred.tocado == 8) fred.tocado = 0
-                }
 
-                if (pulsadoDisparo ) {
-                    if ((fred.cuerda && fred.estadoFred== EstadosFred.SALTANDOCUERDA) || (!fred.cuerda && (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.SALTANDO || fred.estadoFred == EstadosFred.SALTANDOCUERDA || fred.estadoFred == EstadosFred.QUIETO))) {
-                        if (fred.balas > 0 && !bala.disparo) {
-                            fred.disparando = true
-                            fred.balas--
-                            bala.disparar(cX, cY , pasoX , fred.lado, fred.estadoFred)
-                        }
-                    }
-                    pulsadoDisparo = false
-                }
-
-                when {
-                    // si Fred está saltando de una cuerda no hacer caso de los botones que pulsa el usuario
-                    fred.estadoFred == EstadosFred.SALTANDOCUERDA -> {
-                        if (fred.lado == Lado.DERECHA) {
-                            moverDerecha()
-                        } else {
-                            moverIzquierda()
-                        }
+                if (!fin) {
+                    if (fred.tocado > 0) {
+                        fred.tocado++
+                        if (fred.tocado == 8) fred.tocado = 0
                     }
 
-                    // si ha acabado de saltar dedicamos un tick a mirar si nos agarramos a una cuerda o seguimos de pie
-                    fred.estadoFred == EstadosFred.DECISIONSALTO -> {
-                        if (miLaberinto.map[cX][cY-1] == 0 || miLaberinto.map[cX][cY+1] == 0) {
-                            if (pasoX == 0) fred.cuerda = true
-                         //   if (fred.lado == Lado.DERECHA) fred.lado = Lado.IZQUIERDA else fred.lado = Lado.DERECHA
-                        }
-                        fred.estadoFred = EstadosFred.QUIETO
-                    }
-
-                    // Si no hay ningun botón pulsado, y Fred está caminando o moviéndose por una cuerda, hacemos que se quede quieto
-                    !pulsadoDerecha && !pulsadoIzquierda && !pulsadoAbajo && !pulsadoArriba && (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.MOVIENDOCUERDA) -> {
-                        fred.estadoFred = EstadosFred.QUIETO
-                        fred.scrollTick = 0
-                    }
-
-                    // Si pulsamos el botón derecho ...
-                    pulsadoDerecha -> {
-                        // Lo primero mirar que no estemos saltando y si estamos saltando, no hacemos nada, dejamos que la vida fluya
-                        if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.QUIETO) {
-                            // Miramos si está en una cuerda
-                            if (fred.cuerda) {
-                                // Si Fred está en una cuerda y mira a la izquierda y puede saltar a la derecha, salta
-                                if (fred.lado == Lado.IZQUIERDA) {
-                                    if (esPosibleMoverDerecha()) {
-                                        moverDerecha()
-                                        fred.lado = Lado.DERECHA
-                                        fred.estadoFred = EstadosFred.SALTANDOCUERDA
-                                    }
-                                } else {
-                                    // Si está mirando a la derecha, le damos la vuelta
-                                    fred.lado = Lado.IZQUIERDA
-                                }
-                            } else {
-                                // Si estamos en un pasillo y puede moverse a la derecha, y mira a la derecha, lo movemos
-                                if (fred.lado == Lado.DERECHA) {
-                                    if (esPosibleMoverDerecha()) {
-                                        // Detectar si hay una cuerda y saltar si la hay
-                                        moverDerecha()
-                                        if (miLaberinto.map[cX + 1][cY + 1] == 0 && pasoX == -32) {
-                                            fred.estadoFred = EstadosFred.SALTANDOCUERDA
-                                        } else {
-                                        // Si no hay cuerda, seguimos caminando
-                                            fred.estadoFred = EstadosFred.CAMINANDO
-                                        }
-
-                                    } else {
-                                        fred.estadoFred = EstadosFred.QUIETO
-                                    }
-                                } else {
-                                    // si estamos en un pasillo y mira para el otro lado, le damos la vuelta
-                                    fred.lado = Lado.DERECHA
-                                }
+                    if (pulsadoDisparo) {
+                        if ((fred.cuerda && fred.estadoFred == EstadosFred.SALTANDOCUERDA) || (!fred.cuerda && (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.SALTANDO || fred.estadoFred == EstadosFred.SALTANDOCUERDA || fred.estadoFred == EstadosFred.QUIETO))) {
+                            if (fred.balas > 0 && !bala.disparo) {
+                                sonidoDisparo = true
+                                fred.disparando = true
+                                fred.balas--
+                                bala.disparar(cX, cY, pasoX, fred.lado, fred.estadoFred)
                             }
                         }
+                        pulsadoDisparo = false
                     }
 
-                    pulsadoIzquierda -> {
-                        // Lo primero mirar que no estemos saltando y si estamos saltando, no hacemos nada, dejamos que la vida fluya
-                        if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.QUIETO) {
-                            // Miramos si está en una cuerda
-                            if (fred.cuerda) {
-                                // Si Fred está en una cuerda y mira a la izquierda y puede saltar a la derecha, salta
-                                if (fred.lado == Lado.DERECHA) {
-                                    if (esPosibleMoverIzquierda()) {
-                                        moverIzquierda()
+                    when {
+                        // si Fred está saltando de una cuerda no hacer caso de los botones que pulsa el usuario
+                        fred.estadoFred == EstadosFred.SALTANDOCUERDA -> {
+                            if (fred.lado == Lado.DERECHA) {
+                                moverDerecha()
+                            } else {
+                                moverIzquierda()
+                            }
+                        }
+
+                        // si ha acabado de saltar dedicamos un tick a mirar si nos agarramos a una cuerda o seguimos de pie
+                        fred.estadoFred == EstadosFred.DECISIONSALTO -> {
+                            if (miLaberinto.map[cX][cY - 1] == 0 || miLaberinto.map[cX][cY + 1] == 0) {
+                                if (pasoX == 0) fred.cuerda = true
+                                //   if (fred.lado == Lado.DERECHA) fred.lado = Lado.IZQUIERDA else fred.lado = Lado.DERECHA
+                            }
+                            fred.estadoFred = EstadosFred.QUIETO
+                        }
+
+                        // Si no hay ningun botón pulsado, y Fred está caminando o moviéndose por una cuerda, hacemos que se quede quieto
+                        !pulsadoDerecha && !pulsadoIzquierda && !pulsadoAbajo && !pulsadoArriba && (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.MOVIENDOCUERDA) -> {
+                            fred.estadoFred = EstadosFred.QUIETO
+                            fred.scrollTick = 0
+                        }
+
+                        // Si pulsamos el botón derecho ...
+                        pulsadoDerecha -> {
+                            // Lo primero mirar que no estemos saltando y si estamos saltando, no hacemos nada, dejamos que la vida fluya
+                            if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.QUIETO) {
+                                // Miramos si está en una cuerda
+                                if (fred.cuerda) {
+                                    // Si Fred está en una cuerda y mira a la izquierda y puede saltar a la derecha, salta
+                                    if (fred.lado == Lado.IZQUIERDA) {
+                                        if (esPosibleMoverDerecha()) {
+                                            moverDerecha()
+                                            fred.lado = Lado.DERECHA
+                                            fred.estadoFred = EstadosFred.SALTANDOCUERDA
+                                        }
+                                    } else {
+                                        // Si está mirando a la derecha, le damos la vuelta
                                         fred.lado = Lado.IZQUIERDA
-                                        fred.estadoFred = EstadosFred.SALTANDOCUERDA
                                     }
                                 } else {
-                                    // Si está mirando a la derecha, le damos la vuelta
-                                    fred.lado = Lado.DERECHA
-                                }
-                            } else {
-                                // Si estamos en un pasillo y puede moverse a la derecha, y mira a la derecha, lo movemos
-                                if (fred.lado == Lado.IZQUIERDA) {
-                                    if (esPosibleMoverIzquierda()) {
-                                        moverIzquierda()
-                                        if (miLaberinto.map[cX - 1][cY + 1] == 0 && pasoX == 32) {
-                                            fred.estadoFred = EstadosFred.SALTANDOCUERDA
+                                    // Si estamos en un pasillo y puede moverse a la derecha, y mira a la derecha, lo movemos
+                                    if (fred.lado == Lado.DERECHA) {
+                                        if (esPosibleMoverDerecha()) {
+                                            // Detectar si hay una cuerda y saltar si la hay
+                                            moverDerecha()
+                                            if (miLaberinto.map[cX + 1][cY + 1] == 0 && pasoX == -32) {
+                                                fred.estadoFred = EstadosFred.SALTANDOCUERDA
+                                            } else {
+                                                // Si no hay cuerda, seguimos caminando
+                                                fred.estadoFred = EstadosFred.CAMINANDO
+                                            }
+
                                         } else {
-                                            fred.estadoFred = EstadosFred.CAMINANDO
+                                            fred.estadoFred = EstadosFred.QUIETO
                                         }
                                     } else {
-                                        fred.estadoFred = EstadosFred.QUIETO
+                                        // si estamos en un pasillo y mira para el otro lado, le damos la vuelta
+                                        fred.lado = Lado.DERECHA
                                     }
-                                } else {
-                                    // si estamos en un pasillo y mira para el otro lado, le damos la vuelta
-                                    fred.lado = Lado.IZQUIERDA
                                 }
                             }
                         }
 
-                    }
+                        pulsadoIzquierda -> {
+                            // Lo primero mirar que no estemos saltando y si estamos saltando, no hacemos nada, dejamos que la vida fluya
+                            if (fred.estadoFred == EstadosFred.CAMINANDO || fred.estadoFred == EstadosFred.QUIETO) {
+                                // Miramos si está en una cuerda
+                                if (fred.cuerda) {
+                                    // Si Fred está en una cuerda y mira a la izquierda y puede saltar a la derecha, salta
+                                    if (fred.lado == Lado.DERECHA) {
+                                        if (esPosibleMoverIzquierda()) {
+                                            moverIzquierda()
+                                            fred.lado = Lado.IZQUIERDA
+                                            fred.estadoFred = EstadosFred.SALTANDOCUERDA
+                                        }
+                                    } else {
+                                        // Si está mirando a la derecha, le damos la vuelta
+                                        fred.lado = Lado.DERECHA
+                                    }
+                                } else {
+                                    // Si estamos en un pasillo y puede moverse a la derecha, y mira a la derecha, lo movemos
+                                    if (fred.lado == Lado.IZQUIERDA) {
+                                        if (esPosibleMoverIzquierda()) {
+                                            moverIzquierda()
+                                            if (miLaberinto.map[cX - 1][cY + 1] == 0 && pasoX == 32) {
+                                                fred.estadoFred = EstadosFred.SALTANDOCUERDA
+                                            } else {
+                                                fred.estadoFred = EstadosFred.CAMINANDO
+                                            }
+                                        } else {
+                                            fred.estadoFred = EstadosFred.QUIETO
+                                        }
+                                    } else {
+                                        // si estamos en un pasillo y mira para el otro lado, le damos la vuelta
+                                        fred.lado = Lado.IZQUIERDA
+                                    }
+                                }
+                            }
 
-                    pulsadoArriba -> {
-                        if (fred.cuerda) {
-                            // si está en una cuerda ...
-                            // si se puede subir ... si no, quieto
-                            if (esPosibleMoverArriba() && pasoX == 0) {
-                                fred.estadoFred = EstadosFred.MOVIENDOCUERDA
-                                moverArriba()
-                            } else fred.estadoFred = EstadosFred.QUIETO
-                        } else {
-                            // si está en un pasillo ... saltar
-                            fred.estadoFred = EstadosFred.SALTANDO
-                            if (miLaberinto.map[cX][cY-1] == 3 && pasoX == 0) {
-                               fin = true
+                        }
+
+                        pulsadoArriba -> {
+                            if (fred.cuerda) {
+                                // si está en una cuerda ...
+                                // si se puede subir ... si no, quieto
+                                if (esPosibleMoverArriba() && pasoX == 0) {
+                                    fred.estadoFred = EstadosFred.MOVIENDOCUERDA
+                                    moverArriba()
+                                } else fred.estadoFred = EstadosFred.QUIETO
+                            } else {
+                                // si está en un pasillo ... saltar
+                                fred.estadoFred = EstadosFred.SALTANDO
+                                if (miLaberinto.map[cX][cY - 1] == 3 && pasoX == 0) {
+                                    fin = true
+                                }
+                            }
+                        }
+
+                        pulsadoAbajo -> {
+                            if (fred.cuerda) {
+                                if (esPosibleMoverAbajo()) {
+                                    fred.estadoFred = EstadosFred.MOVIENDOCUERDA
+                                    moverAbajo()
+                                } else fred.estadoFred = EstadosFred.QUIETO
                             }
                         }
                     }
 
-                    pulsadoAbajo -> {
-                        if (fred.cuerda) {
-                            if (esPosibleMoverAbajo()) {
-                                fred.estadoFred = EstadosFred.MOVIENDOCUERDA
-                                moverAbajo()
-                            } else fred.estadoFred = EstadosFred.QUIETO
-                        }
+
+                    listaEnemigos.forEach { enemigo ->
+                        // actualizar enemigos
+                        enemigo.actualizarEntidad(miLaberinto, cX, cY)
+                    }
+
+                    if (bala.disparo) {
+                        bala.actualizarBala(miLaberinto)
+                        if (bala.bX - cX > 4 || bala.bX - cX < -4) bala.eliminarBala()
                     }
                 }
-
-
-                listaEnemigos.forEach { enemigo ->
-                    // actualizar enemigos
-                    enemigo.actualizarEntidad(miLaberinto, cX, cY)
-                }
-
-                if (bala.disparo) {
-                    bala.actualizarBala(miLaberinto)
-                    if (bala.bX - cX > 4 || bala.bX - cX < -4) bala.eliminarBala()
-                }
-
 
                 runOnUiThread {
                     if (fin) {
-                        fin = false
-                        dialogoFin("Enhorabuena has salido!!")
+                        if (tickFinal < 20) {
+                            if (tickFinal % 5 == 0) {
+                                fred.cuerda = true
+                                fred.estadoFred = EstadosFred.MOVIENDOCUERDA
+                                moverArriba()
+                                crearFondo(cX - 4, cY - 3, pasoX, pasoY)
+                            }
+                            tickFinal++
+                        } else {
+                            fin = false
+                            dialogoFin("SIGUIENTENIVEL")
+                        }
+
                     } else {
 
                         // Dibujar el fondo
@@ -400,21 +402,40 @@ class MainActivity : AppCompatActivity() {
                             imageViewMapa.setImageBitmap(mapa)
                             mapaEncontrado = false
                         }
-
                     }
-
-
 
                 }
                 //    Log.d("Miapp" , "pasoX: " + pasoX + " PasoY: " + pasoY)
                 // Sonidos, lanzamos una corrutina para evitar bloquear el hilo principal
-             //   CoroutineScope(Default).launch {
+                CoroutineScope(Default).launch {
                     sonido()
-             //   }
+                }
             }
         }
 
         timer.schedule(ticks, velocidadJuego, velocidadJuego)
+    }
+
+    private fun iniciarNivel() {
+
+        miLaberinto.generarLaberinto()
+        cX = 0
+        cY = 0
+        pasoX = 0
+        pasoY = -160
+
+        listaEnemigos.removeAll(listaEnemigos)
+        listaObjetos.removeAll(listaObjetos)
+
+        // Situar al personaje en un punto aleatorio en la fila de mas abajo del laberinto
+        cY = 34
+        do {
+            cX = (3..29).shuffled().last()
+        } while (miLaberinto.map[cX][cY] != 0)
+        crearFondo(cX - 4, cY - 3, pasoX, pasoY)
+        actualizarBarraVida()
+        crearEnemigos()
+        crearObjetos()
     }
 
     private fun cargarSonidos() {
@@ -442,23 +463,21 @@ class MainActivity : AppCompatActivity() {
         pow = soundPool.load(this, R.raw.pow, 0)
         musicasalida = soundPool.load(this, R.raw.musicasalida, 0)
         beep = soundPool.load(this, R.raw.beep, 0)
+        fire = soundPool.load(this, R.raw.fire,0)
+        fredfrito = soundPool.load(this,R.raw.fredfrito,0)
+        marchafunebre = soundPool.load(this, R.raw.marchafunebre, 0)
     }
 
 
      fun sonido() {
-      //  mediaPlayer.reset()
-
-       tick++
-       if (tick == 4) tick = 0
-
-
+       if (tick == 1) tick = 0 else tick = 1
+         Log.d("Sonidos" , "Estado Fred ${fred.estadoFred}  tick ${fred.scrollTick}")
         when {
             fred.tocado == 2 -> {
-                Log.d("Sonidos" , "Estado Fred ${fred.estadoFred}  TOCADO ${fred.tocado}")
                 soundPool.play(hurt ,1F,1F,0,0,1F )
             }
 
-            (fred.scrollTick == 2 && fred.estadoFred == EstadosFred.CAMINANDO) || (fred.cuerda && fred.scrollTickSaltoCuerda == 3) -> {
+            ((fred.scrollTick == 0 || fred.scrollTick == 2) && fred.estadoFred == EstadosFred.CAMINANDO) || (fred.cuerda && fred.scrollTickSaltoCuerda == 3) -> {
                 soundPool.play(tac ,1F,1F,0,0,1F )
             }
 
@@ -466,20 +485,22 @@ class MainActivity : AppCompatActivity() {
                 soundPool.play(salto ,1F,1F,0,0,1F )
             }
 
-            tick == 2 && fred.cuerda  && fred.estadoFred == EstadosFred.MOVIENDOCUERDA -> {
+            !fin && tick == 1 && fred.cuerda  && fred.estadoFred == EstadosFred.MOVIENDOCUERDA -> {
                 soundPool.play(toc ,1F,1F,0,0,1F )
             }
 
-            tick == 0 && fred.cuerda && fred.estadoFred == EstadosFred.MOVIENDOCUERDA -> {
+            !fin && tick == 0 && fred.cuerda && fred.estadoFred == EstadosFred.MOVIENDOCUERDA -> {
                 soundPool.play(tic ,1F,1F,0,0,1F )
             }
-
-
-
             sonidoPow -> {
                 sonidoPow = false
                 soundPool.play(pow ,1F,1F,0,0,1F )
             }
+            sonidoDisparo -> {
+                sonidoDisparo = false
+                soundPool.play(fire ,1F,1F,0,0,1F )
+            }
+
 
         }
 
@@ -823,7 +844,7 @@ class MainActivity : AppCompatActivity() {
                        }
 
                        if (fred.vida == 0) {
-                           dialogoFin("D.E.P. Fred")
+                           dialogoFin("GAMEOVER")
                        }
                    }
 
@@ -860,6 +881,7 @@ class MainActivity : AppCompatActivity() {
 
                     if (objeto is Tesoro) {
                         fred.puntos += objeto.puntos
+                        tesorosRecogidos++
                     }
 
                     if (objeto is Balas) {
@@ -1107,6 +1129,7 @@ class MainActivity : AppCompatActivity() {
         outState.putParcelableArrayList("LISTAOBJETOS", listaObjetos)
         outState.putParcelable("LABERINTO", miLaberinto)
         outState.putParcelable("FRED", fred)
+     //   outState.putParcelable("MAPA", mapa)
 
         Log.d("Miapp" , "Salvar estado")
 
@@ -1124,21 +1147,57 @@ class MainActivity : AppCompatActivity() {
         listaObjetos.addAll(savedInstanceState.getParcelableArrayList("LISTAOBJETOS")!!)
         miLaberinto = savedInstanceState.getParcelable("LABERINTO")!!
         fred = savedInstanceState.getParcelable("FRED")!!
+    //    mapa = savedInstanceState.getParcelable("MAPA")!!
+      //  imageViewMapa = findViewById(R.id.imageViewMapa)
+      //  imageViewMapa.setImageBitmap(mapa)
+        actualizarBarraVida()
     }
 
     private fun dialogoFin(texto : String) {
         timer.cancel()
-
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.dialogofin)
         val textofin = dialog.findViewById(R.id.textofinTV) as TextView
-        textofin.text = texto
+        val textobonus = dialog.findViewById(R.id.esfuerzoTV) as TextView
+        val textotesoros = dialog.findViewById(R.id.tesorosRecogidosTV) as TextView
+        val textobonotesoros = dialog.findViewById(R.id.bonosTesorosTV) as TextView
+        val imagenDialog = dialog.findViewById(R.id.imageViewFin) as ImageView
         val yesBtn = dialog.findViewById(R.id.botonfinjugar) as Button
+
+
+        when (texto) {
+            "GAMEOVER" -> {
+                imagenDialog.setImageResource(R.drawable.fredgameover)
+                textofin.text = "SE ACABÓ"
+                textobonus.text = "Nivel alcanzado: ${nivel}"
+                textotesoros.text = "Puntos: ${fred.puntos}"
+                textobonotesoros.text = "Eres uno de los mejores de hoy!!"
+                yesBtn.text = "SALIR"
+                soundPool.play(fredfrito, 1F,1F,0,0,1F)
+            }
+
+            "SIGUIENTENIVEL" -> {
+                soundPool.play(musicasalida ,1F,1F,0,0,1F )
+                imagenDialog.setImageResource(R.drawable.fredfinal)
+                textofin.text = "Por fin has salido!!!"
+                textobonus.text = "Bonos por tu esfuerzo: 5000"
+                textotesoros.text = "Tesoros recogidos: ${tesorosRecogidos}"
+                textobonotesoros.text = "Bonos por tesoros: ${tesorosRecogidos * 1000}"
+                yesBtn.text = "SIGUIENTE NIVEL"
+                fred.puntos = fred.puntos + 5000 + (tesorosRecogidos*1000)
+            }
+        }
+
         yesBtn.setOnClickListener {
             dialog.dismiss()
-            finish()
+            if (texto.equals("GAMEOVER")) {
+                    finish()
+                } else {
+                    nivel++
+                    iniciarNivel()
+            }
         }
         dialog.show()
 
