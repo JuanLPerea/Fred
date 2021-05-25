@@ -149,7 +149,7 @@ class Bala {
         }
         disparo = true
         impacto = false
-        if (estadoFred == EstadosFred.SALTANDO || estadoFred == EstadosFred.SALTANDOCUERDA) balaOffsetY = 372 else balaOffsetY = 400
+        if (estadoFred == EstadosFred.SALTANDO || estadoFred == EstadosFred.SALTANDOCUERDA) balaOffsetY = 372 else balaOffsetY = 416
 
         Log.d("Miapp" , "Bala en: ${bX},${bY} disparo: ${disparo} , impacto: ${impacto}     balaoffsetX ${balaOffsetX}   offsetX: ${offsetX}")
     }

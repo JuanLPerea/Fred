@@ -2,12 +2,14 @@ package com.fred
 
 import android.app.Dialog
 import android.graphics.*
-import android.media.MediaPlayer
+import android.media.AudioAttributes
+import android.media.AudioManager
+import android.media.SoundPool
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
-import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
@@ -19,11 +21,9 @@ import com.fred.items.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.coroutines.CoroutineContext
 
 
 class MainActivity : AppCompatActivity() {
@@ -47,7 +47,16 @@ class MainActivity : AppCompatActivity() {
     lateinit var mapa : Bitmap
 
     // Sonidos
-    lateinit var mediaPlayer : MediaPlayer
+     lateinit var soundPool : SoundPool
+     var tac = 0
+     var tic = 0
+     var toc = 0
+     var beep = 0
+     var hurt = 0
+     var salto = 0
+     var pow = 0
+     var musicasalida = 0
+     var fire = 0
 
     // Variables
     var cX = 0
@@ -71,13 +80,13 @@ class MainActivity : AppCompatActivity() {
 
 
     // Establecemos el número de enemigos de cada tipo
-    var numeroGotasAcidoEnLaberinto = 0
-    var numeroEspinetesEnLaberinto = 0
-    var numeroFantasmasEnLaberinto = 0
-    var numeroLagartijasEnLaberinto = 0
-    var numeroMomiasEnLaberinto = 0
-    var numeroVampirosEnLaberinto = 50
-    var numeroEsqueletosEnLaberinto = 0
+    var numeroGotasAcidoEnLaberinto = 10
+    var numeroEspinetesEnLaberinto = 10
+    var numeroFantasmasEnLaberinto = 5
+    var numeroLagartijasEnLaberinto = 10
+    var numeroMomiasEnLaberinto = 10
+    var numeroVampirosEnLaberinto = 5
+    var numeroEsqueletosEnLaberinto = 3
 
     // Numero de objetos en el laberinto
     var totalObjetos = 10
@@ -140,10 +149,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Sonidos
-        mediaPlayer = MediaPlayer.create(this, R.raw.beep)
-        mediaPlayer.start()
 
-
+        cargarSonidos()
 
         // Cargar Sprites
         cargarSprites()
@@ -401,57 +408,77 @@ class MainActivity : AppCompatActivity() {
                 }
                 //    Log.d("Miapp" , "pasoX: " + pasoX + " PasoY: " + pasoY)
                 // Sonidos, lanzamos una corrutina para evitar bloquear el hilo principal
-                CoroutineScope(Default).launch {
+             //   CoroutineScope(Default).launch {
                     sonido()
-                }
+             //   }
             }
         }
 
         timer.schedule(ticks, velocidadJuego, velocidadJuego)
     }
 
+    private fun cargarSonidos() {
+        if (Build.VERSION.SDK_INT
+            >= Build.VERSION_CODES.LOLLIPOP) {
+            val audioAttributes = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
 
-    suspend fun sonido() {
+            soundPool = SoundPool.Builder()
+                .setMaxStreams(3)
+                .setAudioAttributes(audioAttributes)
+                .build()
+        } else {
+            soundPool = SoundPool(3, AudioManager.STREAM_MUSIC, 0)
+        }
+
+
+        tac = soundPool.load(this, R.raw.tac, 0)
+        tic = soundPool.load(this, R.raw.tic, 0)
+        toc = soundPool.load(this, R.raw.toc, 0)
+        hurt = soundPool.load(this, R.raw.hurt, 1)
+        salto = soundPool.load(this, R.raw.salto, 1)
+        pow = soundPool.load(this, R.raw.pow, 0)
+        musicasalida = soundPool.load(this, R.raw.musicasalida, 0)
+        beep = soundPool.load(this, R.raw.beep, 0)
+    }
+
+
+     fun sonido() {
       //  mediaPlayer.reset()
 
        tick++
        if (tick == 4) tick = 0
 
-        if (mediaPlayer.isPlaying) mediaPlayer.stop()
 
         when {
             fred.tocado == 2 -> {
                 Log.d("Sonidos" , "Estado Fred ${fred.estadoFred}  TOCADO ${fred.tocado}")
-                mediaPlayer = MediaPlayer.create(this, R.raw.hurt)
-                mediaPlayer.start()
+                soundPool.play(hurt ,1F,1F,0,0,1F )
             }
 
             (fred.scrollTick == 2 && fred.estadoFred == EstadosFred.CAMINANDO) || (fred.cuerda && fred.scrollTickSaltoCuerda == 3) -> {
-                mediaPlayer = MediaPlayer.create(this, R.raw.tac)
-                mediaPlayer.start()
+                soundPool.play(tac ,1F,1F,0,0,1F )
             }
 
             fred.scrollTickSalto == 1 || fred.scrollTickSaltoCuerda == 1 ->{
-                mediaPlayer = MediaPlayer.create(this, R.raw.salto)
-                mediaPlayer.start()
+                soundPool.play(salto ,1F,1F,0,0,1F )
             }
 
             tick == 2 && fred.cuerda  && fred.estadoFred == EstadosFred.MOVIENDOCUERDA -> {
-                mediaPlayer = MediaPlayer.create(this, R.raw.toc)
-                mediaPlayer.start()
+                soundPool.play(toc ,1F,1F,0,0,1F )
             }
 
             tick == 0 && fred.cuerda && fred.estadoFred == EstadosFred.MOVIENDOCUERDA -> {
-                mediaPlayer = MediaPlayer.create(this, R.raw.tic)
-                mediaPlayer.start()
+                soundPool.play(tic ,1F,1F,0,0,1F )
             }
 
 
 
             sonidoPow -> {
                 sonidoPow = false
-                mediaPlayer = MediaPlayer.create(this, R.raw.pow)
-                mediaPlayer.start()
+                soundPool.play(pow ,1F,1F,0,0,1F )
             }
 
         }
@@ -827,6 +854,7 @@ class MainActivity : AppCompatActivity() {
 
                     if (objeto is Pocima) {
                         fred.vida += 2
+                        actualizarBarraVida()
                         if (fred.vida > 15) fred.vida = 15
                     }
 
