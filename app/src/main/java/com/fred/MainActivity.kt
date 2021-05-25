@@ -2,11 +2,12 @@ package com.fred
 
 import android.app.Dialog
 import android.graphics.*
-import android.media.SoundPool
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
@@ -16,8 +17,13 @@ import android.widget.TextView
 import com.fred.entidades.*
 import com.fred.items.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.coroutines.CoroutineContext
 
 
 class MainActivity : AppCompatActivity() {
@@ -41,13 +47,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var mapa : Bitmap
 
     // Sonidos
-    lateinit var soundPool : SoundPool
-    var tic = 0
-    var tac = 0
-    var toc = 0
-    var salto = 0
-    var hurt = 0
-    var beep = 0
+    lateinit var mediaPlayer : MediaPlayer
 
     // Variables
     var cX = 0
@@ -66,18 +66,21 @@ class MainActivity : AppCompatActivity() {
     var fin = false
     var nivel = 1
     var recordPuntos = 0
+    var tick = 0
+    var sonidoPow = false
+
 
     // Establecemos el número de enemigos de cada tipo
-    var numeroGotasAcidoEnLaberinto = 20
-    var numeroEspinetesEnLaberinto = 20
-    var numeroFantasmasEnLaberinto = 10
+    var numeroGotasAcidoEnLaberinto = 0
+    var numeroEspinetesEnLaberinto = 0
+    var numeroFantasmasEnLaberinto = 0
     var numeroLagartijasEnLaberinto = 0
-    var numeroMomiasEnLaberinto = 10
-    var numeroVampirosEnLaberinto = 5
-    var numeroEsqueletosEnLaberinto = 2
+    var numeroMomiasEnLaberinto = 0
+    var numeroVampirosEnLaberinto = 50
+    var numeroEsqueletosEnLaberinto = 0
 
     // Numero de objetos en el laberinto
-    var totalObjetos = 100
+    var totalObjetos = 10
 
     val timer = Timer()
 
@@ -137,8 +140,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Sonidos
-        // TODO sonidos
+        mediaPlayer = MediaPlayer.create(this, R.raw.beep)
+        mediaPlayer.start()
 
+
+
+        // Cargar Sprites
         cargarSprites()
 
         botonArriba = findViewById(R.id.flecha_arriba)
@@ -330,7 +337,7 @@ class MainActivity : AppCompatActivity() {
                         } else {
                             // si está en un pasillo ... saltar
                             fred.estadoFred = EstadosFred.SALTANDO
-                            if (miLaberinto.map[cX][cY-1] == 3) {
+                            if (miLaberinto.map[cX][cY-1] == 3 && pasoX == 0) {
                                fin = true
                             }
                         }
@@ -363,12 +370,15 @@ class MainActivity : AppCompatActivity() {
                         fin = false
                         dialogoFin("Enhorabuena has salido!!")
                     } else {
+
+                        // Dibujar el fondo
                         crearFondo(cX - 4, cY - 3, pasoX, pasoY)
                         if (eliminarEnemigo != -1) {
                             listaEnemigos.remove(listaEnemigos.get(eliminarEnemigo))
                             eliminarEnemigo = -1
                         }
                         if (eliminarObjeto != -1) {
+                            sonidoPow = true
                             listaObjetos.remove(listaObjetos.get(eliminarObjeto))
                             eliminarObjeto = -1
                         }
@@ -387,13 +397,69 @@ class MainActivity : AppCompatActivity() {
                     }
 
 
+
                 }
                 //    Log.d("Miapp" , "pasoX: " + pasoX + " PasoY: " + pasoY)
+                // Sonidos, lanzamos una corrutina para evitar bloquear el hilo principal
+                CoroutineScope(Default).launch {
+                    sonido()
+                }
             }
         }
 
         timer.schedule(ticks, velocidadJuego, velocidadJuego)
     }
+
+
+    suspend fun sonido() {
+      //  mediaPlayer.reset()
+
+       tick++
+       if (tick == 4) tick = 0
+
+        if (mediaPlayer.isPlaying) mediaPlayer.stop()
+
+        when {
+            fred.tocado == 2 -> {
+                Log.d("Sonidos" , "Estado Fred ${fred.estadoFred}  TOCADO ${fred.tocado}")
+                mediaPlayer = MediaPlayer.create(this, R.raw.hurt)
+                mediaPlayer.start()
+            }
+
+            (fred.scrollTick == 2 && fred.estadoFred == EstadosFred.CAMINANDO) || (fred.cuerda && fred.scrollTickSaltoCuerda == 3) -> {
+                mediaPlayer = MediaPlayer.create(this, R.raw.tac)
+                mediaPlayer.start()
+            }
+
+            fred.scrollTickSalto == 1 || fred.scrollTickSaltoCuerda == 1 ->{
+                mediaPlayer = MediaPlayer.create(this, R.raw.salto)
+                mediaPlayer.start()
+            }
+
+            tick == 2 && fred.cuerda  && fred.estadoFred == EstadosFred.MOVIENDOCUERDA -> {
+                mediaPlayer = MediaPlayer.create(this, R.raw.toc)
+                mediaPlayer.start()
+            }
+
+            tick == 0 && fred.cuerda && fred.estadoFred == EstadosFred.MOVIENDOCUERDA -> {
+                mediaPlayer = MediaPlayer.create(this, R.raw.tic)
+                mediaPlayer.start()
+            }
+
+
+
+            sonidoPow -> {
+                sonidoPow = false
+                mediaPlayer = MediaPlayer.create(this, R.raw.pow)
+                mediaPlayer.start()
+            }
+
+        }
+
+    }
+
+
+
 
     private fun crearObjetos() {
 
@@ -409,14 +475,14 @@ class MainActivity : AppCompatActivity() {
         // Creamos objetos al azar
         for (n in 1..totalObjetos) {
 
-            val azar = (0..10).shuffled().last()
+            val azar = (0..20).shuffled().last()
             when (azar) {
-                in 1..3 -> {
+                in 1..5 -> {
                     val objeto = Pocima()
                     objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
                 }
-                in 4..7 -> {
+                in 6..15 -> {
                     val objeto = Tesoro()
                     objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
@@ -426,7 +492,7 @@ class MainActivity : AppCompatActivity() {
                     objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
                 }
-                in 8..10 -> {
+                in 15..20 -> {
                     val objeto = Balas()
                     objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
@@ -474,7 +540,7 @@ class MainActivity : AppCompatActivity() {
 
         // Crear lagartijas
         var listaUbicacionesLagartija = miLaberinto.posiblesUbicacionesLagartija(miLaberinto)
-        if (numeroLagartijasEnLaberinto > listaUbicacionesLagartija.size) numeroLagartijasEnLaberinto = listaUbicacionesLagartija.size - 1
+        if (numeroLagartijasEnLaberinto >= listaUbicacionesLagartija.size) numeroLagartijasEnLaberinto = listaUbicacionesLagartija.size - 1
         for (n in 1..numeroLagartijasEnLaberinto) {
             val lagartijaTMP = Lagartija()
             lagartijaTMP.newLagartija(this, listaUbicacionesLagartija.get(n))
@@ -484,7 +550,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Crear momias
-        if (numeroMomiasEnLaberinto > listaUbicacionesPasilloHorizontal.size) numeroMomiasEnLaberinto = listaUbicacionesPasilloHorizontal.size - 1
+        if (numeroMomiasEnLaberinto >= listaUbicacionesPasilloHorizontal.size) numeroMomiasEnLaberinto = listaUbicacionesPasilloHorizontal.size - 1
         for (n in 1..numeroMomiasEnLaberinto) {
             val momiaTMP = Momia()
             momiaTMP.newMomia(this, listaUbicacionesPasilloHorizontal, n)
@@ -495,7 +561,7 @@ class MainActivity : AppCompatActivity() {
 
         listaUbicacionesPasilloHorizontal.shuffle()
         // Crear Vampiros
-        if (numeroVampirosEnLaberinto > listaUbicacionesPasilloHorizontal.size) numeroVampirosEnLaberinto = listaUbicacionesPasilloHorizontal.size - 1
+        if (numeroVampirosEnLaberinto >= listaUbicacionesPasilloHorizontal.size) numeroVampirosEnLaberinto = listaUbicacionesPasilloHorizontal.size - 1
         for (n in 1..numeroVampirosEnLaberinto) {
             val vampiroTMP = Vampiro()
             val coordenada = listaUbicacionesPasilloHorizontal.get(n)
@@ -507,7 +573,7 @@ class MainActivity : AppCompatActivity() {
 
         listaUbicacionesPasilloHorizontal.shuffle()
         // Crear Esqueletos
-        if (numeroEsqueletosEnLaberinto > listaUbicacionesPasilloHorizontal.size) numeroEsqueletosEnLaberinto = listaUbicacionesPasilloHorizontal.size - 1
+        if (numeroEsqueletosEnLaberinto >= listaUbicacionesPasilloHorizontal.size) numeroEsqueletosEnLaberinto = listaUbicacionesPasilloHorizontal.size - 1
         for (n in 1..numeroEsqueletosEnLaberinto) {
             val esqueletoTMP = Esqueleto()
             val coordenada = listaUbicacionesPasilloHorizontal.get(n)

@@ -111,6 +111,10 @@ class Bala {
             bY = enemigo.pY
             balaOffsetX = enemigo.offsetX
             balaOffsetY = enemigo.offsetY
+            if (enemigo is Vampiro) {
+                balaOffsetY -= 48
+                balaOffsetX -= 16
+            }
         }
 
         return impacto

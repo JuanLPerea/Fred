@@ -44,7 +44,7 @@ class Tesoro() : Objeto() {
         nefertiti = BitmapFactory.decodeResource(context.resources, R.drawable.nefertiti)
         ankh = BitmapFactory.decodeResource(context.resources, R.drawable.ankh)
         rosetta = BitmapFactory.decodeResource(context.resources, R.drawable.rosetta)
-        esfinge = BitmapFactory.decodeResource(context.resources, R.drawable.figurilla)
+        esfinge = BitmapFactory.decodeResource(context.resources, R.drawable.esfinge)
         oX = cX
         oY = cY
 
