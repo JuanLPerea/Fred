@@ -49,51 +49,94 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/nivelTV"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="0"
-                    android:background="@color/white"
-                    android:fontFamily="monospace"
-                    android:text="Nivel: 1"
-                    android:textSize="16sp" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/alturaTV"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="0"
-                    android:background="@color/white"
-                    android:fontFamily="monospace"
-                    android:text="Altura: "
-                    android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/alturaTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0"
+                        android:background="@color/white"
+                        android:fontFamily="monospace"
+                        android:text="Altura: "
+                        android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/balasTV"
+                    <TextView
+                        android:id="@+id/nivelTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0"
+                        android:background="@color/white"
+                        android:fontFamily="monospace"
+                        android:text="Nivel: 1"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/balasTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0"
+                        android:background="@color/white"
+                        android:fontFamily="monospace"
+                        android:text="Balas: 6 "
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="0"
-                    android:background="@color/white"
-                    android:fontFamily="monospace"
-                    android:text="Balas: 6 "
-                    android:textSize="16sp" />
+                    android:gravity="center_horizontal|top"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/vidaTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/white"
+                        android:fontFamily="monospace"
+                        android:text="Vida:"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/barraVida"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal|top"
+                        android:layout_margin="10dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:minHeight="30dp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -103,75 +146,69 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/vidaTV"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@color/white"
-                    android:fontFamily="monospace"
-                    android:text="Vida:"
-                    android:textSize="16sp" />
 
-                <ImageView
-                    android:id="@+id/barraVida"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:layout_gravity="left"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp" />
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/mapTV"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@color/white"
-                    android:fontFamily="monospace"
-                    android:text="MAPA"
-                    android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/mapTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/white"
+                        android:fontFamily="monospace"
+                        android:text="MAPA"
+                        android:textSize="16sp" />
 
-                <ImageView
-                    android:id="@+id/imageViewMapa"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/fondomapa" />
+                    <ImageView
+                        android:id="@+id/imageViewMapa"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/fondomapa" />
 
-                <TextView
-                    android:id="@+id/puntosTV"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@color/white"
-                    android:fontFamily="monospace"
-                    android:text="Puntos: 000000"
-                    android:textSize="16sp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/maxTV"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@color/white"
-                    android:fontFamily="monospace"
-                    android:text="MAX: 000000"
-                    android:textSize="16sp" />
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="50dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/puntosTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/white"
+                        android:fontFamily="monospace"
+                        android:text="Puntos: 000000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/maxTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/white"
+                        android:fontFamily="monospace"
+                        android:text="MAX: 000000"
+                        android:textSize="16sp" />
+                </LinearLayout>
 
             </LinearLayout>
 
