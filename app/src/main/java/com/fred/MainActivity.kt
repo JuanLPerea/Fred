@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var barraVida : ImageView
     lateinit var imageViewMapa : ImageView
     lateinit var mapa : Bitmap
+    lateinit var ticks : TimerTask
 
     // Sonidos
      lateinit var soundPool : SoundPool
@@ -173,29 +174,20 @@ class MainActivity : AppCompatActivity() {
         puntosTV = findViewById(R.id.puntosTV)
         puntosMax = findViewById(R.id.maxTV)
 
+        establecerListeners()
+
         // Creamos a nuestro protagonista
         fred = Fred()
         // Hay un objeto 'Bala' para gestionar los disparos
         bala = Bala()
         bala.newBala(this)
 
-     //   dibujarLaberintoTexto(miLaberinto)
-        miLaberinto = Laberinto()
-
-        // Variables para la posición -------------------------------------------------------------------------------------------------------
-        if (savedInstanceState == null) {
-            iniciarNivel()
-        }
-        // ---------------------------------------------------------------------------------------------------------------------------------------
-
-        establecerListeners()
-
         // Con este Timer se actualiza la pantalla cada 200ms osea 5 fps!!
         // lo que le da ese toque tan rítmico que enganchaba en los 80's tic-tac-tic-tac-tic-tac
         // ¿fundiré un procesador del siglo 21??? sometiéndole a este terrible trabajo :D ???
 
 
-        val ticks = object : TimerTask() {
+        ticks = object : TimerTask() {
             override fun run() {
 
          //       Log.d("Miapp" , "cX: $cX cY: $cY pasoX: $pasoX pasoY: $pasoY")
@@ -413,11 +405,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        if (savedInstanceState == null) {
+            iniciarNivel()
+        }
+
         timer.schedule(ticks, velocidadJuego, velocidadJuego)
+
+
     }
 
     private fun iniciarNivel() {
 
+        fred.balas = 6
+        imageViewMapa.setImageResource(R.drawable.fondomapa)
+
+        //   dibujarLaberintoTexto(miLaberinto)
+        miLaberinto = Laberinto()
         miLaberinto.generarLaberinto()
         cX = 0
         cY = 0
@@ -461,10 +464,10 @@ class MainActivity : AppCompatActivity() {
         hurt = soundPool.load(this, R.raw.hurt, 1)
         salto = soundPool.load(this, R.raw.salto, 1)
         pow = soundPool.load(this, R.raw.pow, 0)
-        musicasalida = soundPool.load(this, R.raw.musicasalida, 0)
+        musicasalida = soundPool.load(this, R.raw.musicasalida, 2)
         beep = soundPool.load(this, R.raw.beep, 0)
         fire = soundPool.load(this, R.raw.fire,0)
-        fredfrito = soundPool.load(this,R.raw.fredfrito,0)
+        fredfrito = soundPool.load(this,R.raw.fredfrito,2)
         marchafunebre = soundPool.load(this, R.raw.marchafunebre, 0)
     }
 
@@ -1154,7 +1157,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun dialogoFin(texto : String) {
-        timer.cancel()
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
