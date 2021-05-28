@@ -11,6 +11,7 @@ class Nivel {
     var numeroEsqueletosEnLaberinto = 0
     // Numero de objetos en el laberinto
     var totalObjetos = 0
+    var totalBalas = 0
     var textoNivel = ""
 
 
@@ -26,6 +27,7 @@ class Nivel {
                  numeroEsqueletosEnLaberinto = 0
                 // Numero de objetos en el laberinto
                  totalObjetos = 15
+                 totalBalas = 1
                  textoNivel = "Nivel 1 - Fred comienza su aventura, cuidado con los fantasmas, espinetes y gotas de ácido"
             }
 
@@ -39,7 +41,8 @@ class Nivel {
                 numeroEsqueletosEnLaberinto = 0
                 // Numero de objetos en el laberinto
                 totalObjetos = 15
-                textoNivel = "Nivel 2 - Fred comienza su aventura, aparecen los camaleones y momias"
+                totalBalas = 4
+                textoNivel = "Nivel 2 - Aparecen los camaleones y momias y siguen los Fantasmas ¿o son gorros de cocinero? :)"
             }
 
             3-> {
@@ -52,6 +55,7 @@ class Nivel {
                 numeroEsqueletosEnLaberinto = 0
                 // Numero de objetos en el laberinto
                 totalObjetos = 10
+                totalBalas = 5
                 textoNivel = "Nivel 3 - Cuidado Fred, los Vampiros van a por tí!!!"
             }
 
@@ -67,6 +71,78 @@ class Nivel {
                 totalObjetos = 10
                 textoNivel = "Nivel 4 - Esqueletos!! están locos por tus huesos!!"
             }
+
+            5-> {
+                numeroGotasAcidoEnLaberinto = 0
+                numeroEspinetesEnLaberinto = 0
+                numeroFantasmasEnLaberinto = 0
+                numeroLagartijasEnLaberinto = 0
+                numeroMomiasEnLaberinto = 0
+                numeroVampirosEnLaberinto = 0
+                numeroEsqueletosEnLaberinto = 1
+                // Numero de objetos en el laberinto
+                totalObjetos = 100
+                totalBalas = 0
+                textoNivel = "Nivel 5 - Nivel bidón, recoge todos los tesoros!!"
+            }
+
+            6 -> {
+                numeroGotasAcidoEnLaberinto = 0
+                numeroEspinetesEnLaberinto = 0
+                numeroFantasmasEnLaberinto = 0
+                numeroLagartijasEnLaberinto = 0
+                numeroMomiasEnLaberinto = 30
+                numeroVampirosEnLaberinto = 0
+                numeroEsqueletosEnLaberinto = 0
+                // Numero de objetos en el laberinto
+                totalObjetos = 10
+                totalBalas = 10
+                textoNivel = "Nivel 6 - La venganza de Tut, 30 momias contra Fred ¿Quién ganará?"
+            }
+
+            7 -> {
+                numeroGotasAcidoEnLaberinto = 0
+                numeroEspinetesEnLaberinto = 0
+                numeroFantasmasEnLaberinto = 0
+                numeroLagartijasEnLaberinto = 0
+                numeroMomiasEnLaberinto = 0
+                numeroVampirosEnLaberinto = 0
+                numeroEsqueletosEnLaberinto = 50
+                // Numero de objetos en el laberinto
+                totalObjetos = 10
+                totalBalas = 10
+                textoNivel = "Nivel 7 - Un montón de huesos, lucha contra 50 esqueletos!!!"
+            }
+
+            8-> {
+                numeroGotasAcidoEnLaberinto = 0
+                numeroEspinetesEnLaberinto = 0
+                numeroFantasmasEnLaberinto = 0
+                numeroLagartijasEnLaberinto = 0
+                numeroMomiasEnLaberinto = 0
+                numeroVampirosEnLaberinto = 50
+                numeroEsqueletosEnLaberinto = 0
+                // Numero de objetos en el laberinto
+                totalObjetos = 10
+                totalBalas = 20
+                textoNivel = "Nivel 8 - La pirámide de Drácula, 50 vampiros revolotean por sus pasillos"
+            }
+
+            9-> {
+                numeroGotasAcidoEnLaberinto = 0
+                numeroEspinetesEnLaberinto = 0
+                numeroFantasmasEnLaberinto = 0
+                numeroLagartijasEnLaberinto = 0
+                numeroMomiasEnLaberinto = 0
+                numeroVampirosEnLaberinto = 50
+                numeroEsqueletosEnLaberinto = 0
+                // Numero de objetos en el laberinto
+                totalObjetos = 10
+                totalBalas = 20
+                textoNivel = "Nivel 9 - Infierno Egipcio, 200 enemigos contra Fred ¿Sobrevivirás?"
+            }
+
+
 
 
         }

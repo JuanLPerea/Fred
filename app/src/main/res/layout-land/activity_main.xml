@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:context=".MainActivity">
 
 
     <FrameLayout
         android:id="@+id/frame_fondo"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center|center_horizontal|center_vertical"
-        android:layout_weight="1">
+        android:layout_weight="2">
 
         <ImageView
             android:id="@+id/image_view_juego"
@@ -23,13 +23,47 @@
             android:cropToPadding="true"
             android:padding="5dp" />
 
+        <RelativeLayout
+            android:id="@+id/relative_botones"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/flecha_abajo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@id/flecha_izquierda" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/flecha_arriba"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/flecha_derecha"
+                android:layout_toRightOf="@id/flecha_izquierda" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/flecha_izquierda"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/flecha_abajo" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/flecha_derecha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/flecha_abajo"
+                android:layout_toRightOf="@id/flecha_abajo" />
+
+        </RelativeLayout>
+
     </FrameLayout>
 
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center_horizontal"
         android:orientation="vertical">
@@ -39,14 +73,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -55,30 +87,13 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/alturaTV"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="0"
-                        android:background="@color/white"
-                        android:fontFamily="monospace"
-                        android:paddingLeft="5dp"
-                        android:text="Altura: "
-                        android:textColor="#000000"
-                        android:textSize="16sp" />
-
-                    <TextView
                         android:id="@+id/nivelTV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="10dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="0"
@@ -96,7 +111,6 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="10dp"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="0"
@@ -106,6 +120,24 @@
                         android:text="Balas: 6 "
                         android:textColor="#000000"
                         android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/alturaTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0"
+                        android:background="@color/white"
+                        android:fontFamily="monospace"
+                        android:paddingLeft="5dp"
+                        android:text="Altura: "
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+
                 </LinearLayout>
 
 
@@ -126,10 +158,10 @@
                         android:layout_marginEnd="10dp"
                         android:background="@color/white"
                         android:fontFamily="monospace"
+                        android:paddingLeft="5dp"
                         android:text="Vida:"
                         android:textColor="#000000"
-                        android:textSize="16sp"
-                        android:paddingLeft="5dp" />
+                        android:textSize="16sp" />
 
                     <ImageView
                         android:id="@+id/barraVida"
@@ -149,9 +181,8 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:orientation="vertical">
 
 
@@ -188,7 +219,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginBottom="50dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -203,10 +233,10 @@
                         android:layout_marginEnd="10dp"
                         android:background="@color/white"
                         android:fontFamily="monospace"
-                        android:paddingLeft="5dp"
                         android:text="Puntos: 000000"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:paddingLeft="5dp" />
 
                     <TextView
                         android:id="@+id/maxTV"
@@ -228,41 +258,6 @@
 
 
         </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/relative_botones"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/flecha_abajo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@id/flecha_izquierda" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/flecha_arriba"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/flecha_derecha"
-                android:layout_toRightOf="@id/flecha_izquierda" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/flecha_izquierda"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/flecha_abajo" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/flecha_derecha"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/flecha_abajo"
-                android:layout_toRightOf="@id/flecha_abajo" />
-
-        </RelativeLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/boton_disparo"

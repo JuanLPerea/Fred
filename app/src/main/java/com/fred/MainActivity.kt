@@ -79,10 +79,8 @@ class MainActivity : AppCompatActivity() {
     var tickFinal = 0
     var tesorosRecogidos = 0
 
-
     // Aquí guardamos el número de enemigos de cada tipo en cada nivel
     lateinit var variablesNivel : Nivel
-
     var timer = Timer()
 
     lateinit var fredd : Bitmap                                     // 0
@@ -172,9 +170,10 @@ class MainActivity : AppCompatActivity() {
         // lo que le da ese toque tan rítmico que enganchaba en los 80's tic-tac-tic-tac-tic-tac
         // ¿fundiré un procesador del siglo 21??? sometiéndole a este terrible trabajo :D ???
         if (savedInstanceState == null) {
+
             iniciarNivel()
         } else {
-            cargarNivel()
+
             establecerTimer()
         }
 
@@ -191,6 +190,13 @@ class MainActivity : AppCompatActivity() {
         fin = false
         fred.balas = 6
         fred.cuerda = false
+        fred.vida += 2
+        if (fred.vida > 15) fred.vida = 15
+        tesorosRecogidos = 0
+        fred.scrollTick = 0
+        fred.scrollTickSalto = 0
+        fred.scrollTickSaltoCuerda = 0
+        fred.estadoFred = EstadosFred.QUIETO
         imageViewMapa.setImageResource(R.drawable.fondomapa)
 
         //   dibujarLaberintoTexto(miLaberinto)
@@ -203,7 +209,6 @@ class MainActivity : AppCompatActivity() {
 
         // cargar el número de enemigos del nivel
         cargarNivel()
-
         listaEnemigos.removeAll(listaEnemigos)
         listaObjetos.removeAll(listaObjetos)
 
@@ -258,7 +263,7 @@ class MainActivity : AppCompatActivity() {
                 soundPool.play(tac ,1F,1F,0,0,1F )
             }
 
-            fred.scrollTickSalto == 1 || fred.scrollTickSaltoCuerda == 1 ->{
+            !fin && (fred.scrollTickSalto == 1 || fred.scrollTickSaltoCuerda == 1) ->{
                 soundPool.play(salto ,1F,1F,0,0,1F )
             }
 
@@ -292,8 +297,13 @@ class MainActivity : AppCompatActivity() {
          mapa.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.first().coordenadaX, listaUbicacionesPasilloHorizontal.first().coordenadaY)
         listaObjetos.add(mapa)
 
-        if (variablesNivel.totalObjetos > listaUbicacionesPasilloHorizontal.size) variablesNivel.totalObjetos = listaUbicacionesPasilloHorizontal.size-1
+        for (n in 0..variablesNivel.totalBalas) {
+            val objeto = Balas()
+            objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
+            listaObjetos.add(objeto)
+        }
 
+        if (variablesNivel.totalObjetos > listaUbicacionesPasilloHorizontal.size) variablesNivel.totalObjetos = listaUbicacionesPasilloHorizontal.size-1
         // Creamos objetos al azar
         for (n in 1..variablesNivel.totalObjetos) {
 
@@ -304,7 +314,7 @@ class MainActivity : AppCompatActivity() {
                     objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
                 }
-                in 6..15 -> {
+                in 6..20 -> {
                     val objeto = Tesoro()
                     objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
@@ -314,11 +324,7 @@ class MainActivity : AppCompatActivity() {
                     objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
                 }
-                in 15..20 -> {
-                    val objeto = Balas()
-                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
-                    listaObjetos.add(objeto)
-                }
+
             }
 
         }
@@ -896,6 +902,8 @@ class MainActivity : AppCompatActivity() {
         outState.putParcelableArrayList("LISTAOBJETOS", listaObjetos)
         outState.putParcelable("LABERINTO", miLaberinto)
         outState.putParcelable("FRED", fred)
+        outState.putInt("NIVEL", nivel)
+        outState.putBoolean("FIN", fin)
      //   outState.putParcelable("MAPA", mapa)
 
         Log.d("Miapp" , "Salvar estado")
@@ -914,6 +922,8 @@ class MainActivity : AppCompatActivity() {
         listaObjetos.addAll(savedInstanceState.getParcelableArrayList("LISTAOBJETOS")!!)
         miLaberinto = savedInstanceState.getParcelable("LABERINTO")!!
         fred = savedInstanceState.getParcelable("FRED")!!
+        nivel = savedInstanceState.getInt("NIVEL")
+        fin = savedInstanceState.getBoolean("FIN")
     //    mapa = savedInstanceState.getParcelable("MAPA")!!
       //  imageViewMapa = findViewById(R.id.imageViewMapa)
       //  imageViewMapa.setImageBitmap(mapa)
@@ -921,6 +931,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun dialogoFin(texto : String) {
+        timer.cancel()
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -932,10 +943,8 @@ class MainActivity : AppCompatActivity() {
         val imagenDialog = dialog.findViewById(R.id.imageViewFin) as ImageView
         val yesBtn = dialog.findViewById(R.id.botonfinjugar) as Button
 
-
         when (texto) {
             "GAMEOVER" -> {
-                timer.cancel()
                 imagenDialog.setImageResource(R.drawable.fredgameover)
                 textofin.text = "SE ACABÓ"
                 textobonus.text = "Nivel alcanzado: ${nivel}"
@@ -948,7 +957,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             "SIGUIENTENIVEL" -> {
-                timer.cancel()
+
                 val mediaPlayer = MediaPlayer.create(applicationContext, R.raw.musicasalida)
                 mediaPlayer.start()
 
@@ -1148,11 +1157,14 @@ class MainActivity : AppCompatActivity() {
                 runOnUiThread {
                     if (fin) {
                         // pequeña animación cuando encuentra la salida
+
                         if (tickFinal < 20) {
-                            soundPool.play(salto,1F,1F,0,0,1F)
                             if (tickFinal % 5 == 0) {
-                                if (tickFinal == 5) {
-                                    fred.estadoFred == EstadosFred.SALTANDO
+                                if (tickFinal < 5) {
+                                    Log.d("Miapp" , "tickFinal ${tickFinal}")
+                                    if (tickFinal == 0) soundPool.play(salto, 1F,1F,0,0,1F)
+                                    fred.estadoFred = EstadosFred.SALTANDO
+
                                     moverArriba()
                                     crearFondo(cX - 4, cY - 3, pasoX, pasoY)
                                 } else {
@@ -1163,10 +1175,13 @@ class MainActivity : AppCompatActivity() {
                                 }
 
                             }
+
                             tickFinal++
                         } else {
                           //  Log.d("Miapp" , "Dialogo siguiente nivel")
+                            tickFinal = 0
                             fin = false
+                            fred.estadoFred = EstadosFred.CAMINANDO
                             dialogoFin("SIGUIENTENIVEL")
                         }
 
