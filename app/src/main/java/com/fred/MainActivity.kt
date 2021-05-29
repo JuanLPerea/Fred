@@ -954,6 +954,18 @@ class MainActivity : AppCompatActivity() {
 
                 val mediaPlayer = MediaPlayer.create(this, R.raw.fredfrito)
                 mediaPlayer.start()
+
+                if (SharedApp.prefs.record1.toInt() < fred.puntos) {
+                    nuevoRecord(1)
+                } else if (SharedApp.prefs.record2.toInt() < fred.puntos) {
+                    nuevoRecord(2)
+                } else if (SharedApp.prefs.record3.toInt() < fred.puntos){
+                    nuevoRecord(3)
+                } else if (SharedApp.prefs.record4.toInt() < fred.puntos) {
+                    nuevoRecord(4)
+                }
+
+
             }
 
             "SIGUIENTENIVEL" -> {
@@ -981,6 +993,53 @@ class MainActivity : AppCompatActivity() {
             }
         }
         dialog.show()
+
+    }
+
+    private fun nuevoRecord(i: Int) {
+
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialogonuevorecord)
+
+        val editText = findViewById(R.id.edittextnuevorecord) as EditText
+        val botonOK = findViewById(R.id.botonnuevorecordOK) as Button
+
+        botonOK.setOnClickListener {
+
+            if (editText.text != null) {
+                when (i) {
+                    1 -> {
+                        SharedApp.prefs.record1 = fred.puntos.toString()
+                        SharedApp.prefs.record1Name = editText.text.toString()
+                        dialog.dismiss()
+                    }
+                    2 -> {
+                        SharedApp.prefs.record2 = fred.puntos.toString()
+                        SharedApp.prefs.record2Name = editText.text.toString()
+                        dialog.dismiss()
+                    }
+                    3 -> {
+                        SharedApp.prefs.record3 = fred.puntos.toString()
+                        SharedApp.prefs.record3Name = editText.text.toString()
+                        dialog.dismiss()
+                    }
+                    4 -> {
+                        SharedApp.prefs.record4 = fred.puntos.toString()
+                        SharedApp.prefs.record4Name = editText.text.toString()
+                        dialog.dismiss()
+                    }
+                }
+            } else {
+                Toast.makeText(applicationContext, "Introduce tus iniciales", Toast.LENGTH_LONG).show()
+            }
+
+
+        }
+
+
+
 
     }
 

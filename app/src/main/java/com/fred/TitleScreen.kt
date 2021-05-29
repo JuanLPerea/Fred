@@ -4,40 +4,71 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.*
 import android.media.MediaPlayer
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
+import android.view.Menu
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.PopupMenu
 import java.util.*
 
 class TitleScreen : AppCompatActivity() {
 
     lateinit var imagenCreditos : ImageView
+    lateinit var layoutCreditos : LinearLayout
+    lateinit var creditos : Bitmap
+    lateinit var records : Bitmap
+    lateinit var timer : Timer
+    lateinit var mediaPlayer: MediaPlayer
     var musica = false
+    var altoCreditos = 0
+    var anchoCreditos = 0
+    var scrollY = 0
+    var crono = System.currentTimeMillis()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_title_screen)
 
 
-        if (SharedApp.prefs.record1 == "") {
-            SharedApp.prefs.record1 = "000000"
-            SharedApp.prefs.record1Name = "JUANLU"
+        imagenCreditos = findViewById(R.id.imageViewTitulo)
+        layoutCreditos = findViewById(R.id.layoutCreditos)
 
-            SharedApp.prefs.record2 = "000000"
-            SharedApp.prefs.record2Name = "JUANLU"
+        mediaPlayer = MediaPlayer.create(this, R.raw.marchafunebre)
 
-            SharedApp.prefs.record3 = "000000"
-            SharedApp.prefs.record3Name = "JUANLU"
 
-            SharedApp.prefs.record4 = "000000"
-            SharedApp.prefs.record4Name = "JUANLU"
+
+
+        records = BitmapFactory.decodeResource(resources , R.drawable.todaysgreatest)
+
+        layoutCreditos.addOnLayoutChangeListener { view, i, i2, i3, i4, i5, i6, i7, i8 ->
+            altoCreditos = view.height
+            anchoCreditos = view.width
+            Log.d("Miapp", "Alto: ${altoCreditos}")
+            creditos = BitmapFactory.decodeResource(resources , R.drawable.tituloscredito)
+            scrollCreditos()
         }
 
-        imagenCreditos = findViewById(R.id.imageViewTitulo)
 
-        val timer = Timer()
+        if (SharedApp.prefs.record1 == "") {
+            SharedApp.prefs.record1 = "000000"
+            SharedApp.prefs.record1Name = "FRED"
+
+            SharedApp.prefs.record2 = "000000"
+            SharedApp.prefs.record2Name = "FRED"
+
+            SharedApp.prefs.record3 = "000000"
+            SharedApp.prefs.record3Name = "FRED"
+
+            SharedApp.prefs.record4 = "000000"
+            SharedApp.prefs.record4Name = "FRED"
+        }
+
 
         val botonJugar = findViewById(R.id.botonJugarBTN) as Button
 
@@ -48,66 +79,68 @@ class TitleScreen : AppCompatActivity() {
         }
 
 
-        val creditos = BitmapFactory.decodeResource(resources , R.drawable.tituloscredito)
+    }
 
-
-        val rectDestino = Rect()
-        rectDestino.set(0, 0, 128, 160)
-        var x = 0
-        var y = 0
-
+    private fun scrollCreditos() {
+        timer = Timer()
         val ticks = object : TimerTask() {
             override fun run() {
-                val scroll = Bitmap.createBitmap(creditos, x,y, creditos.width, 480)
 
+                if (scrollY < creditos.height - altoCreditos - 2) {
 
-             //   Log.d("Miapp" , "Ancho: ${scroll.width}")
-
-                if (y < creditos.height - 482) {
-                    y = y + 2
+                    val scroll = Bitmap.createBitmap(creditos, 0, scrollY, creditos.width, altoCreditos)
+                    scrollY = scrollY + 2
 
                     runOnUiThread {
                         imagenCreditos.setImageBitmap(scroll)
-
                     }
 
 
                 } else {
-                    val crono = System.currentTimeMillis() + 5000
+                    // Mostramos los records durante 10 segundos
+                    if (musica == false) {
+                        mediaPlayer.start()
+                        crono = System.currentTimeMillis() + 10000
+                        musica = true
+                        var pintura = Paint()
+                        pintura.style = Paint.Style.FILL
+                        pintura.textSize = 82F
+                        pintura.strokeWidth = 4F
+                        pintura.setARGB(255,255,100,0)
 
-                    var pintura = Paint()
-                    pintura.style = Paint.Style.FILL
-                    pintura.textSize = 42F
-                    pintura.strokeWidth = 2F
-                    pintura.setARGB(255,0,0,0)
-                    var bitmapFondo = Bitmap.createBitmap(creditos, x,y, creditos.width, 480)
-                    var lienzo = Canvas(bitmapFondo)
-                    // Mostramos los records
-                    lienzo.drawText(SharedApp.prefs.record1Name, 135F, 100F, pintura)
-                    lienzo.drawText(SharedApp.prefs.record1, 135F, 350F, pintura)
+                        var bitmapRecords = Bitmap.createBitmap(records.width, records.height,  Bitmap.Config.ARGB_8888)
+                        var lienzo = Canvas(bitmapRecords)
 
-                    lienzo.drawText(SharedApp.prefs.record2Name, 450F, 100F, pintura)
-                    lienzo.drawText(SharedApp.prefs.record2, 450F, 350F, pintura)
+                        val rectDestino = Rect()
+                        rectDestino.set(0, 0, records.width, records.height)
+                        lienzo.drawBitmap(records, null, rectDestino, null)
 
-                    lienzo.drawText(SharedApp.prefs.record3Name, 755F, 100F, pintura)
-                    lienzo.drawText(SharedApp.prefs.record3, 755F, 350F, pintura)
+                        Log.d("Miapp" , "ancho: ${records.width} alto: ${records.height}")
 
-                    lienzo.drawText(SharedApp.prefs.record4Name, 1060F, 100F, pintura)
-                    lienzo.drawText(SharedApp.prefs.record4, 1060F, 350F, pintura)
+                        // Mostramos los records
+                        lienzo.drawText(SharedApp.prefs.record1Name, 350F, 800F, pintura)
+                        lienzo.drawText(SharedApp.prefs.record1, 350F, 1400F, pintura)
 
+                        lienzo.drawText(SharedApp.prefs.record2Name, 1050F, 800F, pintura)
+                        lienzo.drawText(SharedApp.prefs.record2, 1050F, 1400F, pintura)
 
-                    if (System.currentTimeMillis() > crono ) {
-                        y = 0
-                    }
+                        lienzo.drawText(SharedApp.prefs.record3Name, 1750F, 800F, pintura)
+                        lienzo.drawText(SharedApp.prefs.record3, 1750F, 1400F, pintura)
 
-                    runOnUiThread {
-                        if (musica == false) {
-                            musica = true
-                            val mediaPlayer = MediaPlayer.create(applicationContext, R.raw.fredfrito)
+                        lienzo.drawText(SharedApp.prefs.record4Name, 2450F, 800F, pintura)
+                        lienzo.drawText(SharedApp.prefs.record4, 2450F, 1400F, pintura)
+
+                        runOnUiThread {
                             mediaPlayer.start()
+                            imagenCreditos.setImageBitmap(bitmapRecords)
                         }
-                        imagenCreditos.setImageBitmap(bitmapFondo)
                     }
+
+
+                if (crono < System.currentTimeMillis()) {
+                    scrollY = 0
+                    musica = false
+                }
 
 
                 }
@@ -116,12 +149,27 @@ class TitleScreen : AppCompatActivity() {
 
         }
 
-        timer.schedule(ticks, 10L, 10L)
-
+        timer.schedule(ticks, 50L, 50L)
     }
 
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("SCROLLY", scrollY)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        scrollY = savedInstanceState.getInt("SCROLLY")
+        Log.d("Miapp" , "Valor Scroll: ${scrollY}")
+    }
 
 
+    fun menuOpciones(view: View) {
+        val popupMenu = PopupMenu(applicationContext, view)
+        popupMenu.inflate(R.menu.opciones_menu)
+        popupMenu.show()
 
+
+    }
 }

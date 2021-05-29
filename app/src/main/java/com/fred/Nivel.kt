@@ -129,13 +129,13 @@ class Nivel {
             }
 
             9-> {
-                numeroGotasAcidoEnLaberinto = 0
-                numeroEspinetesEnLaberinto = 0
-                numeroFantasmasEnLaberinto = 0
-                numeroLagartijasEnLaberinto = 0
-                numeroMomiasEnLaberinto = 0
-                numeroVampirosEnLaberinto = 50
-                numeroEsqueletosEnLaberinto = 0
+                numeroGotasAcidoEnLaberinto = 20
+                numeroEspinetesEnLaberinto = 20
+                numeroFantasmasEnLaberinto = 20
+                numeroLagartijasEnLaberinto = 20
+                numeroMomiasEnLaberinto = 50
+                numeroVampirosEnLaberinto = 30
+                numeroEsqueletosEnLaberinto = 30
                 // Numero de objetos en el laberinto
                 totalObjetos = 10
                 totalBalas = 20

@@ -9,54 +9,50 @@
     android:orientation="vertical"
     tools:context=".TitleScreen">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:gravity="center">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/logofred" />
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="3"
-                app:srcCompat="@drawable/logofred" />
+        <Button
+            android:id="@+id/botonJugarBTN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:text="Jugar" />
 
-            <Button
-                android:id="@+id/botonJugarBTN"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Jugar" />
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:background="?android:selectableItemBackground"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/ankh"
+            android:onClick="menuOpciones"/>
 
-    </LinearLayout>
+    </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/layoutCreditos"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/imageViewTitulo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/todaysgreatest" />
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/imageViewTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/todaysgreatest" />
 
     </LinearLayout>
 </LinearLayout>
