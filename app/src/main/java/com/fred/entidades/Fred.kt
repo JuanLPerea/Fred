@@ -24,6 +24,7 @@ class Fred() : Parcelable {
     var scrollTickCuerda = 0
     var scrollTickSaltoCuerda = 0
     var lado = Lado.DERECHA
+    var fredDeColor = 0
 
     constructor(parcel: Parcel) : this() {
         vida = parcel.readInt()
@@ -36,6 +37,7 @@ class Fred() : Parcelable {
         scrollTickSalto = parcel.readInt()
         scrollTickCuerda = parcel.readInt()
         scrollTickSaltoCuerda = parcel.readInt()
+        fredDeColor = parcel.readInt()
     }
 
     fun animacionFred(): Int {
@@ -230,6 +232,7 @@ class Fred() : Parcelable {
         parcel.writeInt(scrollTickSalto)
         parcel.writeInt(scrollTickCuerda)
         parcel.writeInt(scrollTickSaltoCuerda)
+        parcel.writeInt(fredDeColor)
         //parcel.writeValue(lado)
     }
 
@@ -248,6 +251,7 @@ class Fred() : Parcelable {
             }
         }
     }
+
 
 }
 

@@ -9,6 +9,18 @@ class Prefs (context: Context) {
         val PREFS_NAME = "fred.sharedpreferences"
         val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, 0)
 
+        var velocidadJuego : Long
+        get() = prefs.getLong("VELOCIDAD" , 200L)
+        set(value) = prefs.edit().putLong("VELOCIDAD", value).apply()
+
+        var tipoFred : Boolean
+        get() = prefs.getBoolean("TIPOFRED", false)
+        set(value) = prefs.edit().putBoolean("TIPOFRED", value).apply()
+
+        var nivelInicio : Int
+        get() = prefs.getInt("NIVELINICIO", 1)
+        set(value) = prefs.edit().putInt("NIVELINICIO", value).apply()
+
         var record1 : String
         get () = prefs.getString("RECORD1", "")!!
         set (value) = prefs.edit().putString("RECORD1", value).apply()

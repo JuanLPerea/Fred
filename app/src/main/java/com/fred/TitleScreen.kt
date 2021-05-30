@@ -1,21 +1,13 @@
 package com.fred
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.*
-import android.media.MediaPlayer
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
-import android.view.Menu
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.PopupMenu
+import android.widget.*
 import java.util.*
 
 class TitleScreen : AppCompatActivity() {
@@ -70,13 +62,18 @@ class TitleScreen : AppCompatActivity() {
         val botonJugar = findViewById(R.id.botonJugarBTN) as Button
 
         botonJugar.setOnClickListener {
-            timer.cancel()
-            SharedApp.myMediaPlayer.stopPlayer()
-            val intent = Intent (this, MainActivity::class.java)
-            startActivity(intent)
+            SharedApp.prefs.nivelInicio = 1
+            jugar()
         }
 
 
+    }
+
+    private fun jugar() {
+        timer.cancel()
+        SharedApp.myMediaPlayer.stopPlayer()
+        val intent = Intent (this, MainActivity::class.java)
+        startActivity(intent)
     }
 
     private fun scrollCreditos() {
@@ -186,6 +183,114 @@ class TitleScreen : AppCompatActivity() {
     fun menuOpciones(view: View) {
         val popupMenu = PopupMenu(applicationContext, view)
         popupMenu.inflate(R.menu.opciones_menu)
+
+
+        popupMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.seleccionar_velocidad -> {
+                        val popupMenuVelocidad = PopupMenu(applicationContext, view)
+                        popupMenuVelocidad.inflate(R.menu.menu_velocidad)
+
+                        popupMenuVelocidad.setOnMenuItemClickListener { item ->
+                            when (item.itemId) {
+                                R.id.velonormal -> {
+                                    SharedApp.prefs.velocidadJuego = 200L
+                                }
+                                R.id.velorapida -> {
+                                    SharedApp.prefs.velocidadJuego = 150L
+                                }
+                                R.id.veloabsurda -> {
+                                    SharedApp.prefs.velocidadJuego = 50L
+                                }
+                            }
+
+                            true
+                        }
+                        popupMenuVelocidad.show()
+                    }
+
+                    R.id.secreto -> {
+
+                        if (SharedApp.prefs.secreto) {
+                            val popupMenuSecreto = PopupMenu(applicationContext, view)
+                            popupMenuSecreto.inflate(R.menu.menu_secreto)
+
+                            popupMenuSecreto.setOnMenuItemClickListener { item ->
+                                when (item.itemId) {
+                                    R.id.fredoriginal -> {
+                                        SharedApp.prefs.tipoFred = false
+                                    }
+                                    R.id.fredcolor -> {
+                                        SharedApp.prefs.tipoFred = true
+                                    }
+                                }
+
+                                true
+                            }
+                            popupMenuSecreto.show()
+                        } else {
+                            Toast.makeText(applicationContext, "Para desbloquear tienes que pasar del nivel 4", Toast.LENGTH_LONG).show()
+                        }
+
+                    }
+
+                    R.id.seleccionar_nivel -> {
+                        val popupMenuNiveles = PopupMenu(applicationContext, view)
+                        popupMenuNiveles.inflate(R.menu.menu_niveles)
+
+                        popupMenuNiveles.setOnMenuItemClickListener { item ->
+                            when (item.itemId) {
+                                R.id.niveltut -> {
+                                    // lanzamos el nivel de tut
+                                    if (SharedApp.prefs.reto1) {
+                                        SharedApp.prefs.nivelInicio = 6
+                                        jugar()
+                                    } else {
+                                        Toast.makeText(applicationContext, "Este nivel todavía no está desbloqueado", Toast.LENGTH_LONG).show()
+                                    }
+                                }
+                                R.id.nivelhuesos -> {
+                                    if (SharedApp.prefs.reto2) {
+                                        SharedApp.prefs.nivelInicio = 7
+                                        jugar()
+                                    } else {
+                                        Toast.makeText(applicationContext, "Este nivel todavía no está desbloqueado", Toast.LENGTH_LONG).show()
+                                    }
+                                }
+                                R.id.niveldracula -> {
+                                    if (SharedApp.prefs.reto3) {
+                                        SharedApp.prefs.nivelInicio = 8
+                                        jugar()
+                                    } else {
+                                        Toast.makeText(applicationContext, "Este nivel todavía no está desbloqueado", Toast.LENGTH_LONG).show()
+                                    }
+                                }
+                                R.id.nivelegipcio -> {
+                                    if (SharedApp.prefs.reto4) {
+                                        SharedApp.prefs.nivelInicio = 9
+                                        jugar()
+                                    } else {
+                                        Toast.makeText(applicationContext, "Este nivel todavía no está desbloqueado", Toast.LENGTH_LONG).show()
+                                    }
+                                }
+
+                            }
+
+                            true
+                        }
+                        popupMenuNiveles.show()
+                    }
+
+                    R.id.elegirenemigos -> {
+                        // TODO Dialog seleccionando los enemigos y pasarlos al juego
+                    }
+
+
+                }
+        true
+        }
+
+
         popupMenu.show()
     }
 

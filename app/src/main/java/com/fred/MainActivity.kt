@@ -1,6 +1,8 @@
 package com.fred
 
 import android.app.Dialog
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.*
 import android.media.AudioAttributes
 import android.media.AudioManager
@@ -67,10 +69,10 @@ class MainActivity : AppCompatActivity() {
     var pulsadoIzquierda = false
     var pulsadoDerecha = false
     var pulsadoDisparo = false
-    var velocidadJuego = 150L
+    var velocidadJuego = SharedApp.prefs.velocidadJuego
     var mapaEncontrado = false
     var fin = false
-    var nivel = 1
+    var nivel = SharedApp.prefs.nivelInicio
     var recordPuntos = 0
     var tick = 0
     var sonidoPow = false
@@ -161,10 +163,12 @@ class MainActivity : AppCompatActivity() {
         establecerListeners()
 
         // record
-        puntosMax.text = SharedApp.prefs.record1
+        recordPuntos = SharedApp.prefs.record1.toInt()
 
         // Creamos a nuestro protagonista
         fred = Fred()
+
+
         // Hay un objeto 'Bala' para gestionar los disparos
         bala = Bala()
         bala.newBala(this)
@@ -213,6 +217,12 @@ class MainActivity : AppCompatActivity() {
         listaEnemigos.removeAll(listaEnemigos)
         listaObjetos.removeAll(listaObjetos)
 
+        // Actualizar datos info
+        puntosMax.text = SharedApp.prefs.record1
+
+        // Desbloquear rotación de pantalla
+        lockScreenRotation(false)
+
         // Situar al personaje en un punto aleatorio en la fila de mas abajo del laberinto
         cY = 34
         do {
@@ -254,7 +264,7 @@ class MainActivity : AppCompatActivity() {
 
      fun sonido() {
        if (tick == 1) tick = 0 else tick = 1
-         Log.d("Sonidos" , "Estado Fred ${fred.estadoFred}  tick ${fred.scrollTick}")
+       //  Log.d("Sonidos" , "Estado Fred ${fred.estadoFred}  tick ${fred.scrollTick}")
         when {
             fred.tocado == 2 -> {
                 soundPool.play(hurt ,1F,1F,0,0,1F )
@@ -264,7 +274,7 @@ class MainActivity : AppCompatActivity() {
                 soundPool.play(tac ,1F,1F,0,0,1F )
             }
 
-            !fin && (fred.scrollTickSalto == 1 || fred.scrollTickSaltoCuerda == 1) ->{
+            !fin && (fred.scrollTickSalto == 1 || fred.scrollTickSaltoCuerda == 1) && (fred.estadoFred == EstadosFred.SALTANDO || fred.estadoFred == EstadosFred.SALTANDOCUERDA)->{
                 soundPool.play(salto ,1F,1F,0,0,1F )
             }
 
@@ -574,6 +584,7 @@ class MainActivity : AppCompatActivity() {
                             enemigo is Momia || enemigo is Esqueleto -> {
                                 // Se destruye el enemigo y se muestra la animación de la nube
                                 eliminarEnemigo = listaEnemigos.indexOf(enemigo)
+                                fred.puntos += 100
                                 bala.impacto = true
                             }
                             enemigo is Vampiro -> {
@@ -894,46 +905,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        timer.cancel()
-        outState.putInt("POSICIONX", cX)
-        outState.putInt("POSICIONY", cY)
-        outState.putInt("OFFSETX", pasoX)
-        outState.putInt("OFFSETY", pasoY)
-        outState.putParcelableArrayList("LISTAENEMIGOS", listaEnemigos)
-        outState.putParcelableArrayList("LISTAOBJETOS", listaObjetos)
-        outState.putParcelable("LABERINTO", miLaberinto)
-        outState.putParcelable("FRED", fred)
-        outState.putInt("NIVEL", nivel)
-        outState.putBoolean("FIN", fin)
-     //   outState.putParcelable("MAPA", mapa)
-
-        Log.d("Miapp" , "Salvar estado")
-
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        Log.d("Miapp" , "Recuperar estado")
-        cX = savedInstanceState.getInt("POSICIONX")
-        cY = savedInstanceState.getInt("POSICIONY")
-        pasoX = savedInstanceState.getInt("OFFSETX")
-        pasoY = savedInstanceState.getInt("OFFSETY")
-        listaEnemigos.addAll(savedInstanceState.getParcelableArrayList("LISTAENEMIGOS")!!)
-        listaObjetos.addAll(savedInstanceState.getParcelableArrayList("LISTAOBJETOS")!!)
-        miLaberinto = savedInstanceState.getParcelable("LABERINTO")!!
-        fred = savedInstanceState.getParcelable("FRED")!!
-        nivel = savedInstanceState.getInt("NIVEL")
-        fin = savedInstanceState.getBoolean("FIN")
-    //    mapa = savedInstanceState.getParcelable("MAPA")!!
-      //  imageViewMapa = findViewById(R.id.imageViewMapa)
-      //  imageViewMapa.setImageBitmap(mapa)
-        actualizarBarraVida()
-    }
 
     private fun dialogoFin(texto : String) {
         timer.cancel()
+        lockScreenRotation(true)
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -1005,7 +980,7 @@ class MainActivity : AppCompatActivity() {
 
                 // Este es uno de los retos si se supera el nivel 4
                 if (nivel == 5 && SharedApp.prefs.secreto == false) {
-                    Toast.makeText(applicationContext, "Bien!! has desbloqueado el secreto. Fred ha cogido color!!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, "Bien!! has desbloqueado el secreto. Fred en color!!", Toast.LENGTH_LONG).show()
                     SharedApp.prefs.secreto = true
                 }
 
@@ -1025,7 +1000,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun nuevoRecord(i: Int, dialogoFin : Dialog) {
-
         val dialogrecord = Dialog(this)
         dialogrecord.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialogrecord.setCancelable(false)
@@ -1075,8 +1049,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(applicationContext, "Introduce tus iniciales", Toast.LENGTH_LONG).show()
             }
-
-
         }
 
         dialogrecord.show()
@@ -1260,7 +1232,7 @@ class MainActivity : AppCompatActivity() {
                         if (tickFinal < 20) {
                             if (tickFinal % 5 == 0) {
                                 if (tickFinal < 5) {
-                                    Log.d("Miapp" , "tickFinal ${tickFinal}")
+                               //     Log.d("Miapp" , "tickFinal ${tickFinal}")
                                     if (tickFinal == 0) soundPool.play(salto, 1F,1F,0,0,1F)
                                     fred.estadoFred = EstadosFred.SALTANDO
 
@@ -1291,6 +1263,19 @@ class MainActivity : AppCompatActivity() {
                         if (eliminarEnemigo != -1) {
                             listaEnemigos.remove(listaEnemigos.get(eliminarEnemigo))
                             eliminarEnemigo = -1
+                            // Retos Eliminar todos los enemigos
+                            if (listaEnemigos.size == 0 && nivel == 6) {
+                                Toast.makeText(applicationContext, "Reto desbloqueado!! Has acabado con todas las momias!!" , Toast.LENGTH_LONG).show()
+                                SharedApp.prefs.reto1 = true
+                            }
+                            if (listaEnemigos.size == 0 && nivel == 7) {
+                                Toast.makeText(applicationContext, "Alucinante!! 50 esqueletos hechos papilla!!" , Toast.LENGTH_LONG).show()
+                                SharedApp.prefs.reto1 = true
+                            }
+                            if (listaEnemigos.size == 0 && nivel == 8) {
+                                Toast.makeText(applicationContext, "Vampiros eliminados!! Has desbloqueado el nivel máximo" , Toast.LENGTH_LONG).show()
+                                SharedApp.prefs.reto1 = true
+                            }
                         }
                         if (eliminarObjeto != -1) {
                             sonidoPow = true
@@ -1323,12 +1308,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+
+        Log.d("Miapp" , "On stop")
      //   finish()
     }
 
     override fun onPause() {
         super.onPause()
-
+        Log.d("Miapp" , "On Pause")
         timer.cancel()
 
         val dialog = Dialog(this)
@@ -1343,6 +1330,63 @@ class MainActivity : AppCompatActivity() {
         }
         dialog.show()
 
+    }
+
+    private fun lockScreenRotation (value : Boolean) {
+        if (value) {
+            val currentOrientation = resources. configuration.orientation
+            if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            } else {
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            }
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_USER
+            } else {
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+            }
+        }
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        timer.cancel()
+        outState.putInt("POSICIONX", cX)
+        outState.putInt("POSICIONY", cY)
+        outState.putInt("OFFSETX", pasoX)
+        outState.putInt("OFFSETY", pasoY)
+        outState.putParcelableArrayList("LISTAENEMIGOS", listaEnemigos)
+        outState.putParcelableArrayList("LISTAOBJETOS", listaObjetos)
+        outState.putParcelable("LABERINTO", miLaberinto)
+        outState.putParcelable("FRED", fred)
+        outState.putInt("NIVEL", nivel)
+        outState.putBoolean("FIN", fin)
+        //   outState.putParcelable("MAPA", mapa)
+
+        Log.d("Miapp" , "Salvar estado")
+
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        Log.d("Miapp" , "Recuperar estado")
+        cX = savedInstanceState.getInt("POSICIONX")
+        cY = savedInstanceState.getInt("POSICIONY")
+        pasoX = savedInstanceState.getInt("OFFSETX")
+        pasoY = savedInstanceState.getInt("OFFSETY")
+        listaEnemigos.addAll(savedInstanceState.getParcelableArrayList("LISTAENEMIGOS")!!)
+        listaObjetos.addAll(savedInstanceState.getParcelableArrayList("LISTAOBJETOS")!!)
+        miLaberinto = savedInstanceState.getParcelable("LABERINTO")!!
+        fred = savedInstanceState.getParcelable("FRED")!!
+        nivel = savedInstanceState.getInt("NIVEL")
+        fin = savedInstanceState.getBoolean("FIN")
+        //    mapa = savedInstanceState.getParcelable("MAPA")!!
+        //  imageViewMapa = findViewById(R.id.imageViewMapa)
+        //  imageViewMapa.setImageBitmap(mapa)
+        actualizarBarraVida()
     }
 
 }
