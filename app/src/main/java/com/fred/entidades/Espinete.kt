@@ -18,10 +18,10 @@ class   Espinete() : Enemigo () {
     var direccion = 0
 
     constructor(parcel: Parcel) : this() {
-        espinete1D = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        espinete2D = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        espinete1I = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        espinete2I = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+      //  espinete1D = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+     //   espinete2D = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+     //   espinete1I = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+     //   espinete2I = parcel.readParcelable(Bitmap::class.java.classLoader)!!
         direccion = parcel.readInt()
     }
 
@@ -138,10 +138,10 @@ class   Espinete() : Enemigo () {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeParcelable(espinete1D, flags)
-        parcel.writeParcelable(espinete2D, flags)
-        parcel.writeParcelable(espinete1I, flags)
-        parcel.writeParcelable(espinete2I, flags)
+       // parcel.writeParcelable(espinete1D, flags)
+      //  parcel.writeParcelable(espinete2D, flags)
+     //   parcel.writeParcelable(espinete1I, flags)
+     //   parcel.writeParcelable(espinete2I, flags)
         parcel.writeInt(direccion)
         parcel.writeInt( pX )
         parcel.writeInt( pY )

@@ -18,11 +18,11 @@ class Tesoro() : Objeto() {
     var tipo = 0
 
     constructor(parcel: Parcel) : this() {
-        nefertiti = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        figurilla = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        ankh = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        rosetta = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        esfinge = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        nefertiti = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        figurilla = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        ankh = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        rosetta = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        esfinge = parcel.readParcelable(Bitmap::class.java.classLoader)!!
         puntos = parcel.readInt()
         tipo = parcel.readInt()
     }
@@ -83,11 +83,11 @@ class Tesoro() : Objeto() {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeParcelable(nefertiti, flags)
-        parcel.writeParcelable(figurilla, flags)
-        parcel.writeParcelable(ankh, flags)
-        parcel.writeParcelable(rosetta, flags)
-        parcel.writeParcelable(esfinge, flags)
+//        parcel.writeParcelable(nefertiti, flags)
+//        parcel.writeParcelable(figurilla, flags)
+//        parcel.writeParcelable(ankh, flags)
+//        parcel.writeParcelable(rosetta, flags)
+//        parcel.writeParcelable(esfinge, flags)
         parcel.writeInt(puntos)
         parcel.writeInt(tipo)
     }

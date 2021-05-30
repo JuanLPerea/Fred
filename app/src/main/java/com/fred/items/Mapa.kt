@@ -13,7 +13,7 @@ class Mapa() : Objeto() {
     lateinit var mapa : Bitmap
 
     constructor(parcel: Parcel) : this() {
-        mapa = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+     //   mapa = parcel.readParcelable(Bitmap::class.java.classLoader)!!
     }
 
     override fun devolverBitmap () : Bitmap {
@@ -69,7 +69,7 @@ class Mapa() : Objeto() {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeParcelable(mapa, flags)
+     //   parcel.writeParcelable(mapa, flags)
         parcel.writeInt( oX )
         parcel.writeInt( oY )
     }

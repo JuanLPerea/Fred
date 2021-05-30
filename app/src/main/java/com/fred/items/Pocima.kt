@@ -12,7 +12,7 @@ class Pocima() : Objeto() {
     lateinit var pocimaBitmap: Bitmap
 
     constructor(parcel: Parcel) : this() {
-        pocimaBitmap = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+    //    pocimaBitmap = parcel.readParcelable(Bitmap::class.java.classLoader)!!
     }
 
     override fun devolverBitmap(): Bitmap {
@@ -39,7 +39,7 @@ class Pocima() : Objeto() {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeParcelable(pocimaBitmap, flags)
+    //    parcel.writeParcelable(pocimaBitmap, flags)
         parcel.writeInt( oX )
         parcel.writeInt( oY )
     }

@@ -20,10 +20,10 @@ class Vampiro() : Enemigo() {
     var velocidad = 32
 
     constructor(parcel: Parcel) : this() {
-        vampiro1d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        vampiro2d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        vampiro1i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        vampiro2i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        vampiro1d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        vampiro2d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        vampiro1i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        vampiro2i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
         velocidad = parcel.readInt()
     }
 
@@ -184,10 +184,10 @@ class Vampiro() : Enemigo() {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeParcelable(vampiro1d, flags)
-        parcel.writeParcelable(vampiro2d, flags)
-        parcel.writeParcelable(vampiro1i, flags)
-        parcel.writeParcelable(vampiro2i, flags)
+//        parcel.writeParcelable(vampiro1d, flags)
+//        parcel.writeParcelable(vampiro2d, flags)
+//        parcel.writeParcelable(vampiro1i, flags)
+//        parcel.writeParcelable(vampiro2i, flags)
         parcel.writeInt(velocidad)
         parcel.writeInt( pX )
         parcel.writeInt( pY )

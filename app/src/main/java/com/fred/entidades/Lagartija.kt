@@ -26,14 +26,14 @@ class Lagartija() : Enemigo() {
     var cambiando = false
 
     constructor(parcel: Parcel) : this() {
-        lagartija1DAbajo = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        lagartija2DAbajo = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        lagartija1IAbajo = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        lagartija2IAbajo = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        lagartija1DArriba = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        lagartija2DArriba = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        lagartija1IArriba = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        lagartija2IArriba = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        lagartija1DAbajo = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        lagartija2DAbajo = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        lagartija1IAbajo = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        lagartija2IAbajo = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        lagartija1DArriba = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        lagartija2DArriba = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        lagartija1IArriba = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        lagartija2IArriba = parcel.readParcelable(Bitmap::class.java.classLoader)!!
         cambiando = parcel.readByte() != 0.toByte()
     }
 
@@ -195,14 +195,14 @@ class Lagartija() : Enemigo() {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeParcelable(lagartija1DAbajo, flags)
-        parcel.writeParcelable(lagartija2DAbajo, flags)
-        parcel.writeParcelable(lagartija1IAbajo, flags)
-        parcel.writeParcelable(lagartija2IAbajo, flags)
-        parcel.writeParcelable(lagartija1DArriba, flags)
-        parcel.writeParcelable(lagartija2DArriba, flags)
-        parcel.writeParcelable(lagartija1IArriba, flags)
-        parcel.writeParcelable(lagartija2IArriba, flags)
+//        parcel.writeParcelable(lagartija1DAbajo, flags)
+//        parcel.writeParcelable(lagartija2DAbajo, flags)
+//        parcel.writeParcelable(lagartija1IAbajo, flags)
+//        parcel.writeParcelable(lagartija2IAbajo, flags)
+//        parcel.writeParcelable(lagartija1DArriba, flags)
+//        parcel.writeParcelable(lagartija2DArriba, flags)
+//        parcel.writeParcelable(lagartija1IArriba, flags)
+//        parcel.writeParcelable(lagartija2IArriba, flags)
         parcel.writeBoolean(cambiando)
         parcel.writeInt( pX )
         parcel.writeInt( pY )

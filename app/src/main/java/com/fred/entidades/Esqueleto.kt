@@ -23,12 +23,12 @@ class Esqueleto() : Enemigo() {
     lateinit var laberintoEsqueleto : Laberinto
 
     constructor(parcel: Parcel) : this() {
-        esqueleto1d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        esqueleto2d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        esqueleto3d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        esqueleto1i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        esqueleto2i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        esqueleto3i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+     //   esqueleto1d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+      //  esqueleto2d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+     //   esqueleto3d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+    //    esqueleto1i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+    //    esqueleto2i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+    //    esqueleto3i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
         esqueletocuerda1 = parcel.readParcelable(Bitmap::class.java.classLoader)!!
         esqueletocuerda2 = parcel.readParcelable(Bitmap::class.java.classLoader)!!
     }
@@ -293,14 +293,14 @@ class Esqueleto() : Enemigo() {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeParcelable(esqueleto1d, flags)
-        parcel.writeParcelable(esqueleto2d, flags)
-        parcel.writeParcelable(esqueleto3d, flags)
-        parcel.writeParcelable(esqueleto1i, flags)
-        parcel.writeParcelable(esqueleto2i, flags)
-        parcel.writeParcelable(esqueleto3i, flags)
-        parcel.writeParcelable(esqueletocuerda1, flags)
-        parcel.writeParcelable(esqueletocuerda2, flags)
+     //   parcel.writeParcelable(esqueleto1d, flags)
+    //    parcel.writeParcelable(esqueleto2d, flags)
+    //    parcel.writeParcelable(esqueleto3d, flags)
+    //    parcel.writeParcelable(esqueleto1i, flags)
+     //   parcel.writeParcelable(esqueleto2i, flags)
+     //   parcel.writeParcelable(esqueleto3i, flags)
+     //   parcel.writeParcelable(esqueletocuerda1, flags)
+     //   parcel.writeParcelable(esqueletocuerda2, flags)
         parcel.writeInt( pX )
         parcel.writeInt( pY )
         parcel.writeInt( animacionTick )

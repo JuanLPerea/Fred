@@ -12,7 +12,7 @@ class Balas() : Objeto() {
     lateinit var balas : Bitmap
 
     constructor(parcel: Parcel) : this() {
-        balas = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+    //    balas = parcel.readParcelable(Bitmap::class.java.classLoader)!!
     }
 
     override fun devolverBitmap(): Bitmap {
@@ -35,7 +35,7 @@ class Balas() : Objeto() {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeParcelable(balas, flags)
+    //    parcel.writeParcelable(balas, flags)
     }
 
     override fun describeContents(): Int {

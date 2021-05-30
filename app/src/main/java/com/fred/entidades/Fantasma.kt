@@ -18,10 +18,10 @@ class Fantasma() : Enemigo() {
     var movimiento = Direcciones.PARADO
 
     constructor(parcel: Parcel) : this() {
-        fantasma1d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        fantasma1i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        fantasma2d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        fantasma2i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+    //    fantasma1d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+     //   fantasma1i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+    //    fantasma2d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+    //    fantasma2i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
     }
 
 
@@ -164,10 +164,10 @@ class Fantasma() : Enemigo() {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeParcelable(fantasma1d, flags)
-        parcel.writeParcelable(fantasma1i, flags)
-        parcel.writeParcelable(fantasma2d, flags)
-        parcel.writeParcelable(fantasma2i, flags)
+     //   parcel.writeParcelable(fantasma1d, flags)
+    //    parcel.writeParcelable(fantasma1i, flags)
+     //   parcel.writeParcelable(fantasma2d, flags)
+     //   parcel.writeParcelable(fantasma2i, flags)
         parcel.writeInt( pX )
         parcel.writeInt( pY )
         parcel.writeInt( animacionTick )

@@ -327,13 +327,16 @@ class MainActivity : AppCompatActivity() {
         listaObjetos.add(mapa)
         listaUbicacionesPasilloHorizontal.removeAt(0)
 
+        var contador = 0
+
         for (n in 0..variablesNivel.totalBalas) {
             val objeto = Balas()
-            objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
+            objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(contador).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
             listaObjetos.add(objeto)
+            contador++
         }
 
-        if (variablesNivel.totalObjetos > listaUbicacionesPasilloHorizontal.size) variablesNivel.totalObjetos = listaUbicacionesPasilloHorizontal.size-1
+        if (variablesNivel.totalObjetos > listaUbicacionesPasilloHorizontal.size - contador) variablesNivel.totalObjetos = listaUbicacionesPasilloHorizontal.size -1 - contador
         // Creamos objetos al azar
         for (n in 1..variablesNivel.totalObjetos) {
 
@@ -341,22 +344,22 @@ class MainActivity : AppCompatActivity() {
             when (azar) {
                 in 1..5 -> {
                     val objeto = Pocima()
-                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
+                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(contador).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
                 }
                 in 6..20 -> {
                     val objeto = Tesoro()
-                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
+                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(contador).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
                 }
                 0 -> {
                     val objeto = Mapa()
-                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
+                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(contador).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
                 }
 
             }
-
+            contador++
         }
 
 
@@ -1355,6 +1358,13 @@ class MainActivity : AppCompatActivity() {
 
     }
 */
+
+    override fun onRestart() {
+        super.onRestart()
+        establecerTimer()
+    }
+
+
     private fun lockScreenRotation (value : Boolean) {
         if (value) {
             val currentOrientation = resources. configuration.orientation

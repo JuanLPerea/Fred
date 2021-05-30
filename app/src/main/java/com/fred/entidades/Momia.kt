@@ -29,14 +29,14 @@ class Momia() : Enemigo() {
     var momiaID = 0
 
     constructor(parcel: Parcel) : this() {
-        momia1d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        momia2d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        momia1i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        momia2i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        momiacuerdad = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        momiacuerdai = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        momiapopd = parcel.readParcelable(Bitmap::class.java.classLoader)!!
-        momiapopi = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        momia1d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        momia2d = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        momia1i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        momia2i = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        momiacuerdad = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        momiacuerdai = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        momiapopd = parcel.readParcelable(Bitmap::class.java.classLoader)!!
+//        momiapopi = parcel.readParcelable(Bitmap::class.java.classLoader)!!
         choque = parcel.readByte() != 0.toByte()
         indiceSpawn = parcel.readInt()
         momiaID = parcel.readInt()
@@ -276,14 +276,14 @@ class Momia() : Enemigo() {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeParcelable(momia1d, flags)
-        parcel.writeParcelable(momia2d, flags)
-        parcel.writeParcelable(momia1i, flags)
-        parcel.writeParcelable(momia2i, flags)
-        parcel.writeParcelable(momiacuerdad, flags)
-        parcel.writeParcelable(momiacuerdai, flags)
-        parcel.writeParcelable(momiapopd, flags)
-        parcel.writeParcelable(momiapopi, flags)
+//        parcel.writeParcelable(momia1d, flags)
+//        parcel.writeParcelable(momia2d, flags)
+//        parcel.writeParcelable(momia1i, flags)
+//        parcel.writeParcelable(momia2i, flags)
+//        parcel.writeParcelable(momiacuerdad, flags)
+//        parcel.writeParcelable(momiacuerdai, flags)
+//        parcel.writeParcelable(momiapopd, flags)
+//        parcel.writeParcelable(momiapopi, flags)
         parcel.writeBoolean(choque)
         parcel.writeInt(indiceSpawn)
         parcel.writeInt(momiaID)
