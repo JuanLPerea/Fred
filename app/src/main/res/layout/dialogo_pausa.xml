@@ -3,38 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
-    android:gravity="center"
+    android:layout_gravity="center"
+    android:background="@color/black"
     android:orientation="vertical">
 
+
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageViewPausa"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/esfingefin" />
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        app:srcCompat="@drawable/piramide" />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:gravity="center"
-        android:text="NUEVO RECORD"
+        android:text="PAUSA"
         android:textColor="#FFFFFF"
         android:textSize="34sp" />
-
-    <EditText
-        android:id="@+id/edittextnuevorecord"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="Introduce tus iniciales"
-        android:maxLength="6"
-        android:textColor="#CDDC39"
-        android:textColorHint="#2F4A48" />
 
     <Button
         android:id="@+id/botonPausaOK"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
         android:text="OK" />
 
     <Space

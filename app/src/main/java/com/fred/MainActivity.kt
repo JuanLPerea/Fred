@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.graphics.*
 import android.media.AudioAttributes
 import android.media.AudioManager
-import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -78,6 +77,7 @@ class MainActivity : AppCompatActivity() {
     var sonidoDisparo = false
     var tickFinal = 0
     var tesorosRecogidos = 0
+    var pausa = false
 
     // Aquí guardamos el número de enemigos de cada tipo en cada nivel
     lateinit var variablesNivel : Nivel
@@ -160,6 +160,9 @@ class MainActivity : AppCompatActivity() {
 
         establecerListeners()
 
+        // record
+        puntosMax.text = SharedApp.prefs.record1
+
         // Creamos a nuestro protagonista
         fred = Fred()
         // Hay un objeto 'Bala' para gestionar los disparos
@@ -170,10 +173,8 @@ class MainActivity : AppCompatActivity() {
         // lo que le da ese toque tan rítmico que enganchaba en los 80's tic-tac-tic-tac-tic-tac
         // ¿fundiré un procesador del siglo 21??? sometiéndole a este terrible trabajo :D ???
         if (savedInstanceState == null) {
-
             iniciarNivel()
         } else {
-
             establecerTimer()
         }
 
@@ -296,6 +297,7 @@ class MainActivity : AppCompatActivity() {
         val mapa = Mapa()
          mapa.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.first().coordenadaX, listaUbicacionesPasilloHorizontal.first().coordenadaY)
         listaObjetos.add(mapa)
+        listaUbicacionesPasilloHorizontal.removeAt(0)
 
         for (n in 0..variablesNivel.totalBalas) {
             val objeto = Balas()
@@ -616,7 +618,7 @@ class MainActivity : AppCompatActivity() {
                            actualizarBarraVida()
                        }
 
-                       if (fred.vida == 0) {
+                       if (fred.vida <= 0) {
                            dialogoFin("GAMEOVER")
                        }
                    }
@@ -943,35 +945,69 @@ class MainActivity : AppCompatActivity() {
         val imagenDialog = dialog.findViewById(R.id.imageViewFin) as ImageView
         val yesBtn = dialog.findViewById(R.id.botonfinjugar) as Button
 
+        yesBtn.setOnClickListener {
+            dialog.dismiss()
+            if (texto.equals("GAMEOVER")) {
+                finish()
+            } else {
+                nivel++
+                iniciarNivel()
+            }
+        }
+
+
+        if (SharedApp.prefs.record1 == "") {
+            SharedApp.prefs.firstrecords()
+        }
+
         when (texto) {
             "GAMEOVER" -> {
+
+                var record = 0
+                when {
+                    fred.puntos > SharedApp.prefs.record1.toInt() -> {
+                       record = 1
+                    }
+                    fred.puntos > SharedApp.prefs.record2.toInt() -> {
+                        record = 2
+                    }
+                    fred.puntos > SharedApp.prefs.record3.toInt()  -> {
+                        record = 3
+                    }
+                    fred.puntos > SharedApp.prefs.record4.toInt()  -> {
+                        record = 4
+                    }
+                }
+
+                if (record == 0) {
+                    dialog.show()
+                } else {
+                    nuevoRecord(record , dialog)
+                }
+
                 imagenDialog.setImageResource(R.drawable.fredgameover)
                 textofin.text = "SE ACABÓ"
                 textobonus.text = "Nivel alcanzado: ${nivel}"
                 textotesoros.text = "Puntos: ${fred.puntos}"
-                textobonotesoros.text = "Eres uno de los mejores de hoy!!"
+                textobonotesoros.text = "Fred reposa aquí en paz!!"
                 yesBtn.text = "SALIR"
 
-                val mediaPlayer = MediaPlayer.create(this, R.raw.fredfrito)
-                mediaPlayer.start()
+                SharedApp.myMediaPlayer.playMedia(R.raw.fredfrito)
 
-                if (SharedApp.prefs.record1.toInt() < fred.puntos) {
-                    nuevoRecord(1)
-                } else if (SharedApp.prefs.record2.toInt() < fred.puntos) {
-                    nuevoRecord(2)
-                } else if (SharedApp.prefs.record3.toInt() < fred.puntos){
-                    nuevoRecord(3)
-                } else if (SharedApp.prefs.record4.toInt() < fred.puntos) {
-                    nuevoRecord(4)
-                }
+
 
 
             }
 
             "SIGUIENTENIVEL" -> {
 
-                val mediaPlayer = MediaPlayer.create(applicationContext, R.raw.musicasalida)
-                mediaPlayer.start()
+                SharedApp.myMediaPlayer.playMedia(R.raw.musicasalida)
+
+                // Este es uno de los retos si se supera el nivel 4
+                if (nivel == 5 && SharedApp.prefs.secreto == false) {
+                    Toast.makeText(applicationContext, "Bien!! has desbloqueado el secreto. Fred ha cogido color!!", Toast.LENGTH_LONG).show()
+                    SharedApp.prefs.secreto = true
+                }
 
                 imagenDialog.setImageResource(R.drawable.fredfinal)
                 textofin.text = "Por fin has salido!!!"
@@ -980,57 +1016,62 @@ class MainActivity : AppCompatActivity() {
                 textobonotesoros.text = "Bonos por tesoros: ${tesorosRecogidos * 1000}"
                 yesBtn.text = "SIGUIENTE NIVEL"
                 fred.puntos = fred.puntos + 5000 + (tesorosRecogidos*1000)
+                dialog.show()
             }
         }
 
-        yesBtn.setOnClickListener {
-            dialog.dismiss()
-            if (texto.equals("GAMEOVER")) {
-                    finish()
-                } else {
-                    nivel++
-                    iniciarNivel()
-            }
-        }
-        dialog.show()
+
 
     }
 
-    private fun nuevoRecord(i: Int) {
+    private fun nuevoRecord(i: Int, dialogoFin : Dialog) {
 
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialogonuevorecord)
+        val dialogrecord = Dialog(this)
+        dialogrecord.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogrecord.setCancelable(false)
+        dialogrecord.setContentView(R.layout.dialogonuevorecord)
 
-        val editText = findViewById(R.id.edittextnuevorecord) as EditText
-        val botonOK = findViewById(R.id.botonnuevorecordOK) as Button
+        val editText = dialogrecord.findViewById(R.id.edittextnuevorecord) as EditText
+        val botonOK = dialogrecord.findViewById(R.id.botonPausaOK) as Button
 
         botonOK.setOnClickListener {
-
             if (editText.text != null) {
                 when (i) {
                     1 -> {
+                        SharedApp.prefs.record4 = SharedApp.prefs.record3
+                        SharedApp.prefs.record4Name = SharedApp.prefs.record3Name
+                        SharedApp.prefs.record3 = SharedApp.prefs.record2
+                        SharedApp.prefs.record3Name = SharedApp.prefs.record2Name
+                        SharedApp.prefs.record2 = SharedApp.prefs.record1
+                        SharedApp.prefs.record2Name = SharedApp.prefs.record1Name
                         SharedApp.prefs.record1 = fred.puntos.toString()
                         SharedApp.prefs.record1Name = editText.text.toString()
-                        dialog.dismiss()
+                        dialogrecord.dismiss()
                     }
                     2 -> {
+                        SharedApp.prefs.record4 = SharedApp.prefs.record3
+                        SharedApp.prefs.record4Name = SharedApp.prefs.record3Name
+                        SharedApp.prefs.record3 = SharedApp.prefs.record2
+                        SharedApp.prefs.record3Name = SharedApp.prefs.record2Name
                         SharedApp.prefs.record2 = fred.puntos.toString()
                         SharedApp.prefs.record2Name = editText.text.toString()
-                        dialog.dismiss()
+                        dialogrecord.dismiss()
                     }
                     3 -> {
+                        SharedApp.prefs.record4 = SharedApp.prefs.record3
+                        SharedApp.prefs.record4Name = SharedApp.prefs.record3Name
                         SharedApp.prefs.record3 = fred.puntos.toString()
                         SharedApp.prefs.record3Name = editText.text.toString()
-                        dialog.dismiss()
+                        dialogrecord.dismiss()
                     }
                     4 -> {
                         SharedApp.prefs.record4 = fred.puntos.toString()
                         SharedApp.prefs.record4Name = editText.text.toString()
-                        dialog.dismiss()
+                        dialogrecord.dismiss()
                     }
                 }
+                dialogrecord.dismiss()
+                dialogoFin.show()
             } else {
                 Toast.makeText(applicationContext, "Introduce tus iniciales", Toast.LENGTH_LONG).show()
             }
@@ -1038,8 +1079,7 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-
-
+        dialogrecord.show()
 
     }
 
@@ -1279,6 +1319,30 @@ class MainActivity : AppCompatActivity() {
             }
         }
         timer.schedule(ticks, velocidadJuego, velocidadJuego)
+    }
+
+    override fun onStop() {
+        super.onStop()
+     //   finish()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        timer.cancel()
+
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialogo_pausa)
+
+        val yesBtn = dialog.findViewById(R.id.botonPausaOK) as Button
+
+        yesBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
+
     }
 
 }

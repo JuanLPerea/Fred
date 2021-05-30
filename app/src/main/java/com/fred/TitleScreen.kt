@@ -2,6 +2,7 @@ package com.fred
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.graphics.*
 import android.media.MediaPlayer
 import android.net.Uri
@@ -24,7 +25,6 @@ class TitleScreen : AppCompatActivity() {
     lateinit var creditos : Bitmap
     lateinit var records : Bitmap
     lateinit var timer : Timer
-    lateinit var mediaPlayer: MediaPlayer
     var musica = false
     var altoCreditos = 0
     var anchoCreditos = 0
@@ -35,38 +35,35 @@ class TitleScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_title_screen)
 
+        SharedApp.myMediaPlayer.playMedia(R.raw.beep)
+        SharedApp.myMediaPlayer.stopPlayer()
 
         imagenCreditos = findViewById(R.id.imageViewTitulo)
         layoutCreditos = findViewById(R.id.layoutCreditos)
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.marchafunebre)
-
-
-
-
         records = BitmapFactory.decodeResource(resources , R.drawable.todaysgreatest)
 
-        layoutCreditos.addOnLayoutChangeListener { view, i, i2, i3, i4, i5, i6, i7, i8 ->
-            altoCreditos = view.height
-            anchoCreditos = view.width
-            Log.d("Miapp", "Alto: ${altoCreditos}")
-            creditos = BitmapFactory.decodeResource(resources , R.drawable.tituloscredito)
-            scrollCreditos()
+        creditos = BitmapFactory.decodeResource(resources , R.drawable.tituloscredito)
+
+        val orientation = resources.configuration.orientation
+        when (orientation) {
+            Configuration.ORIENTATION_LANDSCAPE -> {
+                altoCreditos = creditos.height / 8
+            }
+            Configuration.ORIENTATION_PORTRAIT -> {
+                altoCreditos = creditos.height / 4
+            }
         }
+
+         //   Log.d("Miapp", "Alto: ${altoCreditos}")
+
+            anchoCreditos = creditos.width
+            scrollCreditos()
+
 
 
         if (SharedApp.prefs.record1 == "") {
-            SharedApp.prefs.record1 = "000000"
-            SharedApp.prefs.record1Name = "FRED"
-
-            SharedApp.prefs.record2 = "000000"
-            SharedApp.prefs.record2Name = "FRED"
-
-            SharedApp.prefs.record3 = "000000"
-            SharedApp.prefs.record3Name = "FRED"
-
-            SharedApp.prefs.record4 = "000000"
-            SharedApp.prefs.record4Name = "FRED"
+            SharedApp.prefs.firstrecords()
         }
 
 
@@ -74,6 +71,7 @@ class TitleScreen : AppCompatActivity() {
 
         botonJugar.setOnClickListener {
             timer.cancel()
+            SharedApp.myMediaPlayer.stopPlayer()
             val intent = Intent (this, MainActivity::class.java)
             startActivity(intent)
         }
@@ -86,10 +84,10 @@ class TitleScreen : AppCompatActivity() {
         val ticks = object : TimerTask() {
             override fun run() {
 
-                if (scrollY < creditos.height - altoCreditos - 2) {
+                if (scrollY < creditos.height - altoCreditos - 10) {
 
                     val scroll = Bitmap.createBitmap(creditos, 0, scrollY, creditos.width, altoCreditos)
-                    scrollY = scrollY + 2
+                    scrollY = scrollY + 10
 
                     runOnUiThread {
                         imagenCreditos.setImageBitmap(scroll)
@@ -99,7 +97,7 @@ class TitleScreen : AppCompatActivity() {
                 } else {
                     // Mostramos los records durante 10 segundos
                     if (musica == false) {
-                        mediaPlayer.start()
+                        SharedApp.myMediaPlayer.playMedia(R.raw.marchafunebre)
                         crono = System.currentTimeMillis() + 10000
                         musica = true
                         var pintura = Paint()
@@ -115,23 +113,23 @@ class TitleScreen : AppCompatActivity() {
                         rectDestino.set(0, 0, records.width, records.height)
                         lienzo.drawBitmap(records, null, rectDestino, null)
 
-                        Log.d("Miapp" , "ancho: ${records.width} alto: ${records.height}")
+                   //     Log.d("Miapp" , "ancho: ${records.width} alto: ${records.height}")
+
 
                         // Mostramos los records
-                        lienzo.drawText(SharedApp.prefs.record1Name, 350F, 800F, pintura)
-                        lienzo.drawText(SharedApp.prefs.record1, 350F, 1400F, pintura)
+                        lienzo.drawText(rellenarConEspacios(SharedApp.prefs.record1Name), 350F, 800F, pintura)
+                        lienzo.drawText(rellenarConCeros(SharedApp.prefs.record1), 350F, 1400F, pintura)
 
-                        lienzo.drawText(SharedApp.prefs.record2Name, 1050F, 800F, pintura)
-                        lienzo.drawText(SharedApp.prefs.record2, 1050F, 1400F, pintura)
+                        lienzo.drawText(rellenarConEspacios(SharedApp.prefs.record2Name), 1050F, 800F, pintura)
+                        lienzo.drawText(rellenarConCeros(SharedApp.prefs.record2), 1050F, 1400F, pintura)
 
-                        lienzo.drawText(SharedApp.prefs.record3Name, 1750F, 800F, pintura)
-                        lienzo.drawText(SharedApp.prefs.record3, 1750F, 1400F, pintura)
+                        lienzo.drawText(rellenarConEspacios(SharedApp.prefs.record3Name), 1750F, 800F, pintura)
+                        lienzo.drawText(rellenarConCeros(SharedApp.prefs.record3), 1750F, 1400F, pintura)
 
-                        lienzo.drawText(SharedApp.prefs.record4Name, 2450F, 800F, pintura)
-                        lienzo.drawText(SharedApp.prefs.record4, 2450F, 1400F, pintura)
+                        lienzo.drawText(rellenarConEspacios(SharedApp.prefs.record4Name), 2450F, 800F, pintura)
+                        lienzo.drawText(rellenarConCeros(SharedApp.prefs.record4), 2450F, 1400F, pintura)
 
                         runOnUiThread {
-                            mediaPlayer.start()
                             imagenCreditos.setImageBitmap(bitmapRecords)
                         }
                     }
@@ -140,6 +138,7 @@ class TitleScreen : AppCompatActivity() {
                 if (crono < System.currentTimeMillis()) {
                     scrollY = 0
                     musica = false
+                    SharedApp.myMediaPlayer.stopPlayer()
                 }
 
 
@@ -152,16 +151,35 @@ class TitleScreen : AppCompatActivity() {
         timer.schedule(ticks, 50L, 50L)
     }
 
+    private fun rellenarConCeros(string: String): String {
+        var espaciosderecha = (6 - string.length)/2
+        val sb = StringBuffer(10)
+        for (n in 0..espaciosderecha) {
+            sb.append("0")
+        }
+        return sb.toString() + string
+    }
+
+    private fun rellenarConEspacios(string: String): String {
+        var espaciosderecha = (6 - string.length) -1
+        val sb = StringBuffer(10)
+        for (n in 0..espaciosderecha) {
+            sb.append(" ")
+        }
+        return sb.toString() + string
+    }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        timer.cancel()
+        SharedApp.myMediaPlayer.stopPlayer()
         outState.putInt("SCROLLY", scrollY)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         scrollY = savedInstanceState.getInt("SCROLLY")
-        Log.d("Miapp" , "Valor Scroll: ${scrollY}")
     }
 
 
@@ -169,7 +187,13 @@ class TitleScreen : AppCompatActivity() {
         val popupMenu = PopupMenu(applicationContext, view)
         popupMenu.inflate(R.menu.opciones_menu)
         popupMenu.show()
-
-
     }
+
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d("Miapp" , "Restart")
+        scrollCreditos()
+    }
+
 }
