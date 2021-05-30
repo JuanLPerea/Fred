@@ -28,10 +28,14 @@ class Vampiro() : Enemigo() {
     }
 
     fun newVampiro (context: Context, coordenada: Coordenada) {
-        vampiro1d = BitmapFactory.decodeResource(context.resources , R.drawable.vampiro1d)
-        vampiro2d = BitmapFactory.decodeResource(context.resources , R.drawable.vampiro2d)
-        vampiro1i = BitmapFactory.decodeResource(context.resources , R.drawable.vampiro1i)
-        vampiro2i = BitmapFactory.decodeResource(context.resources , R.drawable.vampiro2i)
+        val opciones = BitmapFactory.Options()
+        opciones.inPreferredConfig = Bitmap.Config.RGB_565
+        opciones.inSampleSize = 2
+
+        vampiro1d = BitmapFactory.decodeResource(context.resources , R.drawable.vampiro1d, opciones)
+        vampiro2d = BitmapFactory.decodeResource(context.resources , R.drawable.vampiro2d, opciones)
+        vampiro1i = BitmapFactory.decodeResource(context.resources , R.drawable.vampiro1i, opciones)
+        vampiro2i = BitmapFactory.decodeResource(context.resources , R.drawable.vampiro2i, opciones)
 
         pX = coordenada.coordenadaX
         pY = coordenada.coordenadaY

@@ -7,11 +7,13 @@ import android.graphics.*
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.SoundPool
+import android.opengl.Visibility
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.*
@@ -45,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var imageViewMapa : ImageView
     lateinit var mapa : Bitmap
     lateinit var ticks : TimerTask
+    lateinit var cronometroTV : TextView
 
     // Sonidos
      lateinit var soundPool : SoundPool
@@ -75,6 +78,7 @@ class MainActivity : AppCompatActivity() {
     var nivel = SharedApp.prefs.nivelInicio
     var recordPuntos = 0
     var tick = 0
+    var cronometrotick = 0
     var sonidoPow = false
     var sonidoDisparo = false
     var tickFinal = 0
@@ -159,10 +163,15 @@ class MainActivity : AppCompatActivity() {
         nivelTV = findViewById(R.id.nivelTV)
         puntosTV = findViewById(R.id.puntosTV)
         puntosMax = findViewById(R.id.maxTV)
+        cronometroTV = findViewById(R.id.textViewCronometro)
 
         establecerListeners()
 
+
         // record
+        if (SharedApp.prefs.record1 == "") {
+            SharedApp.prefs.firstrecords()
+        }
         recordPuntos = SharedApp.prefs.record1.toInt()
 
         // Creamos a nuestro protagonista
@@ -219,6 +228,15 @@ class MainActivity : AppCompatActivity() {
 
         // Actualizar datos info
         puntosMax.text = SharedApp.prefs.record1
+
+        // Cronometro
+        if (nivel == 5) {
+            cronometrotick =  1000     // Tienes 1 minuto para resolver el laberinto
+            cronometroTV.text = cronometrotick.toString()
+            cronometroTV.visibility = View.VISIBLE
+        } else {
+            cronometroTV.visibility = View.INVISIBLE
+        }
 
         // Desbloquear rotación de pantalla
         lockScreenRotation(false)
@@ -931,9 +949,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        if (SharedApp.prefs.record1 == "") {
-            SharedApp.prefs.firstrecords()
-        }
+
 
         when (texto) {
             "GAMEOVER" -> {
@@ -1065,7 +1081,7 @@ class MainActivity : AppCompatActivity() {
                 // aquí gestionamos el estado de Fred para mostrar la animación que corresponda
 
                 if (!fin) {
-                    if (fred.tocado > 0) {
+                      if (fred.tocado > 0) {
                         fred.tocado++
                         if (fred.tocado == 8) fred.tocado = 0
                     }
@@ -1228,7 +1244,6 @@ class MainActivity : AppCompatActivity() {
                 runOnUiThread {
                     if (fin) {
                         // pequeña animación cuando encuentra la salida
-
                         if (tickFinal < 20) {
                             if (tickFinal % 5 == 0) {
                                 if (tickFinal < 5) {
@@ -1257,7 +1272,15 @@ class MainActivity : AppCompatActivity() {
                         }
 
                     } else {
-
+                        // Cronometro para el nivel 5
+                        if (nivel == 5) {
+                            cronometrotick--
+                            cronometroTV.text = cronometrotick.toString()
+                            cronometroTV.visibility = View.VISIBLE
+                            if (cronometrotick<=0) dialogoFin("GAMEOVER")
+                        } else {
+                            cronometroTV.visibility = View.INVISIBLE
+                        }
                         // Dibujar el fondo
                         crearFondo(cX - 4, cY - 3, pasoX, pasoY)
                         if (eliminarEnemigo != -1) {
@@ -1312,7 +1335,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("Miapp" , "On stop")
      //   finish()
     }
-
+/*
     override fun onPause() {
         super.onPause()
         Log.d("Miapp" , "On Pause")
@@ -1331,7 +1354,7 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
 
     }
-
+*/
     private fun lockScreenRotation (value : Boolean) {
         if (value) {
             val currentOrientation = resources. configuration.orientation

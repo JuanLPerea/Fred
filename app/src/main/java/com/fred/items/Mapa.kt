@@ -21,7 +21,11 @@ class Mapa() : Objeto() {
     }
 
     override fun nuevoObjeto(context: Context, cX : Int, cY : Int) {
-        mapa = BitmapFactory.decodeResource(context.resources , R.drawable.mapa)
+        val opciones = BitmapFactory.Options()
+        opciones.inPreferredConfig = Bitmap.Config.RGB_565
+        opciones.inSampleSize = 2
+
+        mapa = BitmapFactory.decodeResource(context.resources , R.drawable.mapa, opciones)
         oX = cX
         oY = cY
     }

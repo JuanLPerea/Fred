@@ -40,11 +40,15 @@ class Tesoro() : Objeto() {
     }
 
     override fun nuevoObjeto(context: Context, cX: Int, cY: Int) {
-        figurilla = BitmapFactory.decodeResource(context.resources, R.drawable.figurilla)
-        nefertiti = BitmapFactory.decodeResource(context.resources, R.drawable.nefertiti)
-        ankh = BitmapFactory.decodeResource(context.resources, R.drawable.ankh)
-        rosetta = BitmapFactory.decodeResource(context.resources, R.drawable.rosetta)
-        esfinge = BitmapFactory.decodeResource(context.resources, R.drawable.esfinge)
+        val opciones = BitmapFactory.Options()
+        opciones.inPreferredConfig = Bitmap.Config.RGB_565
+        opciones.inSampleSize = 2
+
+        figurilla = BitmapFactory.decodeResource(context.resources, R.drawable.figurilla, opciones )
+        nefertiti = BitmapFactory.decodeResource(context.resources, R.drawable.nefertiti, opciones)
+        ankh = BitmapFactory.decodeResource(context.resources, R.drawable.ankh, opciones)
+        rosetta = BitmapFactory.decodeResource(context.resources, R.drawable.rosetta, opciones)
+        esfinge = BitmapFactory.decodeResource(context.resources, R.drawable.esfinge, opciones)
         oX = cX
         oY = cY
 

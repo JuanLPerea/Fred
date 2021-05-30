@@ -20,7 +20,11 @@ class Balas() : Objeto() {
     }
 
     override fun nuevoObjeto(context: Context, cX: Int, cY: Int) {
-        balas = BitmapFactory.decodeResource(context.resources, R.drawable.balas)
+        val opciones = BitmapFactory.Options()
+        opciones.inPreferredConfig = Bitmap.Config.RGB_565
+        opciones.inSampleSize = 2
+
+        balas = BitmapFactory.decodeResource(context.resources, R.drawable.balas, opciones)
         oX = cX
         oY = cY
     }

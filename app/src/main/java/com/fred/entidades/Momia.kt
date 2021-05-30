@@ -44,14 +44,18 @@ class Momia() : Enemigo() {
 
 
     fun newMomia(context: Context, listaCoordenadas: MutableList<Coordenada>, id : Int) {
-        momia1d = BitmapFactory.decodeResource(context.resources, R.drawable.momia1d)
-        momia2d = BitmapFactory.decodeResource(context.resources, R.drawable.momia2d)
-        momia1i = BitmapFactory.decodeResource(context.resources, R.drawable.momia1i)
-        momia2i = BitmapFactory.decodeResource(context.resources, R.drawable.momia2i)
-        momiacuerdad = BitmapFactory.decodeResource(context.resources, R.drawable.momia3d)
-        momiacuerdai = BitmapFactory.decodeResource(context.resources, R.drawable.momia3i)
-        momiapopd = BitmapFactory.decodeResource(context.resources, R.drawable.momia4d)
-        momiapopi = BitmapFactory.decodeResource(context.resources, R.drawable.momia4i)
+        val opciones = BitmapFactory.Options()
+        opciones.inPreferredConfig = Bitmap.Config.RGB_565
+        opciones.inSampleSize = 2
+
+        momia1d = BitmapFactory.decodeResource(context.resources, R.drawable.momia1d, opciones)
+        momia2d = BitmapFactory.decodeResource(context.resources, R.drawable.momia2d, opciones)
+        momia1i = BitmapFactory.decodeResource(context.resources, R.drawable.momia1i, opciones)
+        momia2i = BitmapFactory.decodeResource(context.resources, R.drawable.momia2i, opciones)
+        momiacuerdad = BitmapFactory.decodeResource(context.resources, R.drawable.momia3d, opciones)
+        momiacuerdai = BitmapFactory.decodeResource(context.resources, R.drawable.momia3i, opciones)
+        momiapopd = BitmapFactory.decodeResource(context.resources, R.drawable.momia4d, opciones)
+        momiapopi = BitmapFactory.decodeResource(context.resources, R.drawable.momia4i, opciones)
         posicionesSpawn = listaCoordenadas
 
         momiaID = id

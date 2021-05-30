@@ -39,17 +39,21 @@ class GotaAcido() : Enemigo () {
         // Las gotas pueden existir en las filas pares, de la 4 a la 32
         // siempre que haya bloques de piedra encima y debajo en su columna y en las dos de alrededor
         // y no exista ya una gota en esa posición
-        gota1 = BitmapFactory.decodeResource(context.resources, R.drawable.gota1)
-        gota2 = BitmapFactory.decodeResource(context.resources, R.drawable.gota2)
-        gota3 = BitmapFactory.decodeResource(context.resources, R.drawable.gota3)
-        gota4 = BitmapFactory.decodeResource(context.resources, R.drawable.gota4)
-        gota5 = BitmapFactory.decodeResource(context.resources, R.drawable.gota5)
-        gota6 = BitmapFactory.decodeResource(context.resources, R.drawable.gota6)
-        gota7 = BitmapFactory.decodeResource(context.resources, R.drawable.gota7)
-        gota8 = BitmapFactory.decodeResource(context.resources, R.drawable.gota8)
-        gota9 = BitmapFactory.decodeResource(context.resources, R.drawable.gota9)
-        gota10 = BitmapFactory.decodeResource(context.resources, R.drawable.gota10)
-        gota11 = BitmapFactory.decodeResource(context.resources, R.drawable.gota11)
+        val opciones = BitmapFactory.Options()
+        opciones.inPreferredConfig = Bitmap.Config.RGB_565
+        opciones.inSampleSize = 2
+
+        gota1 = BitmapFactory.decodeResource(context.resources, R.drawable.gota1, opciones)
+        gota2 = BitmapFactory.decodeResource(context.resources, R.drawable.gota2, opciones)
+        gota3 = BitmapFactory.decodeResource(context.resources, R.drawable.gota3, opciones)
+        gota4 = BitmapFactory.decodeResource(context.resources, R.drawable.gota4, opciones)
+        gota5 = BitmapFactory.decodeResource(context.resources, R.drawable.gota5, opciones)
+        gota6 = BitmapFactory.decodeResource(context.resources, R.drawable.gota6, opciones)
+        gota7 = BitmapFactory.decodeResource(context.resources, R.drawable.gota7, opciones)
+        gota8 = BitmapFactory.decodeResource(context.resources, R.drawable.gota8, opciones)
+        gota9 = BitmapFactory.decodeResource(context.resources, R.drawable.gota9, opciones)
+        gota10 = BitmapFactory.decodeResource(context.resources, R.drawable.gota10, opciones)
+        gota11 = BitmapFactory.decodeResource(context.resources, R.drawable.gota11, opciones)
 
         pX = coordenada.coordenadaX
         pY = coordenada.coordenadaY

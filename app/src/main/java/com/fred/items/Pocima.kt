@@ -20,7 +20,11 @@ class Pocima() : Objeto() {
     }
 
     override fun nuevoObjeto(context: Context, cX: Int, cY: Int) {
-        pocimaBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pocion)
+        val opciones = BitmapFactory.Options()
+        opciones.inPreferredConfig = Bitmap.Config.RGB_565
+        opciones.inSampleSize = 2
+
+        pocimaBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pocion, opciones)
         oX = cX
         oY = cY
     }

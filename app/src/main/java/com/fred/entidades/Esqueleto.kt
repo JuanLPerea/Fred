@@ -34,14 +34,18 @@ class Esqueleto() : Enemigo() {
     }
 
     fun newEsqueleto(context: Context, coordenada: Coordenada, miLaberinto: Laberinto) {
-         esqueleto1d = BitmapFactory.decodeResource(context.resources, R.drawable.esqueleto1d)
-         esqueleto2d = BitmapFactory.decodeResource(context.resources, R.drawable.esqueleto2d)
-         esqueleto3d = BitmapFactory.decodeResource(context.resources, R.drawable.esqueleto3d)
-         esqueleto1i = BitmapFactory.decodeResource(context.resources, R.drawable.esqueleto1i)
-         esqueleto2i = BitmapFactory.decodeResource(context.resources, R.drawable.esqueleto2i)
-         esqueleto3i = BitmapFactory.decodeResource(context.resources, R.drawable.esqueleto3i)
-         esqueletocuerda1 = BitmapFactory.decodeResource(context.resources, R.drawable.esqueletocuerda1)
-         esqueletocuerda2 = BitmapFactory.decodeResource(context.resources, R.drawable.esqueletocuerda2)
+        val opciones = BitmapFactory.Options()
+        opciones.inPreferredConfig = Bitmap.Config.RGB_565
+        opciones.inSampleSize = 2
+
+         esqueleto1d = BitmapFactory.decodeResource(context.resources, R.drawable.esqueleto1d, opciones)
+         esqueleto2d = BitmapFactory.decodeResource(context.resources, R.drawable.esqueleto2d, opciones)
+         esqueleto3d = BitmapFactory.decodeResource(context.resources, R.drawable.esqueleto3d, opciones)
+         esqueleto1i = BitmapFactory.decodeResource(context.resources, R.drawable.esqueleto1i, opciones)
+         esqueleto2i = BitmapFactory.decodeResource(context.resources, R.drawable.esqueleto2i, opciones)
+         esqueleto3i = BitmapFactory.decodeResource(context.resources, R.drawable.esqueleto3i, opciones)
+         esqueletocuerda1 = BitmapFactory.decodeResource(context.resources, R.drawable.esqueletocuerda1, opciones)
+         esqueletocuerda2 = BitmapFactory.decodeResource(context.resources, R.drawable.esqueletocuerda2, opciones)
 
         pX = coordenada.coordenadaX
         pY = coordenada.coordenadaY

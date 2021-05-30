@@ -81,10 +81,10 @@ class TitleScreen : AppCompatActivity() {
         val ticks = object : TimerTask() {
             override fun run() {
 
-                if (scrollY < creditos.height - altoCreditos - 10) {
+                if (scrollY < creditos.height - altoCreditos - 5) {
 
                     val scroll = Bitmap.createBitmap(creditos, 0, scrollY, creditos.width, altoCreditos)
-                    scrollY = scrollY + 10
+                    scrollY = scrollY + 5
 
                     runOnUiThread {
                         imagenCreditos.setImageBitmap(scroll)
@@ -103,14 +103,14 @@ class TitleScreen : AppCompatActivity() {
                         pintura.strokeWidth = 4F
                         pintura.setARGB(255,255,100,0)
 
-                        var bitmapRecords = Bitmap.createBitmap(records.width, records.height,  Bitmap.Config.ARGB_8888)
+                        var bitmapRecords = Bitmap.createBitmap(3017, 1488,  Bitmap.Config.ARGB_8888)
                         var lienzo = Canvas(bitmapRecords)
 
                         val rectDestino = Rect()
-                        rectDestino.set(0, 0, records.width, records.height)
+                        rectDestino.set(0, 0, 3017, 1488)
                         lienzo.drawBitmap(records, null, rectDestino, null)
 
-                   //     Log.d("Miapp" , "ancho: ${records.width} alto: ${records.height}")
+                       Log.d("Miapp" , "ancho: ${records.width} alto: ${records.height}")
 
 
                         // Mostramos los records
@@ -193,11 +193,14 @@ class TitleScreen : AppCompatActivity() {
 
                         popupMenuVelocidad.setOnMenuItemClickListener { item ->
                             when (item.itemId) {
-                                R.id.velonormal -> {
+                                R.id.velolento -> {
                                     SharedApp.prefs.velocidadJuego = 200L
                                 }
-                                R.id.velorapida -> {
+                                R.id.velonormal -> {
                                     SharedApp.prefs.velocidadJuego = 150L
+                                }
+                                R.id.velorapida -> {
+                                    SharedApp.prefs.velocidadJuego = 100L
                                 }
                                 R.id.veloabsurda -> {
                                     SharedApp.prefs.velocidadJuego = 50L

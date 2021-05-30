@@ -40,14 +40,18 @@ class Lagartija() : Enemigo() {
     fun newLagartija (context: Context, coordenada: Coordenada) {
         // las lagartijas existen en los pasillos verticales, siempre que haya muros a los 2 lados
         // siempre tiene que ser en una columna par
-        lagartija1DAbajo = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija1d)
-        lagartija2DAbajo = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija2d)
-        lagartija1IAbajo = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija1i)
-        lagartija2IAbajo = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija2i)
-        lagartija1DArriba = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija1darriba)
-        lagartija2DArriba = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija2darriba)
-        lagartija1IArriba = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija1iarriba)
-        lagartija2IArriba = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija2iarriba)
+        val opciones = BitmapFactory.Options()
+        opciones.inPreferredConfig = Bitmap.Config.RGB_565
+        opciones.inSampleSize = 2
+
+        lagartija1DAbajo = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija1d, opciones)
+        lagartija2DAbajo = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija2d, opciones)
+        lagartija1IAbajo = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija1i, opciones)
+        lagartija2IAbajo = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija2i, opciones)
+        lagartija1DArriba = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija1darriba, opciones)
+        lagartija2DArriba = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija2darriba, opciones)
+        lagartija1IArriba = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija1iarriba, opciones)
+        lagartija2IArriba = BitmapFactory.decodeResource(context.resources , R.drawable.lagartija2iarriba, opciones)
 
         pX = coordenada.coordenadaX
         pY = coordenada.coordenadaY

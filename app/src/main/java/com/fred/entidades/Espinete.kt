@@ -28,10 +28,14 @@ class   Espinete() : Enemigo () {
     fun newEspinete (context: Context, coordenada: Coordenada) {
         // los espinetes existen en los pasillos que tienen 3 o mas tiles de ancho
         // siempre tiene que ser en una fila par
-        espinete1D = BitmapFactory.decodeResource(context.resources , R.drawable.espinete1d)
-        espinete2D = BitmapFactory.decodeResource(context.resources , R.drawable.espinete2d)
-        espinete1I = BitmapFactory.decodeResource(context.resources , R.drawable.espinete1i)
-        espinete2I = BitmapFactory.decodeResource(context.resources , R.drawable.espinete2i)
+        val opciones = BitmapFactory.Options()
+        opciones.inPreferredConfig = Bitmap.Config.RGB_565
+        opciones.inSampleSize = 2
+
+        espinete1D = BitmapFactory.decodeResource(context.resources , R.drawable.espinete1d, opciones)
+        espinete2D = BitmapFactory.decodeResource(context.resources , R.drawable.espinete2d, opciones)
+        espinete1I = BitmapFactory.decodeResource(context.resources , R.drawable.espinete1i, opciones)
+        espinete2I = BitmapFactory.decodeResource(context.resources , R.drawable.espinete2i, opciones)
 
         pX = coordenada.coordenadaX
         pY = coordenada.coordenadaY

@@ -26,10 +26,14 @@ class Fantasma() : Enemigo() {
 
 
     fun newFantasma (context: Context, coordenada: Coordenada) {
-        fantasma1d = BitmapFactory.decodeResource(context.resources , R.drawable.fantasmad1)
-        fantasma2d = BitmapFactory.decodeResource(context.resources , R.drawable.fantasmad2)
-        fantasma1i = BitmapFactory.decodeResource(context.resources , R.drawable.fantasmai1)
-        fantasma2i = BitmapFactory.decodeResource(context.resources , R.drawable.fantasmai2)
+        val opciones = BitmapFactory.Options()
+        opciones.inPreferredConfig = Bitmap.Config.RGB_565
+        opciones.inSampleSize = 2
+
+        fantasma1d = BitmapFactory.decodeResource(context.resources , R.drawable.fantasmad1, opciones)
+        fantasma2d = BitmapFactory.decodeResource(context.resources , R.drawable.fantasmad2, opciones)
+        fantasma1i = BitmapFactory.decodeResource(context.resources , R.drawable.fantasmai1, opciones)
+        fantasma2i = BitmapFactory.decodeResource(context.resources , R.drawable.fantasmai2, opciones)
 
         pX = coordenada.coordenadaX
         pY = coordenada.coordenadaY
