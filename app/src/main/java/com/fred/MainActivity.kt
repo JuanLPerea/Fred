@@ -726,7 +726,7 @@ class MainActivity : AppCompatActivity() {
         // Pintar a Fred
         rectDestino.offsetTo(384, 240)
         if (fred.tocado == 0) {
-            if (!SharedApp.prefs.tipoFred) {
+            if (SharedApp.prefs.tipoFred) {
                 when (fred.animacionFred()) {
                     0 -> lienzo.drawBitmap(fredcolor, null, rectDestino, null)              // Quieto a la derecha
                     1 -> lienzo.drawBitmap(fredd1color, null, rectDestino, null)             // Caminando 1 derecha
