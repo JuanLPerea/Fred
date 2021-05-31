@@ -91,13 +91,13 @@ class Nivel {
                 numeroEspinetesEnLaberinto = 0
                 numeroFantasmasEnLaberinto = 0
                 numeroLagartijasEnLaberinto = 0
-                numeroMomiasEnLaberinto = 30
+                numeroMomiasEnLaberinto = 50
                 numeroVampirosEnLaberinto = 0
                 numeroEsqueletosEnLaberinto = 0
                 // Numero de objetos en el laberinto
-                totalObjetos = 10
-                totalBalas = 10
-                textoNivel = "Nivel 6 - La venganza de Tut, 30 momias contra Fred ¿Quién ganará?"
+                totalObjetos = 5
+                totalBalas = 20
+                textoNivel = "Nivel 6 - La venganza de Tut, 50 momias contra Fred ¿Quién ganará?"
             }
 
             7 -> {

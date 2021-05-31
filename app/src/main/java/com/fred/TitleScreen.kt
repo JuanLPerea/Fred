@@ -62,7 +62,7 @@ class TitleScreen : AppCompatActivity() {
         val botonJugar = findViewById(R.id.botonJugarBTN) as Button
 
         botonJugar.setOnClickListener {
-            SharedApp.prefs.nivelInicio = 1
+            SharedApp.prefs.nivelInicio = 6
             jugar()
         }
 
@@ -183,6 +183,10 @@ class TitleScreen : AppCompatActivity() {
     fun menuOpciones(view: View) {
         val popupMenu = PopupMenu(applicationContext, view)
         popupMenu.inflate(R.menu.opciones_menu)
+
+        if (SharedApp.prefs.secreto) {
+            popupMenu.menu.getItem(1).setTitle("Fred en color")
+        }
 
 
         popupMenu.setOnMenuItemClickListener { item ->

@@ -327,39 +327,36 @@ class MainActivity : AppCompatActivity() {
         listaObjetos.add(mapa)
         listaUbicacionesPasilloHorizontal.removeAt(0)
 
-        var contador = 0
-
         for (n in 0..variablesNivel.totalBalas) {
             val objeto = Balas()
-            objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(contador).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
+            objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
             listaObjetos.add(objeto)
-            contador++
         }
 
-        if (variablesNivel.totalObjetos > listaUbicacionesPasilloHorizontal.size - contador) variablesNivel.totalObjetos = listaUbicacionesPasilloHorizontal.size -1 - contador
+        variablesNivel.totalObjetos += variablesNivel.totalBalas
+        if (variablesNivel.totalObjetos > listaUbicacionesPasilloHorizontal.size) variablesNivel.totalObjetos = listaUbicacionesPasilloHorizontal.size -1
         // Creamos objetos al azar
-        for (n in 1..variablesNivel.totalObjetos) {
+        for (n in variablesNivel.totalBalas..variablesNivel.totalObjetos) {
 
             val azar = (0..20).shuffled().last()
             when (azar) {
                 in 1..5 -> {
                     val objeto = Pocima()
-                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(contador).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
+                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
                 }
                 in 6..20 -> {
                     val objeto = Tesoro()
-                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(contador).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
+                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
                 }
                 0 -> {
                     val objeto = Mapa()
-                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(contador).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
+                    objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)
                     listaObjetos.add(objeto)
                 }
 
             }
-            contador++
         }
 
 
@@ -998,7 +995,7 @@ class MainActivity : AppCompatActivity() {
                 SharedApp.myMediaPlayer.playMedia(R.raw.musicasalida)
 
                 // Este es uno de los retos si se supera el nivel 4
-                if (nivel == 5 && SharedApp.prefs.secreto == false) {
+                if (nivel == 4 && SharedApp.prefs.secreto == false) {
                     Toast.makeText(applicationContext, "Bien!! has desbloqueado el secreto. Fred en color!!", Toast.LENGTH_LONG).show()
                     SharedApp.prefs.secreto = true
                 }
@@ -1276,14 +1273,25 @@ class MainActivity : AppCompatActivity() {
 
                     } else {
                         // Cronometro para el nivel 5
-                        if (nivel == 5) {
-                            cronometrotick--
-                            cronometroTV.text = cronometrotick.toString()
-                            cronometroTV.visibility = View.VISIBLE
-                            if (cronometrotick<=0) dialogoFin("GAMEOVER")
-                        } else {
-                            cronometroTV.visibility = View.INVISIBLE
-                        }
+
+                            when (nivel) {
+                                5 -> {
+                                    cronometrotick--
+                                    cronometroTV.visibility = View.VISIBLE
+                                    cronometroTV.text = cronometrotick.toString()
+                                    if (cronometrotick <= 0) dialogoFin("GAMEOVER")
+                                    }
+                                    in 6..8 -> {
+                                        cronometroTV.visibility = View.VISIBLE
+                                        cronometroTV.text = listaEnemigos.size.toString()
+                                    }
+                                    else -> {
+                                        cronometroTV.visibility = View.INVISIBLE
+
+                                    }
+                            }
+
+
                         // Dibujar el fondo
                         crearFondo(cX - 4, cY - 3, pasoX, pasoY)
                         if (eliminarEnemigo != -1) {

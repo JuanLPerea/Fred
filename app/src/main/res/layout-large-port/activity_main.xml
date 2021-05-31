@@ -32,7 +32,7 @@
             android:layout_gravity="bottom|right"
             android:layout_margin="20dp"
             android:text="00"
-            android:textColor="#FDFDFD"
+            android:textColor="#F44336"
             android:textSize="96sp"
             android:visibility="invisible" />
 
