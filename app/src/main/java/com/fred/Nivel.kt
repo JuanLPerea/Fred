@@ -83,7 +83,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 100
                 totalBalas = 0
-                textoNivel = "Nivel 5 - Nivel bidón, recoge todos los tesoros!!"
+                textoNivel = "Nivel 5 - Nivel bidón, recoge todos los tesoros que puedas!!\nPero sal antes de que se acabe el tiempo!!"
             }
 
             6 -> {
@@ -142,7 +142,19 @@ class Nivel {
                 textoNivel = "Nivel 9 - Infierno Egipcio, 200 enemigos contra Fred ¿Sobrevivirás?"
             }
 
-
+            else -> {
+                numeroGotasAcidoEnLaberinto = (0..30).shuffled().last()
+                numeroEspinetesEnLaberinto = (0..30).shuffled().last()
+                numeroFantasmasEnLaberinto = (0..30).shuffled().last()
+                numeroLagartijasEnLaberinto = (0..30).shuffled().last()
+                numeroMomiasEnLaberinto = (0..30).shuffled().last()
+                numeroVampirosEnLaberinto = (0..30).shuffled().last()
+                numeroEsqueletosEnLaberinto = (0..30).shuffled().last()
+                // Numero de objetos en el laberinto
+                totalObjetos = (0..30).shuffled().last()
+                totalBalas = (0..30).shuffled().last()
+                textoNivel = "Nivel Extra - Eres un/a bestia parda!!\nGracias por jugar a Fred!!"
+            }
 
 
         }

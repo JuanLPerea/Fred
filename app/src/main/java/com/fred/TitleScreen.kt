@@ -62,7 +62,7 @@ class TitleScreen : AppCompatActivity() {
         val botonJugar = findViewById(R.id.botonJugarBTN) as Button
 
         botonJugar.setOnClickListener {
-            SharedApp.prefs.nivelInicio = 6
+            SharedApp.prefs.nivelInicio = 1
             jugar()
         }
 
@@ -306,6 +306,12 @@ class TitleScreen : AppCompatActivity() {
         super.onRestart()
         Log.d("Miapp" , "Restart")
         scrollCreditos()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        timer.cancel()
+        finish()
     }
 
 }
