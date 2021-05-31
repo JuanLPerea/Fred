@@ -84,6 +84,7 @@ class MainActivity : AppCompatActivity() {
     var tickFinal = 0
     var tesorosRecogidos = 0
     var pausa = false
+    var esFredDeColor = false
 
     // Aquí guardamos el número de enemigos de cada tipo en cada nivel
     lateinit var variablesNivel : Nivel
@@ -190,6 +191,7 @@ class MainActivity : AppCompatActivity() {
             SharedApp.prefs.firstrecords()
         }
         recordPuntos = SharedApp.prefs.record1.toInt()
+        esFredDeColor = SharedApp.prefs.tipoFred
 
         // Creamos a nuestro protagonista
         fred = Fred()
@@ -726,7 +728,7 @@ class MainActivity : AppCompatActivity() {
         // Pintar a Fred
         rectDestino.offsetTo(384, 240)
         if (fred.tocado == 0) {
-            if (SharedApp.prefs.tipoFred) {
+            if (esFredDeColor) {
                 when (fred.animacionFred()) {
                     0 -> lienzo.drawBitmap(fredcolor, null, rectDestino, null)              // Quieto a la derecha
                     1 -> lienzo.drawBitmap(fredd1color, null, rectDestino, null)             // Caminando 1 derecha

@@ -69,7 +69,7 @@ class Prefs (context: Context) {
 
         var secreto : Boolean
                 get () = prefs.getBoolean("SECRETO", false)
-                set (value) = prefs.edit().putBoolean("RECORD4NAME", value).apply()
+                set (value) = prefs.edit().putBoolean("SECRETO", value).apply()
 
         var reto1 : Boolean
                 get () = prefs.getBoolean("RETO1", false)
