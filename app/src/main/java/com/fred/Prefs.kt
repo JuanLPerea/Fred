@@ -91,5 +91,42 @@ class Prefs (context: Context) {
                 get () = prefs.getBoolean("RETO5", false)
                 set (value) = prefs.edit().putBoolean("RETO5", value).apply()
 
+        var reto6 : Boolean
+                get () = prefs.getBoolean("RETO6", false)
+                set (value) = prefs.edit().putBoolean("RETO6", value).apply()
+
+
+        var numerodegotas : Int
+                get () = prefs.getInt("NUMERODEGOTAS", 0)
+                set (value) = prefs.edit().putInt("NUMERODEGOTAS", value).apply()
+
+        var numerodeespinetes : Int
+                get () = prefs.getInt("NUMERODEESPINETES", 0)
+                set (value) = prefs.edit().putInt("NUMERODEESPINETES", value).apply()
+
+        var numerodefantasmas : Int
+                get () = prefs.getInt("NUMERODEFANTASMAS", 0)
+                set (value) = prefs.edit().putInt("NUMERODEFANTASMAS", value).apply()
+
+        var numerodelagartijas : Int
+                get () = prefs.getInt("NUMERODELAGARTIJAS", 0)
+                set (value) = prefs.edit().putInt("NUMERODELAGARTIJAS", value).apply()
+
+        var numerodemomias : Int
+                get () = prefs.getInt("NUMERODEMOMIAS", 0)
+                set (value) = prefs.edit().putInt("NUMERODEMOMIAS", value).apply()
+
+        var numerodevampiros : Int
+                get () = prefs.getInt("NUMERODEVAMPIROS", 0)
+                set (value) = prefs.edit().putInt("NUMERODEVAMPIROS", value).apply()
+
+        var numerodeesqueletos : Int
+                get () = prefs.getInt("NUMERODEESQUELETOS", 0)
+                set (value) = prefs.edit().putInt("NUMERODEESQUELETOS", value).apply()
+
+        var numerodebalas : Int
+                get () = prefs.getInt("NUMERODEBALAS", 0)
+                set (value) = prefs.edit().putInt("NUMERODEBALAS", value).apply()
+
 
 }

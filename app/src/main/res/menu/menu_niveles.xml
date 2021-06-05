@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:title='Nivel 6 - "Nivel bidón"' android:id="@+id/nivelbidon" />
     <item android:title='Nivel 6 - "La venganza de Tut"' android:id="@+id/niveltut" />
     <item android:title="Nivel 7 - Un montón de huesos" android:id="@+id/nivelhuesos"/>
     <item android:title="Nivel 8 - La pirámide de Drácula" android:id="@+id/niveldracula"/>

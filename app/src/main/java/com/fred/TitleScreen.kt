@@ -1,5 +1,6 @@
 package com.fred
 
+import android.app.Dialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.*
@@ -7,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.Window
 import android.widget.*
 import java.util.*
 
@@ -247,9 +249,18 @@ class TitleScreen : AppCompatActivity() {
 
                         popupMenuNiveles.setOnMenuItemClickListener { item ->
                             when (item.itemId) {
+                                R.id.nivelbidon -> {
+                                    if (SharedApp.prefs.reto1) {
+                                        SharedApp.prefs.nivelInicio = 5
+                                        jugar()
+                                    } else {
+                                        Toast.makeText(applicationContext, "Este nivel todavía no está desbloqueado", Toast.LENGTH_LONG).show()
+                                    }
+                                }
+
                                 R.id.niveltut -> {
                                     // lanzamos el nivel de tut
-                                    if (SharedApp.prefs.reto1) {
+                                    if (SharedApp.prefs.reto2) {
                                         SharedApp.prefs.nivelInicio = 6
                                         jugar()
                                     } else {
@@ -257,7 +268,7 @@ class TitleScreen : AppCompatActivity() {
                                     }
                                 }
                                 R.id.nivelhuesos -> {
-                                    if (SharedApp.prefs.reto2) {
+                                    if (SharedApp.prefs.reto3) {
                                         SharedApp.prefs.nivelInicio = 7
                                         jugar()
                                     } else {
@@ -265,7 +276,7 @@ class TitleScreen : AppCompatActivity() {
                                     }
                                 }
                                 R.id.niveldracula -> {
-                                    if (SharedApp.prefs.reto3) {
+                                    if (SharedApp.prefs.reto4) {
                                         SharedApp.prefs.nivelInicio = 8
                                         jugar()
                                     } else {
@@ -273,7 +284,7 @@ class TitleScreen : AppCompatActivity() {
                                     }
                                 }
                                 R.id.nivelegipcio -> {
-                                    if (SharedApp.prefs.reto4) {
+                                    if (SharedApp.prefs.reto5) {
                                         SharedApp.prefs.nivelInicio = 9
                                         jugar()
                                     } else {
@@ -289,7 +300,93 @@ class TitleScreen : AppCompatActivity() {
                     }
 
                     R.id.elegirenemigos -> {
-                        // TODO Dialog seleccionando los enemigos y pasarlos al juego
+                        if (SharedApp.prefs.reto6) {
+
+                            val dialogenemigos = Dialog(this)
+                            dialogenemigos.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                            dialogenemigos.setCancelable(false)
+                            dialogenemigos.setContentView(R.layout.dialogo_enemigos)
+
+                            val numeroGotas = dialogenemigos.findViewById(R.id.editTextNumbergotas) as EditText
+                            val numeroEspinetes = dialogenemigos.findViewById(R.id.editTextNumber_espinetes) as EditText
+                            val numeroFantasmas = dialogenemigos.findViewById(R.id.editTextNumber_Fantasmas) as EditText
+                            val numeroLagartijas = dialogenemigos.findViewById(R.id.editTextNumber_Lagartijas) as EditText
+                            val numeroMomias = dialogenemigos.findViewById(R.id.editTextNumber_Momias) as EditText
+                            val numeroVampiros = dialogenemigos.findViewById(R.id.editTextNumber_Vampiros) as EditText
+                            val numeroEsqueletos = dialogenemigos.findViewById(R.id.editTextNumber_Esqueletos) as EditText
+                            val numeroBalas = dialogenemigos.findViewById(R.id.editTextNumber_Balas) as EditText
+
+                            val botonmasgotas = dialogenemigos.findViewById(R.id.buttongotas) as Button
+                            val botonmasespinetes = dialogenemigos.findViewById(R.id.button_espinetes) as Button
+                            val botonmasfantasmas = dialogenemigos.findViewById(R.id.button_Fantasmas) as Button
+                            val botonmaslagartijas = dialogenemigos.findViewById(R.id.button_Lagartijas) as Button
+                            val botonmasmomias = dialogenemigos.findViewById(R.id.button_Momias) as Button
+                            val botonmasvampiros = dialogenemigos.findViewById(R.id.button_Vampiros) as Button
+                            val botonmasesqueletos = dialogenemigos.findViewById(R.id.button_Esqueletos) as Button
+                            val botonmasbalas = dialogenemigos.findViewById(R.id.button_Balas) as Button
+
+                            val botonmenosgotas = dialogenemigos.findViewById(R.id.button2gotas) as Button
+                            val botonmenosespinetes = dialogenemigos.findViewById(R.id.button2_espinetes) as Button
+                            val botonmenosfantasmas = dialogenemigos.findViewById(R.id.button2_Fantasmas) as Button
+                            val botonmenoslagartijas = dialogenemigos.findViewById(R.id.button2_Lagartijas) as Button
+                            val botonmenosmomias = dialogenemigos.findViewById(R.id.button2_Momias) as Button
+                            val botonmenosvampiros = dialogenemigos.findViewById(R.id.button2_Vampiros) as Button
+                            val botonmenosesqueletos = dialogenemigos.findViewById(R.id.button2_Esqueletos) as Button
+                            val botonmenosbalas = dialogenemigos.findViewById(R.id.button2_Balas) as Button
+
+
+                            botonmasgotas.setOnClickListener {botonmas(numeroGotas)}
+                            botonmasespinetes.setOnClickListener {botonmas(numeroEspinetes)}
+                            botonmasfantasmas.setOnClickListener {botonmas(numeroFantasmas)}
+                            botonmaslagartijas.setOnClickListener {botonmas(numeroLagartijas)}
+                            botonmasmomias.setOnClickListener {botonmas(numeroMomias)}
+                            botonmasvampiros.setOnClickListener {botonmas(numeroVampiros)}
+                            botonmasesqueletos.setOnClickListener {botonmas(numeroEsqueletos)}
+                            botonmasbalas.setOnClickListener {botonmas(numeroBalas)}
+
+                            botonmenosgotas.setOnClickListener {botonmenos(numeroGotas)}
+                            botonmenosespinetes.setOnClickListener {botonmenos(numeroEspinetes)}
+                            botonmenosfantasmas.setOnClickListener {botonmenos(numeroFantasmas)}
+                            botonmenoslagartijas.setOnClickListener {botonmenos(numeroLagartijas)}
+                            botonmenosmomias.setOnClickListener {botonmenos(numeroMomias)}
+                            botonmenosvampiros.setOnClickListener {botonmenos(numeroVampiros)}
+                            botonmenosesqueletos.setOnClickListener {botonmenos(numeroEsqueletos)}
+                            botonmenosbalas.setOnClickListener {botonmenos(numeroBalas)}
+                            
+                            
+                            val botonOK = dialogenemigos.findViewById(R.id.botonokenemigos) as Button
+
+                            botonOK.setOnClickListener {
+
+                                if (numeroGotas.text.toString() == "") numeroGotas.setText("0")
+                                if (numeroEspinetes.text.toString() == "") numeroEspinetes.setText("0")
+                                if (numeroFantasmas.text.toString() == "") numeroFantasmas.setText("0")
+                                if (numeroLagartijas.text.toString() == "") numeroLagartijas.setText("0")
+                                if (numeroMomias.text.toString() == "") numeroMomias.setText("0")
+                                if (numeroVampiros.text.toString() == "") numeroVampiros.setText("0")
+                                if (numeroEsqueletos.text.toString() == "") numeroEsqueletos.setText("0")
+                                if (numeroBalas.text.toString() == "") numeroBalas.setText("0")
+
+                                SharedApp.prefs.numerodegotas = numeroGotas.text.toString().toInt()
+                                SharedApp.prefs.numerodeespinetes = numeroEspinetes.text.toString().toInt()
+                                SharedApp.prefs.numerodefantasmas = numeroFantasmas.text.toString().toInt()
+                                SharedApp.prefs.numerodelagartijas = numeroLagartijas.text.toString().toInt()
+                                SharedApp.prefs.numerodemomias = numeroMomias.text.toString().toInt()
+                                SharedApp.prefs.numerodevampiros = numeroVampiros.text.toString().toInt()
+                                SharedApp.prefs.numerodeesqueletos = numeroEsqueletos.text.toString().toInt()
+                                SharedApp.prefs.numerodebalas = numeroBalas.text.toString().toInt()
+                                SharedApp.prefs.nivelInicio = 999
+                                dialogenemigos.dismiss()
+                                jugar()
+                            }
+
+
+                            
+                            dialogenemigos.show()
+                            
+                        } else {
+                            Toast.makeText(applicationContext, "Este nivel todavía no está desbloqueado", Toast.LENGTH_LONG).show()
+                        }
                     }
 
 
@@ -299,6 +396,32 @@ class TitleScreen : AppCompatActivity() {
 
 
         popupMenu.show()
+    }
+
+    fun botonmas (view: View) {
+        if (view is EditText) {
+            val texto = view.text.toString()
+            var valor = 0
+            if (texto != "") {
+                 valor = view.text.toString().toInt()
+            }
+            valor++
+            if (valor > 999) valor = 999
+            view.setText(valor.toString())
+        }
+    }
+
+    fun botonmenos (view: View) {
+        if (view is EditText) {
+            val texto = view.text.toString()
+            var valor = 0
+            if (texto != "") {
+                valor = view.text.toString().toInt()
+            }
+            valor--
+            if (valor < 0) valor = 0
+            view.setText(valor.toString())
+        }
     }
 
 

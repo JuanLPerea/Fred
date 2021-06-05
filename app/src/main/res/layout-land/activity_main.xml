@@ -31,6 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:layout_margin="20dp"
+            android:background="#79FFFFFF"
+            android:padding="5dp"
             android:text="00"
             android:textColor="#F44336"
             android:textSize="34sp"
@@ -48,7 +50,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_toRightOf="@id/flecha_izquierda"
-                android:background="?android:selectableItemBackground" />
+                android:background="?android:selectableItemBackground"
+                android:src="@drawable/flechaabajo"
+                app:backgroundTint="#fff205" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/flecha_arriba"
@@ -56,14 +60,18 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/flecha_derecha"
                 android:layout_toRightOf="@id/flecha_izquierda"
-                android:background="?android:selectableItemBackground" />
+                android:background="?android:selectableItemBackground"
+                android:src="@drawable/flechaarriba"
+                app:backgroundTint="#fff205" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/flecha_izquierda"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/flecha_abajo"
-                android:background="?android:selectableItemBackground" />
+                android:background="?android:selectableItemBackground"
+                android:src="@drawable/flechaizda"
+                app:backgroundTint="#fff205" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/flecha_derecha"
@@ -71,7 +79,9 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/flecha_abajo"
                 android:layout_toRightOf="@id/flecha_abajo"
-                android:background="?android:selectableItemBackground" />
+                android:background="?android:selectableItemBackground"
+                android:src="@drawable/flechadcha"
+                app:backgroundTint="#fff205" />
 
         </RelativeLayout>
 
@@ -284,7 +294,8 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"
             android:background="?android:selectableItemBackground"
-            app:srcCompat="@android:drawable/btn_star_big_on" />
+            app:backgroundTint="#fff205"
+            app:srcCompat="@drawable/pistola" />
 
 
     </FrameLayout>

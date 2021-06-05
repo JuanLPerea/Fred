@@ -142,6 +142,20 @@ class Nivel {
                 textoNivel = "Nivel 9 - Infierno Egipcio, 200 enemigos contra Fred ¿Sobrevivirás?"
             }
 
+            999 -> {
+                numeroGotasAcidoEnLaberinto = SharedApp.prefs.numerodegotas
+                numeroEspinetesEnLaberinto = SharedApp.prefs.numerodeespinetes
+                numeroFantasmasEnLaberinto = SharedApp.prefs.numerodefantasmas
+                numeroLagartijasEnLaberinto = SharedApp.prefs.numerodelagartijas
+                numeroMomiasEnLaberinto = SharedApp.prefs.numerodemomias
+                numeroVampirosEnLaberinto = SharedApp.prefs.numerodevampiros
+                numeroEsqueletosEnLaberinto = SharedApp.prefs.numerodeesqueletos
+                // Numero de objetos en el laberinto
+                totalObjetos = 10
+                totalBalas = SharedApp.prefs.numerodebalas
+                textoNivel = "Nivel 999 - Tu lo has elegido, así que no te quejes y disfruta!!!"
+            }
+
             else -> {
                 numeroGotasAcidoEnLaberinto = (0..30).shuffled().last()
                 numeroEspinetesEnLaberinto = (0..30).shuffled().last()

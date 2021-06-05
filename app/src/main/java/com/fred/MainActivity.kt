@@ -1057,16 +1057,21 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext, "Bien!! has desbloqueado el secreto. Fred en color!!", Toast.LENGTH_LONG).show()
                     SharedApp.prefs.secreto = true
                 }
-
-                if (nivel == 9) {
-                    Toast.makeText(applicationContext, "Desbloqueado Nivel, mata a todos los vampiros para desbloquear nivel final", Toast.LENGTH_LONG).show()
-                    SharedApp.prefs.reto3 = true
+                if (nivel == 6 && SharedApp.prefs.reto1 == false) {
+                    Toast.makeText(applicationContext, "Desbloqueado nivel Bidón, ahora puedes empezar desde este nivel", Toast.LENGTH_LONG).show()
+                    SharedApp.prefs.reto1 = true
                 }
 
-                if (nivel == 10) {
-                    Toast.makeText(applicationContext, "Enhorabuena!!\nhas vencido al infierno Egipcio!!!\nSelección de enemigos desbloqueada.", Toast.LENGTH_LONG).show()
-                    SharedApp.prefs.reto3 = true
+                if (nivel == 9 && SharedApp.prefs.reto5 == false) {
+                    Toast.makeText(applicationContext, "Desbloqueado nivel esqueleto!!!\nVence al infierno egipcio para alcanzar el nivel máximo!!", Toast.LENGTH_LONG).show()
+                    SharedApp.prefs.reto5 = true
                 }
+
+                if (nivel == 10 && SharedApp.prefs.reto6 == false) {
+                    Toast.makeText(applicationContext, "Has vencido la maldición del Faraón, ahora puedes elegir tu los enemigos!!", Toast.LENGTH_LONG).show()
+                    SharedApp.prefs.reto6 = true
+                }
+
 
                 imagenDialog.setImageResource(R.drawable.fredfinal)
                 textofin.text = "Por fin has salido!!!"
@@ -1368,15 +1373,15 @@ class MainActivity : AppCompatActivity() {
                             // Retos Eliminar todos los enemigos
                             if (listaEnemigos.size == 0 && nivel == 6) {
                                 Toast.makeText(applicationContext, "Reto desbloqueado!! Has acabado con todas las momias!!" , Toast.LENGTH_LONG).show()
-                                SharedApp.prefs.reto1 = true
+                                SharedApp.prefs.reto2 = true
                             }
                             if (listaEnemigos.size == 0 && nivel == 7) {
                                 Toast.makeText(applicationContext, "Alucinante!! 50 esqueletos hechos papilla!!" , Toast.LENGTH_LONG).show()
-                                SharedApp.prefs.reto2 = true
+                                SharedApp.prefs.reto3 = true
                             }
                             if (listaEnemigos.size == 0 && nivel == 8) {
                                 Toast.makeText(applicationContext, "Vampiros eliminados!!\nNivel desbloqueado!!" , Toast.LENGTH_LONG).show()
-                                SharedApp.prefs.reto5 = true
+                                SharedApp.prefs.reto4 = true
                             }
                         }
                         if (eliminarObjeto != -1) {
