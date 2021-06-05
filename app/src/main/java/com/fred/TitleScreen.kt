@@ -32,11 +32,12 @@ class TitleScreen : AppCompatActivity() {
         SharedApp.myMediaPlayer.playMedia(R.raw.beep)
         SharedApp.myMediaPlayer.stopPlayer()
 
+     //   SharedApp.prefs.reto6 = true
+
         imagenCreditos = findViewById(R.id.imageViewTitulo)
         layoutCreditos = findViewById(R.id.layoutCreditos)
 
         records = BitmapFactory.decodeResource(resources , R.drawable.todaysgreatest)
-
         creditos = BitmapFactory.decodeResource(resources , R.drawable.tituloscredito)
 
         val orientation = resources.configuration.orientation

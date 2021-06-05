@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Fred</string>
+    <string name="version">version</string>
 </resources>
