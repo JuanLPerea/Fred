@@ -346,6 +346,7 @@ class MainActivity : AppCompatActivity() {
         listaObjetos.add(mapa)
         listaUbicacionesPasilloHorizontal.removeAt(0)
 
+        if (variablesNivel.totalBalas > listaUbicacionesPasilloHorizontal.size) variablesNivel.totalBalas = listaUbicacionesPasilloHorizontal.size - 1
         for (n in 0..variablesNivel.totalBalas) {
             val objeto = Balas()
             objeto.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.get(n).coordenadaX, listaUbicacionesPasilloHorizontal.get(n).coordenadaY)

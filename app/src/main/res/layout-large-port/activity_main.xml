@@ -249,42 +249,52 @@
             android:layout_weight="1">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/boton_disparo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                app:backgroundTint="#fff205"
+                app:srcCompat="@drawable/pistola" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/flecha_abajo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@id/flecha_izquierda" />
+                android:layout_toRightOf="@id/flecha_izquierda"
+                android:src="@drawable/flechaabajo"
+                app:backgroundTint="#fff205" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/flecha_arriba"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/flecha_derecha"
-                android:layout_toRightOf="@id/flecha_izquierda" />
+                android:layout_toRightOf="@id/flecha_izquierda"
+                android:src="@drawable/flechaarriba"
+                app:backgroundTint="#fff205" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/flecha_izquierda"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/flecha_abajo" />
+                android:layout_above="@id/flecha_abajo"
+                android:src="@drawable/flechaizda"
+                app:backgroundTint="#fff205" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/flecha_derecha"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/flecha_abajo"
-                android:layout_toRightOf="@id/flecha_abajo" />
+                android:layout_toRightOf="@id/flecha_abajo"
+                android:src="@drawable/flechadcha"
+                app:backgroundTint="#fff205" />
 
         </RelativeLayout>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/boton_disparo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
-            app:srcCompat="@android:drawable/btn_star_big_on" />
 
 
     </FrameLayout>
