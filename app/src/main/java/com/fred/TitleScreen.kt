@@ -390,6 +390,21 @@ class TitleScreen : AppCompatActivity() {
                         }
                     }
 
+                    R.id.acercade -> {
+                        val dialogoacercade = Dialog(this)
+                        dialogoacercade.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                        dialogoacercade.setCancelable(true)
+                        dialogoacercade.setContentView(R.layout.dialogo_acercade)
+
+                        val botonok = dialogoacercade.findViewById(R.id.buttonokacercade) as Button
+
+                        botonok.setOnClickListener {
+                            dialogoacercade.dismiss()
+                        }
+
+                        dialogoacercade.show()
+                    }
+
 
                 }
         true

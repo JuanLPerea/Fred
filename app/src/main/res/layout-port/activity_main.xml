@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:layout_margin="20dp"
+            android:background="#79FFFFFF"
             android:text="00"
             android:textColor="#F44336"
             android:textSize="34sp"
@@ -67,23 +68,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/alturaTV"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="0"
-                        android:background="@color/white"
-                        android:fontFamily="monospace"
-                        android:paddingLeft="5dp"
-                        android:text="Altura: "
-                        android:textColor="#000000"
-                        android:textSize="16sp" />
+
 
                     <TextView
                         android:id="@+id/nivelTV"
@@ -96,11 +81,29 @@
                         android:layout_marginRight="10dp"
                         android:layout_weight="0"
                         android:background="@color/white"
-                        android:fontFamily="monospace"
+                        android:fontFamily="@font/zxspectrum"
                         android:paddingLeft="5dp"
                         android:text="Nivel: 1"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/alturaTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0"
+                        android:background="@color/white"
+                        android:fontFamily="@font/zxspectrum"
+                        android:paddingLeft="5dp"
+                        android:text="Altura: "
+                        android:textColor="#000000"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/balasTV"
@@ -114,11 +117,11 @@
                         android:layout_marginRight="10dp"
                         android:layout_weight="0"
                         android:background="@color/white"
-                        android:fontFamily="monospace"
+                        android:fontFamily="@font/zxspectrum"
                         android:paddingLeft="5dp"
                         android:text="Balas: 6 "
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
                 </LinearLayout>
 
 
@@ -138,11 +141,11 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginEnd="10dp"
                         android:background="@color/white"
-                        android:fontFamily="monospace"
+                        android:fontFamily="@font/zxspectrum"
+                        android:paddingLeft="5dp"
                         android:text="Vida:"
                         android:textColor="#000000"
-                        android:textSize="16sp"
-                        android:paddingLeft="5dp" />
+                        android:textSize="14sp" />
 
                     <ImageView
                         android:id="@+id/barraVida"
@@ -184,11 +187,11 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:background="@color/white"
-                        android:fontFamily="monospace"
+                        android:fontFamily="@font/zxspectrum"
                         android:paddingLeft="5dp"
                         android:text="MAPA"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <ImageView
                         android:id="@+id/imageViewMapa"
@@ -215,11 +218,11 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:background="@color/white"
-                        android:fontFamily="monospace"
+                        android:fontFamily="@font/zxspectrum"
                         android:paddingLeft="5dp"
                         android:text="Puntos: 000000"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/maxTV"
@@ -230,11 +233,11 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginEnd="10dp"
                         android:background="@color/white"
-                        android:fontFamily="monospace"
+                        android:fontFamily="@font/zxspectrum"
                         android:paddingLeft="5dp"
                         android:text="MAX: 000000"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
                 </LinearLayout>
 
             </LinearLayout>

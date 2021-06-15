@@ -1,5 +1,6 @@
 package com.fred
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
@@ -7,7 +8,6 @@ import android.graphics.*
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.SoundPool
-import android.opengl.Visibility
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main)
 
@@ -339,7 +339,7 @@ class MainActivity : AppCompatActivity() {
     private fun crearObjetos() {
 
         // Ponemos un mapa en un sitio al azar
-        var listaUbicacionesPasilloHorizontal = miLaberinto.posiblesUbicacionesGota(miLaberinto)
+        val listaUbicacionesPasilloHorizontal = miLaberinto.posiblesUbicacionesGota(miLaberinto)
         listaUbicacionesPasilloHorizontal.shuffle()
         val mapa = Mapa()
          mapa.nuevoObjeto(this, listaUbicacionesPasilloHorizontal.first().coordenadaX, listaUbicacionesPasilloHorizontal.first().coordenadaY)
@@ -386,7 +386,7 @@ class MainActivity : AppCompatActivity() {
         // crear enemigos optimizar para que no caiga en bucle infinito
         var totalEnemigos = 0
         // Crear Gotas de ácido
-        var listaUbicacionesPasilloHorizontal = miLaberinto.posiblesUbicacionesGota(miLaberinto)
+        val listaUbicacionesPasilloHorizontal = miLaberinto.posiblesUbicacionesGota(miLaberinto)
         if (variablesNivel.numeroGotasAcidoEnLaberinto > listaUbicacionesPasilloHorizontal.size) variablesNivel.numeroGotasAcidoEnLaberinto = listaUbicacionesPasilloHorizontal.size - 1
         for (n in 1..variablesNivel.numeroGotasAcidoEnLaberinto) {
             val gotaAcidoTMP = GotaAcido()
@@ -417,7 +417,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Crear lagartijas
-        var listaUbicacionesLagartija = miLaberinto.posiblesUbicacionesLagartija(miLaberinto)
+        val listaUbicacionesLagartija = miLaberinto.posiblesUbicacionesLagartija(miLaberinto)
         if (variablesNivel.numeroLagartijasEnLaberinto >= listaUbicacionesLagartija.size) variablesNivel.numeroLagartijasEnLaberinto = listaUbicacionesLagartija.size - 1
         for (n in 1..variablesNivel.numeroLagartijasEnLaberinto) {
             val lagartijaTMP = Lagartija()
@@ -463,6 +463,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun establecerListeners() {
 
         botonDisparo.setOnTouchListener { v , event ->
@@ -551,8 +552,8 @@ class MainActivity : AppCompatActivity() {
         var offsetx = offsetInicialX - 128
         var offsety = offsetInicialY - 80
 
-        var bitmapFondo = Bitmap.createBitmap(896, 800, Bitmap.Config.ARGB_8888)
-        var lienzo = Canvas(bitmapFondo)
+        val bitmapFondo = Bitmap.createBitmap(896, 800, Bitmap.Config.ARGB_8888)
+        val lienzo = Canvas(bitmapFondo)
         val rectDestino = Rect()
         rectDestino.set(0, 0, 128, 160)
 
@@ -817,9 +818,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun actualizarBarraVida() {
-        var bitmapVida = Bitmap.createBitmap(150, 20, Bitmap.Config.ARGB_8888)
-        var lienzovida = Canvas(bitmapVida)
-        var pinturavida = Paint()
+        val bitmapVida = Bitmap.createBitmap(150, 20, Bitmap.Config.ARGB_8888)
+        val lienzovida = Canvas(bitmapVida)
+        val pinturavida = Paint()
         pinturavida.style = Paint.Style.FILL
         pinturavida.strokeWidth = 4F
         pinturavida.setARGB(255,50 + (fred.vida * 10),150 - (fred.vida * -10),25 )
@@ -1058,17 +1059,17 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext, "Bien!! has desbloqueado el secreto. Fred en color!!", Toast.LENGTH_LONG).show()
                     SharedApp.prefs.secreto = true
                 }
-                if (nivel == 6 && SharedApp.prefs.reto1 == false) {
+                if (nivel == 6 ) {
                     Toast.makeText(applicationContext, "Desbloqueado nivel Bidón, ahora puedes empezar desde este nivel", Toast.LENGTH_LONG).show()
                     SharedApp.prefs.reto1 = true
                 }
 
-                if (nivel == 9 && SharedApp.prefs.reto5 == false) {
+                if (nivel == 9 ) {
                     Toast.makeText(applicationContext, "Desbloqueado nivel esqueleto!!!\nVence al infierno egipcio para alcanzar el nivel máximo!!", Toast.LENGTH_LONG).show()
                     SharedApp.prefs.reto5 = true
                 }
 
-                if (nivel == 10 && SharedApp.prefs.reto6 == false) {
+                if (nivel == 10 ) {
                     Toast.makeText(applicationContext, "Has vencido la maldición del Faraón, ahora puedes elegir tu los enemigos!!", Toast.LENGTH_LONG).show()
                     SharedApp.prefs.reto6 = true
                 }
@@ -1390,12 +1391,14 @@ class MainActivity : AppCompatActivity() {
                             listaObjetos.remove(listaObjetos.get(eliminarObjeto))
                             eliminarObjeto = -1
                         }
-                        alturaTV.text = "Altura: ${cY - 3}"
-                        balasTV.text = "Balas ${fred.balas}"
-                        nivelTV.text = "Nivel: ${nivel}"
-                        vidaTV.text = "Vida: ${fred.vida}"
-                        puntosTV.text = "Puntos: ${fred.puntos}"
-                        puntosMax.text = "Max: ${recordPuntos}"
+                        alturaTV.text = "\uD83C\uDFD4 ${String.format("%02d", cY - 3)}"
+                        balasTV.text = "\uD83D\uDD25 ${fred.balas}"
+                        nivelTV.text = "\uD83D\uDC7B ${String.format("%02d", nivel)}"
+                        vidaTV.text = "❤ ${fred.vida}"
+
+
+                        puntosTV.text = "\uD83D\uDCB0 ${String.format("%06d", fred.puntos)}"
+                        puntosMax.text = "\uD83D\uDC51 ${ String.format("%06d" , recordPuntos)}"
 
                         if (mapaEncontrado) {
                             imageViewMapa.setImageBitmap(mapa)

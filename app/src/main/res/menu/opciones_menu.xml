@@ -5,5 +5,5 @@
     <item android:title="Desbloquea Secreto" android:id="@+id/secreto"/>
     <item android:title="Selecciona Nivel" android:id="@+id/seleccionar_nivel"/>
     <item android:title="Elige tu los enemigos" android:id="@+id/elegirenemigos" />
-    <item android:title="Acerca de" android:id="@+id/acercade" />
+    <item android:title="Ayuda" android:id="@+id/acercade" />
 </menu>
