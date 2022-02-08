@@ -113,7 +113,7 @@ class TitleScreen : AppCompatActivity() {
                         rectDestino.set(0, 0, 3017, 1488)
                         lienzo.drawBitmap(records, null, rectDestino, null)
 
-                       Log.d("Miapp" , "ancho: ${records.width} alto: ${records.height}")
+                      // Log.d("Miapp" , "ancho: ${records.width} alto: ${records.height}")
 
 
                         // Mostramos los records
@@ -188,7 +188,7 @@ class TitleScreen : AppCompatActivity() {
         popupMenu.inflate(R.menu.opciones_menu)
 
         if (SharedApp.prefs.secreto) {
-            popupMenu.menu.getItem(1).setTitle("Fred en color")
+            popupMenu.menu.getItem(1).setTitle(getString(R.string.colorFred))
         }
 
 
@@ -239,7 +239,7 @@ class TitleScreen : AppCompatActivity() {
                             }
                             popupMenuSecreto.show()
                         } else {
-                            Toast.makeText(applicationContext, "Para desbloquear tienes que pasar del nivel 4", Toast.LENGTH_LONG).show()
+                            Toast.makeText(applicationContext, getString(R.string.desbloquearsecreto), Toast.LENGTH_LONG).show()
                         }
 
                     }
@@ -255,7 +255,7 @@ class TitleScreen : AppCompatActivity() {
                                         SharedApp.prefs.nivelInicio = 5
                                         jugar()
                                     } else {
-                                        Toast.makeText(applicationContext, "Este nivel todavía no está desbloqueado", Toast.LENGTH_LONG).show()
+                                        Toast.makeText(applicationContext, getString(R.string.nodesbloqueado), Toast.LENGTH_LONG).show()
                                     }
                                 }
 
@@ -265,7 +265,7 @@ class TitleScreen : AppCompatActivity() {
                                         SharedApp.prefs.nivelInicio = 6
                                         jugar()
                                     } else {
-                                        Toast.makeText(applicationContext, "Este nivel todavía no está desbloqueado", Toast.LENGTH_LONG).show()
+                                        Toast.makeText(applicationContext, getString(R.string.nodesbloqueado), Toast.LENGTH_LONG).show()
                                     }
                                 }
                                 R.id.nivelhuesos -> {
@@ -273,7 +273,7 @@ class TitleScreen : AppCompatActivity() {
                                         SharedApp.prefs.nivelInicio = 7
                                         jugar()
                                     } else {
-                                        Toast.makeText(applicationContext, "Este nivel todavía no está desbloqueado", Toast.LENGTH_LONG).show()
+                                        Toast.makeText(applicationContext, getString(R.string.nodesbloqueado), Toast.LENGTH_LONG).show()
                                     }
                                 }
                                 R.id.niveldracula -> {
@@ -281,7 +281,7 @@ class TitleScreen : AppCompatActivity() {
                                         SharedApp.prefs.nivelInicio = 8
                                         jugar()
                                     } else {
-                                        Toast.makeText(applicationContext, "Este nivel todavía no está desbloqueado", Toast.LENGTH_LONG).show()
+                                        Toast.makeText(applicationContext, getString(R.string.nodesbloqueado), Toast.LENGTH_LONG).show()
                                     }
                                 }
                                 R.id.nivelegipcio -> {
@@ -289,7 +289,7 @@ class TitleScreen : AppCompatActivity() {
                                         SharedApp.prefs.nivelInicio = 9
                                         jugar()
                                     } else {
-                                        Toast.makeText(applicationContext, "Este nivel todavía no está desbloqueado", Toast.LENGTH_LONG).show()
+                                        Toast.makeText(applicationContext, getString(R.string.nodesbloqueado), Toast.LENGTH_LONG).show()
                                     }
                                 }
 
@@ -386,7 +386,7 @@ class TitleScreen : AppCompatActivity() {
                             dialogenemigos.show()
                             
                         } else {
-                            Toast.makeText(applicationContext, "Este nivel todavía no está desbloqueado", Toast.LENGTH_LONG).show()
+                            Toast.makeText(applicationContext, getString(R.string.nodesbloqueado), Toast.LENGTH_LONG).show()
                         }
                     }
 

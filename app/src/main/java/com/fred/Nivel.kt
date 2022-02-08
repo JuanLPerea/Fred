@@ -28,7 +28,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                  totalObjetos = 15
                  totalBalas = 1
-                 textoNivel = "Nivel 1 - Fred comienza su aventura, cuidado con los fantasmas, espinetes y gotas de ácido"
+                 textoNivel = R.string.nivel1.toString()
             }
 
             2-> {
@@ -42,7 +42,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 15
                 totalBalas = 4
-                textoNivel = "Nivel 2 - Aparecen los camaleones y momias y siguen los Fantasmas ¿o son gorros de cocinero? :)"
+                textoNivel = R.string.nivel2.toString()
             }
 
             3-> {
@@ -56,7 +56,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 10
                 totalBalas = 5
-                textoNivel = "Nivel 3 - Cuidado Fred, los Vampiros van a por tí!!!"
+                textoNivel = R.string.nivel3.toString()
             }
 
             4-> {
@@ -69,7 +69,7 @@ class Nivel {
                 numeroEsqueletosEnLaberinto = 5
                 // Numero de objetos en el laberinto
                 totalObjetos = 10
-                textoNivel = "Nivel 4 - Esqueletos!! están locos por tus huesos!!"
+                textoNivel = R.string.nivel4.toString()
             }
 
             5-> {
@@ -83,7 +83,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 100
                 totalBalas = 0
-                textoNivel = "Nivel 5 - Nivel bidón, recoge todos los tesoros que puedas!!\nPero sal antes de que se acabe el tiempo!!"
+                textoNivel = R.string.nivel5.toString()
             }
 
             6 -> {
@@ -97,7 +97,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 5
                 totalBalas = 20
-                textoNivel = "Nivel 6 - La venganza de Tut, 50 momias contra Fred ¿Quién ganará?"
+                textoNivel = R.string.nivel6.toString()
             }
 
             7 -> {
@@ -111,7 +111,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 10
                 totalBalas = 10
-                textoNivel = "Nivel 7 - Un montón de huesos, lucha contra 50 esqueletos!!!"
+                textoNivel = R.string.nivel7.toString()
             }
 
             8-> {
@@ -125,7 +125,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 10
                 totalBalas = 20
-                textoNivel = "Nivel 8 - La pirámide de Drácula, 50 vampiros revolotean por sus pasillos"
+                textoNivel = R.string.nivel8.toString()
             }
 
             9-> {
@@ -139,7 +139,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 10
                 totalBalas = 20
-                textoNivel = "Nivel 9 - Infierno Egipcio, 200 enemigos contra Fred ¿Sobrevivirás?"
+                textoNivel = R.string.nivel9.toString()
             }
 
             999 -> {
@@ -153,7 +153,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 10
                 totalBalas = SharedApp.prefs.numerodebalas
-                textoNivel = "Nivel 999 - Tu lo has elegido, así que no te quejes y disfruta!!!"
+                textoNivel = R.string.nivel999.toString()
             }
 
             else -> {
@@ -167,7 +167,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = (0..30).shuffled().last()
                 totalBalas = (0..30).shuffled().last()
-                textoNivel = "Nivel Extra - Eres un/a bestia parda!!\nGracias por jugar a Fred!!"
+                textoNivel = R.string.nivelbestia.toString()
             }
 
 

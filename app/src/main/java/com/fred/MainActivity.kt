@@ -842,7 +842,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             fila += "\n"
-            Log.d("Miapp", fila)
+           // Log.d("Miapp", fila)
         }
     }
 
@@ -1037,11 +1037,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 imagenDialog.setImageResource(R.drawable.fredgameover)
-                textofin.text = "SE ACABÓ"
-                textobonus.text = "Nivel alcanzado: ${nivel}"
-                textotesoros.text = "Puntos: ${fred.puntos}"
-                textobonotesoros.text = "Fred reposa aquí en paz!!"
-                yesBtn.text = "SALIR"
+                textofin.text = getString(R.string.seacabo)
+                textobonus.text = getString(R.string.alcanzado)  + nivel
+                textotesoros.text = getString(R.string.puntos) + fred.puntos
+                textobonotesoros.text = getString(R.string.enpaz)
+                yesBtn.text = getString(R.string.salir)
 
                 SharedApp.myMediaPlayer.playMedia(R.raw.fredfrito)
 
@@ -1055,32 +1055,32 @@ class MainActivity : AppCompatActivity() {
                 SharedApp.myMediaPlayer.playMedia(R.raw.musicasalida)
 
                 // Este es uno de los retos si se supera el nivel 4
-                if (nivel == 4 && SharedApp.prefs.secreto == false) {
-                    Toast.makeText(applicationContext, "Bien!! has desbloqueado el secreto. Fred en color!!", Toast.LENGTH_LONG).show()
+                if (nivel == 3 && SharedApp.prefs.secreto == false) {
+                    Toast.makeText(applicationContext, getString(R.string.fredcolor), Toast.LENGTH_LONG).show()
                     SharedApp.prefs.secreto = true
                 }
-                if (nivel == 6 ) {
-                    Toast.makeText(applicationContext, "Desbloqueado nivel Bidón, ahora puedes empezar desde este nivel", Toast.LENGTH_LONG).show()
+                if (nivel == 5 ) {
+                    Toast.makeText(applicationContext, getString(R.string.desbloqueadobidon), Toast.LENGTH_LONG).show()
                     SharedApp.prefs.reto1 = true
                 }
 
-                if (nivel == 9 ) {
-                    Toast.makeText(applicationContext, "Desbloqueado nivel esqueleto!!!\nVence al infierno egipcio para alcanzar el nivel máximo!!", Toast.LENGTH_LONG).show()
+                if (nivel == 8 ) {
+                    Toast.makeText(applicationContext, getString(R.string.desbloqueadoesqueleto), Toast.LENGTH_LONG).show()
                     SharedApp.prefs.reto5 = true
                 }
 
                 if (nivel == 10 ) {
-                    Toast.makeText(applicationContext, "Has vencido la maldición del Faraón, ahora puedes elegir tu los enemigos!!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, getString(R.string.desbloqueadofinal), Toast.LENGTH_LONG).show()
                     SharedApp.prefs.reto6 = true
                 }
 
 
                 imagenDialog.setImageResource(R.drawable.fredfinal)
-                textofin.text = "Por fin has salido!!!"
-                textobonus.text = "Bonos por tu esfuerzo: 5000"
-                textotesoros.text = "Tesoros recogidos: ${tesorosRecogidos}"
-                textobonotesoros.text = "Bonos por tesoros: ${tesorosRecogidos * 1000}"
-                yesBtn.text = "SIGUIENTE NIVEL"
+                textofin.text = getString(R.string.porfin)
+                textobonus.text = getString(R.string.esfuerzo)
+                textotesoros.text = getString(R.string.tesoros) + tesorosRecogidos
+                textobonotesoros.text = getString(R.string.tesorosbono) + tesorosRecogidos * 1000
+                yesBtn.text = getString(R.string.siguientenivel)
                 fred.puntos = fred.puntos + 5000 + (tesorosRecogidos*1000)
                 dialog.show()
             }
@@ -1138,7 +1138,7 @@ class MainActivity : AppCompatActivity() {
                 dialogrecord.dismiss()
                 dialogoFin.show()
             } else {
-                Toast.makeText(applicationContext, "Introduce tus iniciales", Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, getString(R.string.iniciales), Toast.LENGTH_LONG).show()
             }
         }
 
@@ -1374,15 +1374,15 @@ class MainActivity : AppCompatActivity() {
                             eliminarEnemigo = -1
                             // Retos Eliminar todos los enemigos
                             if (listaEnemigos.size == 0 && nivel == 6) {
-                                Toast.makeText(applicationContext, "Reto desbloqueado!! Has acabado con todas las momias!!" , Toast.LENGTH_LONG).show()
+                                Toast.makeText(applicationContext, getString(R.string.desbloqueadomomias) , Toast.LENGTH_LONG).show()
                                 SharedApp.prefs.reto2 = true
                             }
                             if (listaEnemigos.size == 0 && nivel == 7) {
-                                Toast.makeText(applicationContext, "Alucinante!! 50 esqueletos hechos papilla!!" , Toast.LENGTH_LONG).show()
+                                Toast.makeText(applicationContext, getString(R.string.esqueletoskill) , Toast.LENGTH_LONG).show()
                                 SharedApp.prefs.reto3 = true
                             }
                             if (listaEnemigos.size == 0 && nivel == 8) {
-                                Toast.makeText(applicationContext, "Vampiros eliminados!!\nNivel desbloqueado!!" , Toast.LENGTH_LONG).show()
+                                Toast.makeText(applicationContext, getString(R.string.vampiroskill) , Toast.LENGTH_LONG).show()
                                 SharedApp.prefs.reto4 = true
                             }
                         }

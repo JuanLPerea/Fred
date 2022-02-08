@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fred</string>
+    <string name="ayuda_text">Fred is an Archeologist and Adventurer on search of treasures and artifacts. He indeed on Tut\'s tomb, but needs your help to exit from laberinth. There are dangers that he must evade, like poison dropping from ceiling, phantoms, pink porcupines that he must to jump to don\'t hurt him, chamaleons that go up and down on walls and mummies, vampyres and skeletons that he can kill with a shot of his gun, but with care because only have 6 bullets. On his way, he find treasures, life potions, bullet charges and a map that be a great help to find the pyramid\'s exit, it is always on the top. The ZX Spectrum is a 8 bits personal computer very popular on world\'s homes and specially on spanish homes on 80\'s. It\'s processor be a Zilog Z80 at 3.5 Mhz, 16Kb ROM and 48K or 128K of RAM depending of model. Designed by Richard Altwasser of Sinclair Research.</string>
+    <string name="colorFred">Fred on colour</string>
+    <string name="desbloqueadobidon">Canteen level unlocked, now you can start from this level</string>
+</resources>

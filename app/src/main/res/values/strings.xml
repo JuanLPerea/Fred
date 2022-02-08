@@ -1,5 +1,37 @@
 <resources>
-    <string name="app_name">Fred</string>
-    <string name="version">version 1.0</string>
-    <string name="ayuda_text">Fred es un arqueologo aventurero en busca de tesoros y reliquias. Ha entrado en la tumba de Tut, pero necesita que le ayudes a salir del laberinto.\n\n Hay peligros que tiene que evitar como gotas de veneno que caen del techo, fantasmas, espinetes que tiene que saltar para no pincharse, camaleones que suben por las paredes y momias, vampiros y esqueletos que puede matar con un tiro de su pistola, pero ¡ojo! solo tiene 6 balas. \n\n En su camino encuentra tesoros, pocimas de vida, cartuchos de balas y un mapa que seran de ayuda para encontrar la salida de la piramide, que siempre se encuentra en la parte mas alta\n\nEl ZX Spectrum es un ordenador personal de 8 bits muy utilizado en los hogares españoles durante los años 80. Su procesador es un Zilog Z80 a 3.5Mhz, 16Kb de ROM y 48K o 128K de RAM dependiendo del modelo, diseñado por Richard Altwasser de Sinclair Research</string>
+    <string name="app_name" translatable="false">Fred</string>
+    <string name="version" translatable="false">version 1.0</string>
+    <string name="ayuda_text">Fred es un arqueologo aventurero en busca de tesoros y reliquias. Ha entrado en la tumba de Tut, pero necesita que le ayudes a salir del laberinto.   Hay peligros que tiene que evitar como gotas de veneno que caen del techo, fantasmas, espinetes que tiene que saltar para no pincharse, camaleones que suben por las paredes y momias, vampiros y esqueletos que puede matar con un tiro de su pistola, pero ¡ojo! solo tiene 6 balas.    En su camino encuentra tesoros, pocimas de vida, cartuchos de balas y un mapa que seran de ayuda para encontrar la salida de la piramide, que siempre se encuentra en la parte mas alta  El ZX Spectrum es un ordenador personal de 8 bits muy utilizado en los hogares españoles durante los años 80. Su procesador es un Zilog Z80 a 3.5Mhz, 16Kb de ROM y 48K o 128K de RAM dependiendo del modelo, diseñado por Richard Altwasser de Sinclair Research</string>
+    <string name="seacabo">SE ACABÓ</string>
+    <string name="alcanzado">"Nivel alcanzado: "</string>
+    <string name="puntos">"Puntos: "</string>
+    <string name="enpaz">Fred reposa aquí en paz!!</string>
+    <string name="salir">SALIR</string>
+    <string name="fredcolor">Bien!! has desbloqueado el secreto. Fred en color!!</string>
+    <string name="desbloqueadobidon">Desbloqueado nivel Bidón, ahora puedes empezar desde este nivel</string>
+    <string name="desbloqueadoesqueleto">Desbloqueado nivel esqueleto!!!\nVence al infierno egipcio para alcanzar el nivel máximo!!</string>
+    <string name="desbloqueadofinal">Has vencido la maldición del Faraón, ahora puedes elegir tu los enemigos!!</string>
+    <string name="porfin">Por fin has salido!!!</string>
+    <string name="esfuerzo">Bonos por tu esfuerzo: 5000</string>
+    <string name="tesoros">"Tesoros recogidos: "</string>
+    <string name="tesorosbono">"Bonos por tesoros: "</string>
+    <string name="siguientenivel">SIGUIENTE NIVEL</string>
+    <string name="iniciales">Introduce tus iniciales</string>
+    <string name="desbloqueadomomias">Reto desbloqueado!! Has acabado con todas las momias!!</string>
+    <string name="esqueletoskill">Alucinante!! 50 esqueletos hechos papilla!!</string>
+    <string name="vampiroskill">Vampiros eliminados!!\nNivel desbloqueado!!</string>
+    <string name="nivel1">Nivel 1 - Fred comienza su aventura, cuidado con los fantasmas, espinetes y gotas de ácido</string>
+    <string name="nivel2">Nivel 2 - Aparecen los camaleones y momias y siguen los Fantasmas ¿o son gorros de cocinero? :)</string>
+    <string name="nivel3">Nivel 3 - Cuidado Fred, los Vampiros van a por tí!!!</string>
+    <string name="nivel4">Nivel 4 - Esqueletos!! están locos por tus huesos!!</string>
+    <string name="nivel5">Nivel 5 - Nivel bidón, recoge todos los tesoros que puedas!!\nPero sal antes de que se acabe el tiempo!!</string>
+    <string name="nivel6">Nivel 6 - La venganza de Tut, 50 momias contra Fred ¿Quién ganará?</string>
+    <string name="nivel7">Nivel 7 - Un montón de huesos, lucha contra 50 esqueletos!!!</string>
+    <string name="nivel8">Nivel 8 - La pirámide de Drácula, 50 vampiros revolotean por sus pasillos</string>
+    <string name="nivel9">Nivel 9 - Infierno Egipcio, 200 enemigos contra Fred ¿Sobrevivirás?</string>
+    <string name="nivel999">Nivel 999 - Tu lo has elegido, así que no te quejes y disfruta!!!</string>
+    <string name="nivelbestia">Nivel Extra - Eres una bestia parda!!\nGracias por jugar a Fred!!</string>
+    <string name="colorFred">Fred en color</string>
+    <string name="desbloquearsecreto">Para desbloquear tienes que pasar del nivel 3</string>
+    <string name="nodesbloqueado">Este nivel todavía no está desbloqueado</string>
 </resources>

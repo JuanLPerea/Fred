@@ -159,7 +159,7 @@ class Esqueleto() : Enemigo() {
         when (salidas.size) {
             0 -> {
                 // En teoría siempre tiene que haber una salida, pongo esto por curiosidad
-                Log.d("Miapp" , "Esto es imposible, no puedes verlo")
+                //  Log.d("Miapp" , "Esto es imposible, no puedes verlo")
             }
             1 -> {
                 // Callejón sin salida
