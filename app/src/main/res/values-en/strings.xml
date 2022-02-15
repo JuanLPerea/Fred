@@ -1,7 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Fred</string>
     <string name="ayuda_text">Fred is an Archeologist and Adventurer on search of treasures and artifacts. He indeed on Tut\'s tomb, but needs your help to exit from laberinth. There are dangers that he must evade, like poison dropping from ceiling, phantoms, pink porcupines that he must to jump to don\'t hurt him, chamaleons that go up and down on walls and mummies, vampyres and skeletons that he can kill with a shot of his gun, but with care because only have 6 bullets. On his way, he find treasures, life potions, bullet charges and a map that be a great help to find the pyramid\'s exit, it is always on the top. The ZX Spectrum is a 8 bits personal computer very popular on world\'s homes and specially on spanish homes on 80\'s. It\'s processor be a Zilog Z80 at 3.5 Mhz, 16Kb ROM and 48K or 128K of RAM depending of model. Designed by Richard Altwasser of Sinclair Research.</string>
     <string name="colorFred">Fred on colour</string>
     <string name="desbloqueadobidon">Canteen level unlocked, now you can start from this level</string>
+    <string name="seacabo">The End</string>
+    <string name="alcanzado">Level reached:</string>
+    <string name="puntos">Points:</string>
+    <string name="enpaz">Fred rest in peace here.</string>
+    <string name="salir">EXIT</string>
+    <string name="fredcolor">Well done!! You have unlocked color Fred!!</string>
+    <string name="desbloqueadoesqueleto">Skeleton level unlocked.</string>
+    <string name="desbloqueadofinal">You defeat the Pharaon Curse, now you can choose the enemies!!</string>
+    <string name="porfin">At least you go out!!</string>
+    <string name="esfuerzo">Effort bonus: 5000</string>
+    <string name="tesoros">Treasures picked:</string>
+    <string name="tesorosbono">Treasures bonus:</string>
+    <string name="siguientenivel">NEXT LEVEL</string>
+    <string name="iniciales">Enter your initials</string>
+    <string name="desbloqueadomomias">Gauntlet unlocked!! You have defeated all mummies!!</string>
+    <string name="esqueletoskill">Awesome!! 50 skeletons converted on bone powder!!</string>
+    <string name="vampiroskill">Vampyres erased!! Level unlocked!!</string>
+    <string name="nivel1">Level 1 - Fred starts his adventure, beware of ghosts, rats and acid drops.</string>
+    <string name="nivel2">Level 2 - Chamaleons and mummies appears, Ghosts remains (Or they are Chef\'s Hats?)</string>
+    <string name="nivel3">Level 3 - Beware Fred, the vampyres go for you.</string>
+    <string name="nivel4">Level 4 - Skeletons, they are crazy for your bones.</string>
+    <string name="nivel5">Level 5 - Bonus Level, pick all the treasures you can!! But you must go out before time ends.</string>
+    <string name="nivel6">Level 6 - Tut\'s revenge, 50 mummies against Fred ¿Which one will won?</string>
+    <string name="nivel7">Level 7 - A bunch of bones, fight against 50 skeletons!!!</string>
+    <string name="nivel8">Level 8 - Dracula Piramyd, 50 vampyres flying on corridors.</string>
+    <string name="nivel9">Level 9 - Egypcian Hell, 200 enemies against Fred ¿You will survive?</string>
+    <string name="nivel999">999 Level - You choose it, then don\'t cry and enjoy!!!</string>
+    <string name="nivelbestia">Extra Level - You are a master of Fred!!! Thank you for playing.</string>
+    <string name="desbloquearsecreto">To unlock the secret you must to pass level 3</string>
+    <string name="nodesbloqueado">This level is not unlocked yet.</string>
 </resources>

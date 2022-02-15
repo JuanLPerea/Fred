@@ -12,7 +12,7 @@ class Nivel {
     // Numero de objetos en el laberinto
     var totalObjetos = 0
     var totalBalas = 0
-    var textoNivel = ""
+    var textoNivel = 0
 
 
     fun cargarNivel(nivel: Int) {
@@ -28,7 +28,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                  totalObjetos = 15
                  totalBalas = 1
-                 textoNivel = R.string.nivel1.toString()
+                 textoNivel = R.string.nivel1
             }
 
             2-> {
@@ -42,7 +42,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 15
                 totalBalas = 4
-                textoNivel = R.string.nivel2.toString()
+                textoNivel = R.string.nivel2
             }
 
             3-> {
@@ -56,7 +56,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 10
                 totalBalas = 5
-                textoNivel = R.string.nivel3.toString()
+                textoNivel = R.string.nivel3
             }
 
             4-> {
@@ -69,7 +69,7 @@ class Nivel {
                 numeroEsqueletosEnLaberinto = 5
                 // Numero de objetos en el laberinto
                 totalObjetos = 10
-                textoNivel = R.string.nivel4.toString()
+                textoNivel = R.string.nivel4
             }
 
             5-> {
@@ -83,7 +83,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 100
                 totalBalas = 0
-                textoNivel = R.string.nivel5.toString()
+                textoNivel = R.string.nivel5
             }
 
             6 -> {
@@ -97,7 +97,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 5
                 totalBalas = 20
-                textoNivel = R.string.nivel6.toString()
+                textoNivel = R.string.nivel6
             }
 
             7 -> {
@@ -111,7 +111,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 10
                 totalBalas = 10
-                textoNivel = R.string.nivel7.toString()
+                textoNivel = R.string.nivel7
             }
 
             8-> {
@@ -125,7 +125,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 10
                 totalBalas = 20
-                textoNivel = R.string.nivel8.toString()
+                textoNivel = R.string.nivel8
             }
 
             9-> {
@@ -139,7 +139,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 10
                 totalBalas = 20
-                textoNivel = R.string.nivel9.toString()
+                textoNivel = R.string.nivel9
             }
 
             999 -> {
@@ -153,7 +153,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = 10
                 totalBalas = SharedApp.prefs.numerodebalas
-                textoNivel = R.string.nivel999.toString()
+                textoNivel = R.string.nivel999
             }
 
             else -> {
@@ -167,7 +167,7 @@ class Nivel {
                 // Numero de objetos en el laberinto
                 totalObjetos = (0..30).shuffled().last()
                 totalBalas = (0..30).shuffled().last()
-                textoNivel = R.string.nivelbestia.toString()
+                textoNivel = R.string.nivelbestia
             }
 
 

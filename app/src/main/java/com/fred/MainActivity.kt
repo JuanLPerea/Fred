@@ -216,7 +216,7 @@ class MainActivity : AppCompatActivity() {
     private fun cargarNivel() {
         variablesNivel = Nivel()
         variablesNivel.cargarNivel(nivel)
-        Toast.makeText(applicationContext, variablesNivel.textoNivel, Toast.LENGTH_LONG).show()
+        Toast.makeText(applicationContext, getString(variablesNivel.textoNivel), Toast.LENGTH_LONG).show()
     }
 
     private fun iniciarNivel() {
