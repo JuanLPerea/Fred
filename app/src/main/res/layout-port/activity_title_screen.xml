@@ -12,7 +12,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="5"
         android:gravity="center">
 
         <ImageView
@@ -21,14 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             app:srcCompat="@drawable/logofred" />
-
-        <Button
-            android:id="@+id/botonJugarBTN"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:fontFamily="@font/zxspectrum"
-            android:text="Jugar" />
 
         <ImageButton
             android:id="@+id/imageButton"
@@ -44,10 +36,38 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/layoutCreditos"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/botonJugarBTN"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_weight="1"
+            android:background="@drawable/load"
+            android:fontFamily="@font/zxspectrum"
+            android:scaleType="centerCrop"
+            android:text="@string/jugar" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutCreditos"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
         android:orientation="horizontal">
 
         <ImageView

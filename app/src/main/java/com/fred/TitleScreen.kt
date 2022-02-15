@@ -38,7 +38,15 @@ class TitleScreen : AppCompatActivity() {
         layoutCreditos = findViewById(R.id.layoutCreditos)
 
         records = BitmapFactory.decodeResource(resources , R.drawable.todaysgreatest)
-        creditos = BitmapFactory.decodeResource(resources , R.drawable.tituloscredito)
+
+        val idioma = Locale.getDefault().language
+        Log.d("Miapp", idioma)
+        if (idioma == "en") {
+            creditos = BitmapFactory.decodeResource(resources , R.drawable.tituloscredito_english)
+        } else {
+            creditos = BitmapFactory.decodeResource(resources , R.drawable.tituloscredito)
+        }
+
 
         val orientation = resources.configuration.orientation
         when (orientation) {

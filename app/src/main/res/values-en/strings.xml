@@ -33,4 +33,5 @@
     <string name="nivelbestia">Extra Level - You are a master of Fred!!! Thank you for playing.</string>
     <string name="desbloquearsecreto">To unlock the secret you must to pass level 3</string>
     <string name="nodesbloqueado">This level is not unlocked yet.</string>
+    <string name="jugar">Play</string>
 </resources>
