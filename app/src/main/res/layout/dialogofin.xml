@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Por fin has salido!!"
+        android:text="@string/porfin"
         android:textColor="@color/white"
         android:textSize="34sp" />
 
@@ -27,7 +27,7 @@
         android:id="@+id/esfuerzoTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Bonos por tu esfuerzo: 1000"
+        android:text="@string/esfuerzo"
         android:textColor="@color/white"
         android:textSize="18sp" />
 
@@ -35,7 +35,7 @@
         android:id="@+id/tesorosRecogidosTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tesoros recogidos:"
+        android:text="@string/tesoros"
         android:textColor="@color/white"
         android:textSize="18sp" />
 
@@ -43,7 +43,7 @@
         android:id="@+id/bonosTesorosTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Bonos por tesoros:"
+        android:text="@string/tesorosbono"
         android:textColor="@color/white"
         android:textSize="18sp" />
 
@@ -51,7 +51,7 @@
         android:id="@+id/botonfinjugar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ACEPTAR" />
+        android:text="@string/ok" />
 
     <Space
         android:layout_width="400dp"

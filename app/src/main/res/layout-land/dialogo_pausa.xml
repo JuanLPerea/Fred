@@ -20,7 +20,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="PAUSA"
+        android:text="@string/pausa"
         android:textColor="#FFFFFF"
         android:textSize="34sp" />
 

@@ -19,7 +19,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="NUEVO RECORD"
+        android:text="@string/newrecord"
         android:textColor="#FFFFFF"
         android:textSize="34sp" />
 
@@ -29,7 +29,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:hint="Introduce tus iniciales"
+        android:hint="@string/iniciales"
         android:maxLength="6"
         android:textColor="#CDDC39"
         android:textColorHint="#2F4A48" />
@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="OK" />
+        android:text="@string/ok" />
 
     <Space
         android:layout_width="400dp"

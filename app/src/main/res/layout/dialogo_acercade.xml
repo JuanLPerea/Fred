@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:background="@color/black"
             android:fontFamily="@font/zxspectrum"
-            android:text="VALE"
+            android:text="@string/ok"
             android:textColor="#FFFFFF" />
 
         <Space

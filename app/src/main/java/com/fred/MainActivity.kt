@@ -1391,7 +1391,7 @@ class MainActivity : AppCompatActivity() {
                             listaObjetos.remove(listaObjetos.get(eliminarObjeto))
                             eliminarObjeto = -1
                         }
-                        alturaTV.text = "\uD83C\uDFD4 ${String.format("%02d", cY - 3)}"
+                        alturaTV.text = "H ${String.format("%02d", cY - 3)}"
                         balasTV.text = "\uD83D\uDD25 ${fred.balas}"
                         nivelTV.text = "\uD83D\uDC7B ${String.format("%02d", nivel)}"
                         vidaTV.text = "❤ ${fred.vida}"

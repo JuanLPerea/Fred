@@ -3,8 +3,8 @@
 
     <item
         android:id="@+id/velolento"
-        android:title="Lento" />
-    <item android:title="Normal" android:id="@+id/velonormal"/>
-    <item android:title="Rápido" android:id="@+id/velorapida" />
-    <item android:title="Velocidad Absurda" android:id="@+id/veloabsurda" />
+        android:title="@string/slow" />
+    <item android:title="@string/normal" android:id="@+id/velonormal"/>
+    <item android:title="@string/rapido" android:id="@+id/velorapida" />
+    <item android:title="@string/superspeed" android:id="@+id/veloabsurda" />
 </menu>

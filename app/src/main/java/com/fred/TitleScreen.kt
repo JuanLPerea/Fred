@@ -70,7 +70,7 @@ class TitleScreen : AppCompatActivity() {
         }
 
 
-        val botonJugar = findViewById(R.id.botonJugarBTN) as Button
+        val botonJugar = findViewById(R.id.botonJugarBTN) as ImageButton
 
         botonJugar.setOnClickListener {
             SharedApp.prefs.nivelInicio = 1

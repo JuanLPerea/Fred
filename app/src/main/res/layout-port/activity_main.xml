@@ -189,7 +189,7 @@
                         android:background="@color/white"
                         android:fontFamily="@font/zxspectrum"
                         android:paddingLeft="5dp"
-                        android:text="MAPA"
+                        android:text="@string/mapa"
                         android:textColor="#000000"
                         android:textSize="14sp" />
 

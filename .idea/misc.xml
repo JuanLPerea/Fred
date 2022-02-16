@@ -3,15 +3,28 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/layout-land/activity_main.xml" value="0.17294220665499124" />
         <entry key="app/src/main/res/layout-land/activity_title_screen.xml" value="0.16199649737302976" />
+        <entry key="app/src/main/res/layout-land/dialogo_pausa.xml" value="0.17294220665499124" />
+        <entry key="app/src/main/res/layout-land/dialogofin.xml" value="0.17294220665499124" />
+        <entry key="app/src/main/res/layout-land/dialogonuevorecord.xml" value="0.17294220665499124" />
+        <entry key="app/src/main/res/layout-large-land/activity_main.xml" value="0.1481358189081225" />
+        <entry key="app/src/main/res/layout-large-port/activity_main.xml" value="0.13900273224043716" />
+        <entry key="app/src/main/res/layout-port/activity_main.xml" value="0.18432971014492755" />
         <entry key="app/src/main/res/layout-port/activity_title_screen.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/dialogo_acercade.xml" value="0.20572916666666666" />
+        <entry key="app/src/main/res/layout/dialogo_enemigos.xml" value="0.20572916666666666" />
+        <entry key="app/src/main/res/layout/dialogo_pausa.xml" value="0.20572916666666666" />
+        <entry key="app/src/main/res/layout/dialogofin.xml" value="0.20572916666666666" />
+        <entry key="app/src/main/res/layout/dialogonuevorecord.xml" value="0.20572916666666666" />
         <entry key="app/src/main/res/menu/menu_niveles.xml" value="0.21927083333333333" />
         <entry key="app/src/main/res/menu/menu_secreto.xml" value="0.21927083333333333" />
+        <entry key="app/src/main/res/menu/menu_velocidad.xml" value="0.20572916666666666" />
         <entry key="app/src/main/res/menu/opciones_menu.xml" value="0.21927083333333333" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

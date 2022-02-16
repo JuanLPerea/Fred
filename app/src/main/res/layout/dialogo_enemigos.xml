@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:text="ELIGE TU LOS ENEMIGOS"
+            android:text="@string/elige"
             android:textColor="#03A9F4"
             android:textSize="24sp" />
 
@@ -39,7 +39,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="5"
-                android:text="Gotas de ácido"
+                android:text="@string/gotas_de_acido"
                 android:textColor="#24C118"
                 android:textSize="20sp" />
 
@@ -91,7 +91,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="5"
-                android:text="Espinetes"
+                android:text="@string/espinetes"
                 android:textColor="#F107D9"
                 android:textSize="20sp" />
 
@@ -143,7 +143,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="5"
-                android:text="Fantasmas"
+                android:text="@string/fantasmas"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
@@ -195,7 +195,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="5"
-                android:text="Lagartijas"
+                android:text="@string/lagartijas"
                 android:textColor="#00BCD4"
                 android:textSize="20sp" />
 
@@ -247,7 +247,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="5"
-                android:text="Momias"
+                android:text="@string/momias"
                 android:textColor="#FFEB3B"
                 android:textSize="20sp" />
 
@@ -299,7 +299,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="5"
-                android:text="Vampiros"
+                android:text="@string/vampiros"
                 android:textColor="#C11818"
                 android:textSize="20sp" />
 
@@ -351,7 +351,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="5"
-                android:text="Esqueletos"
+                android:text="@string/esqueletos"
                 android:textColor="#8A48E4"
                 android:textSize="20sp" />
 
@@ -403,7 +403,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="5"
-                android:text="Recarga de Balas"
+                android:text="@string/recarga_de_balas"
                 android:textColor="#FF5722"
                 android:textSize="20sp" />
 
