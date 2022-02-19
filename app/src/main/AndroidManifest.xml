@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.fred">
+    package="com.fredzxgame">
 
 
     <application
-        android:name=".SharedApp"
+        android:name="com.fredzxgame.SharedApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,7 +13,7 @@
         android:theme="@style/SpectrumText">
 
 
-        <activity android:name=".TitleScreen">
+        <activity android:name="com.fredzxgame.TitleScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -21,7 +21,7 @@
 
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.fredzxgame.MainActivity"
             android:theme="@style/SpectrumText"
             >
 
