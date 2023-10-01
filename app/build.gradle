@@ -4,14 +4,14 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.fredzxgame"
         minSdkVersion 16
-        targetSdkVersion 30
-        versionCode 2
-        versionName "Ghost"
+        targetSdkVersion 33
+        versionCode 3
+        versionName "Espinete"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -29,6 +29,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    namespace 'com.fredzxgame'
 }
 
 dependencies {

@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_weight="1"
-            android:background="@drawable/load"
+            android:background="@drawable/botonjugar"
             android:fontFamily="@font/zxspectrum"
             android:scaleType="centerCrop"
             android:text="@string/jugar" />
